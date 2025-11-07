@@ -1,0 +1,32 @@
+# core
+click
+rich
+tqdm
+pydantic
+
+# PDF & text extraction
+pdfminer.six
+pymupdf
+camelot-py[all]
+tabula-py
+pillow
+
+# data + utils
+pandas
+numpy
+python-dateutil
+
+# SQLite helpers (optional but handy)
+sqlalchemy
+alembic
+
+# embeddings / optional LLM support
+sentence-transformers
+transformers
+
+# QA or retrieval glue
+faiss-cpu
+
+# testing
+pytest
+pytest-cov
