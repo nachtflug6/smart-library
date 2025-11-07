@@ -1,3 +1,40 @@
+#########################
+# SMART-LIBRARY DATA
+#########################
+
+# SQLite database files
+db/*.db
+db/*.sqlite
+db/*.sqlite3
+
+# Generated DB schemas (if any)
+db/migrations/*.sql   # optional — remove if you want to version migrations
+!db/migrations/0001_init.sql
+!db/migrations/0002_indexes.sql
+
+# PDF files (copyrighted input)
+data/pdf/**
+
+# Raw extracted text (not versioned, re-generable)
+data/text/**
+
+# Page images, OCR dumps, temp artifacts
+data/cache/**
+data/**/cache/**
+
+# LLM outputs (joins are fine to version, but not auto-generated errors or logs)
+data/jsonl/tmp/**
+data/jsonl/generated/**
+
+# Embeddings (too large for git)
+data/embeddings/**
+**/embeddings/**
+
+# Page-level artifacts (if you generate PNGs or pXX.txt from OCR)
+data/pdf/pages/**
+data/pdf/**/pages/**
+
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
