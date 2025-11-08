@@ -3,7 +3,8 @@ CREATE TABLE IF NOT EXISTS documents (
     title TEXT,
     venue TEXT,
     year INTEGER,
-    page_count INTEGER
+    page_count INTEGER,
+    pdf_path TEXT
 );
 
 

@@ -10,6 +10,7 @@ pymupdf
 camelot-py[all]
 tabula-py
 pillow
+PyPDF2>=3.0.0
 
 # data + utils
 pandas
@@ -30,3 +31,6 @@ faiss-cpu
 # testing
 pytest
 pytest-cov
+
+# LLM
+openai

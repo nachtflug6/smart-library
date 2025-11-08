@@ -1,6 +1,6 @@
-from typer import Typer
+from typer import Typer, Option, echo
 
-app = Typer()
+app = Typer(no_args_is_help=True)
 
 @app.command("db-init")
 def db_init():
@@ -25,6 +25,53 @@ def db_check():
     from smart_library.db.check_db import check_db
     print(check_db())
 
+@app.command("view")
+def view_cmd(document_id: str, page: int):
+    """View the text of a specific page."""
+    from smart_library.db.view import view_page
+    view_page(document_id, page)
+
+@app.command("search")
+def search_cmd(query: str):
+    """Search for text inside all pages."""
+    from smart_library.db.search import search
+    search(query)
+
+
+@app.command("onboard-docs")
+def onboard_docs_cmd():
+    """
+    Move incoming PDFs → curated and upsert documents.jsonl
+    with document_id, pdf_path, page_count.
+    (Title, venue, year remain empty.)
+    """
+    from smart_library.ingest.onboard import onboard_documents
+    onboard_documents()
+    echo("Onboarded documents.")
+
+
+@app.command("onboard-pages")
+def onboard_pages_cmd(
+    document_id: str = Option(None, help="Process only this document_id")
+):
+    """
+    Extract per-page text for curated PDFs and append to pages.jsonl.
+    """
+    from smart_library.ingest.onboard import onboard_pages
+    onboard_pages(document_id=document_id)
+    echo("Onboarded pages.")
+
+
+@app.command("onboard")
+def onboard_all_cmd():
+    """
+    Full pipeline:
+      1) incoming PDFs → curated (documents.jsonl)
+      2) extract per-page text (pages.jsonl)
+    """
+    from smart_library.ingest.onboard import onboard_all
+    onboard_all()
+    echo("Completed full onboarding pipeline.")
 
 if __name__ == "__main__":
     app()

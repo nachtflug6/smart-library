@@ -8,15 +8,24 @@ def import_documents():
     with open("data/jsonl/entities/documents.jsonl") as f:
         for line in f:
             p = json.loads(line)
+
             cur.execute("""
-                INSERT OR REPLACE INTO documents (document_id, title, venue, year, page_count)
-                VALUES (?, ?, ?, ?, ?)
+                INSERT OR REPLACE INTO documents (
+                    document_id,
+                    title,
+                    venue,
+                    year,
+                    page_count,
+                    pdf_path
+                )
+                VALUES (?, ?, ?, ?, ?, ?)
             """, (
                 p["document_id"],
                 p["title"],
                 p.get("venue"),
                 p.get("year"),
-                p.get("page_count")
+                p.get("page_count"),
+                p.get("pdf_path")
             ))
 
     db.commit()
