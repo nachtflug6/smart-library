@@ -8,6 +8,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     default-jre \
     libglib2.0-0 \
     libgl1 \
+    sqlite3 \
     && rm -rf /var/lib/apt/lists/*
 
 # Work inside /app
