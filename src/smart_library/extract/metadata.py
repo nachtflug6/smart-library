@@ -4,6 +4,8 @@ from typing import Dict
 
 from smart_library.llm.client import LLMClient  # your client
 from smart_library.utils.io import read_text  # optional helper
+from smart_library.prompts.system import extraction_system_prompt
+from smart_library.prompts.user import extraction
 
 PROMPT_DIR = Path(__file__).resolve().parent.parent / "prompts"
 
@@ -50,3 +52,5 @@ def extract_metadata_for_document(
 
     data["document_id"] = document_id
     return data
+
+

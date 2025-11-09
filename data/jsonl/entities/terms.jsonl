@@ -1,0 +1,1 @@
+{"term_id": "neural_ode", "label": "Neural ODE", "aliases": ["NeuralODE", "neural ordinary differential equation"], "category": "model_family", "description": "Neural ODEs are continuous-time neural networks defined by an ODE solver.", "source": "curated", "description": "Neural ODEs are continuous-time neural networks defined by an ODE solver.", "source": "curated"}
