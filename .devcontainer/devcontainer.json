@@ -8,6 +8,9 @@
 		// Update the 'dockerFile' property if you aren't using the standard 'Dockerfile' filename.
 		"dockerfile": "../Dockerfile"
 	},
+	"containerEnv": {
+		"OPENAI_API_KEY": "${localEnv:OPENAI_API_KEY}"
+	},
 
 	// Features to add to the dev container. More info: https://containers.dev/features.
 	"features": {
