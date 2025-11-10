@@ -91,5 +91,13 @@ def llm_metadata_extract_cmd(
     
     llm_metadata_extract(model=model, output=Path(output))
 
+@app.command("llm-term-extract")
+def llm_term_extract_cmd(
+    model: str = Option("gpt-5-mini", help="LLM model name."),
+):
+    """Extract technical terms from all document pages via LLM."""
+    from smart_library.pipelines.term_extraction import llm_term_extract
+    llm_term_extract(model=model)
+
 if __name__ == "__main__":
     app()

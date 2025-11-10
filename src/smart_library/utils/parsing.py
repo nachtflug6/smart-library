@@ -2,13 +2,13 @@
 import json
 import re
 import ast
-from typing import Dict, Any
+from typing import Dict, Any, List
 
 
-def parse_structured_obj(raw: str) -> tuple[Dict[str, Any] | None, str]:
-    """Leniently parse LLM output into a JSON-like object.
+def parse_structured_obj(raw: str) -> tuple[Dict[str, Any] | List[Any] | None, str]:
+    """Leniently parse LLM output into a JSON-like object or array.
     
-    Returns (obj, reason). Accepts JSON, code-fenced JSON, Python literals, arrays.
+    Returns (obj, reason). Accepts JSON objects, arrays, code-fenced JSON, Python literals.
     """
     if not raw or not raw.strip():
         return None, "empty_output"
@@ -19,13 +19,13 @@ def parse_structured_obj(raw: str) -> tuple[Dict[str, Any] | None, str]:
     if m:
         s = m.group(1).strip()
 
-    # Try strict JSON
+    # Try strict JSON (both objects and arrays)
     try:
         obj = json.loads(s)
         if isinstance(obj, dict):
             return obj, "json_ok"
-        if isinstance(obj, list) and obj and isinstance(obj[0], dict):
-            return obj[0], "json_array_first_object"
+        if isinstance(obj, list):
+            return obj, "json_array"  # <-- Accept arrays directly
     except Exception:
         pass
 
@@ -34,24 +34,29 @@ def parse_structured_obj(raw: str) -> tuple[Dict[str, Any] | None, str]:
         obj = ast.literal_eval(s)
         if isinstance(obj, dict):
             return obj, "python_literal_dict"
-        if isinstance(obj, list) and obj and isinstance(obj[0], dict):
-            return obj[0], "python_literal_array_first_object"
+        if isinstance(obj, list):
+            return obj, "python_literal_array"  # <-- Accept arrays directly
     except Exception:
         pass
 
-    # Salvage first {...} block
-    start, end = s.find("{"), s.rfind("}")
-    if start != -1 and end != -1 and end > start:
-        blk = s[start : end + 1]
-        blk = re.sub(r",\s*([}\]])", r"\1", blk)
+    # Salvage first {...} or [...] block
+    for pattern, tag_obj, tag_arr in [
+        (r'\{.*\}', "json_salvaged_obj", "json_salvaged_array"),
+        (r'\[.*\]', "json_salvaged_array", "json_salvaged_array"),
+    ]:
+        m = re.search(pattern, s, re.DOTALL)
+        if not m:
+            continue
+        blk = m.group(0)
+        blk = re.sub(r",\s*([}\]])", r"\1", blk)  # Remove trailing commas
 
-        for parser, tag in ((json.loads, "json_salvaged"), (ast.literal_eval, "python_salvaged")):
+        for parser, tag_prefix in ((json.loads, "json_salvaged"), (ast.literal_eval, "python_salvaged")):
             try:
                 obj = parser(blk)
                 if isinstance(obj, dict):
-                    return obj, tag
-                if isinstance(obj, list) and obj and isinstance(obj[0], dict):
-                    return obj[0], tag + "_array"
+                    return obj, tag_obj
+                if isinstance(obj, list):
+                    return obj, tag_arr
             except Exception:
                 continue
 

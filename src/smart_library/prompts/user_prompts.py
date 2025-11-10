@@ -41,3 +41,36 @@ Other rules:
 TEXT:
 {text}
 """
+
+
+def term_extraction_prompt(text: str) -> str:
+    """
+    Extract technical terms from a single page of text.
+    Returns a JSON array of term strings.
+    """
+    return f"""Extract specialized TERMS from the TEXT.
+
+Return a JSON array of lowercase unique terms (max 30 terms):
+["term1", "term2", "term3"]
+
+Goal: extract non-generic, content terms (be broad; when unsure, INCLUDE):
+- concepts, systems, components
+- technical jargon, methods, theories
+- applications, domains, real-world problems
+- datasets/benchmarks/tasks (keep official names, even if they include years)
+- acronyms and multi-word phrases
+
+Exclude (document metadata & noise):
+- people (researchers/authors)
+- publication/venue metadata (venues, conferences, years used only as citation info, affiliations)
+- section/figure/table/page refs
+- formatting artifacts, markdown, footnotes, equations/variables/symbols unless they are named concepts
+
+Rules:
+- lowercase everything
+- preserve multi-word phrases
+- keep acronyms as written
+
+TEXT:
+{text}
+"""

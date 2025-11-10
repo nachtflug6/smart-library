@@ -9,6 +9,7 @@ from smart_library.prompts.system_prompts import deterministic_extraction_prompt
 from smart_library.prompts.user_prompts import metadata_extraction_prompt
 from smart_library.extract.author_utils import clean_author
 from smart_library.utils.parsing import parse_structured_obj
+from smart_library.extract.base import extract_with_llm, extract_bulk_with_llm
 
 EXPECTED_FIELDS = {
     "title",
@@ -64,13 +65,6 @@ def _normalize_metadata(raw: Dict[str, Any]) -> Dict[str, Any]:
     return out
 
 
-def _build_messages(text: str) -> List[Dict[str, str]]:
-    return [
-        {"role": "system", "content": deterministic_extraction_prompt()},
-        {"role": "user", "content": metadata_extraction_prompt(text)},
-    ]
-
-
 def extract_metadata(
     texts: List[str],
     client: BaseLLMClient,
@@ -83,23 +77,21 @@ def extract_metadata(
     """Extract metadata from text using LLM."""
     if not texts:
         return {"error": "no_texts"}
+    
     combined = "\n\n".join(t for t in texts if t)
-    msgs = _build_messages(combined)
-    response_format = {"type": "json_object"} if enforce_json else None
-    temp_arg = None if "gpt-5" in model.lower() else temperature
-
-    raw = client.chat(
+    data, reason = extract_with_llm(
+        combined,
+        client,
+        deterministic_extraction_prompt(),
+        metadata_extraction_prompt,
         model=model,
-        messages=msgs,
-        temperature=temp_arg,
-        response_format=response_format,
+        temperature=temperature,
+        enforce_json=enforce_json,
+        debug=debug,
     )
-    if debug:
-        print("RAW:", raw[:400])
-
-    data, reason = parse_structured_obj(raw)
+    
     if not isinstance(data, dict):
-        return {"error": "invalid_json", "why": reason, "raw": raw}
+        return {"error": "invalid_json", "why": reason}
     return _normalize_metadata(data)
 
 
@@ -127,30 +119,29 @@ def extract_metadata_bulk(
     max_pages_per_doc: int | None = 1,
     enforce_json: bool = True,
 ) -> List[Dict[str, Any]]:
-    temp_arg = None if "gpt-5" in model.lower() else temperature
-    response_format = {"type": "json_object"} if enforce_json else None
-
-    batches: List[List[Dict[str, str]]] = []
-    ids: List[str] = []
+    # Prepare inputs
+    batch_inputs = []
     for doc_id, pages in doc_texts.items():
         usable = pages[: max_pages_per_doc] if max_pages_per_doc else pages
         text = "\n\n".join(p for p in usable if p)
-        if not text:
-            continue
-        batches.append(_build_messages(text))
-        ids.append(doc_id)
-
-    raws = client.chat_concurrent(
+        if text:
+            batch_inputs.append((text, doc_id))
+    
+    # Extract
+    bulk_results = extract_bulk_with_llm(
+        batch_inputs,
+        client,
+        deterministic_extraction_prompt(),
+        metadata_extraction_prompt,
         model=model,
-        list_of_messages=batches,
-        temperature=temp_arg,
-        response_format=response_format,
+        temperature=temperature,
         max_workers=max_workers,
-        apply_rate_limit=True,
+        enforce_json=enforce_json,
     )
-
+    
+    # Process results
     results: List[Dict[str, Any]] = []
-    for doc_id, raw in zip(ids, raws):
+    for doc_id, raw, _ in bulk_results:
         data, reason = parse_structured_obj(raw)
         if not isinstance(data, dict):
             results.append({"document_id": doc_id, "error": "invalid_json", "why": reason})
