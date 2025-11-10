@@ -23,8 +23,7 @@ data/cache/**
 data/**/cache/**
 
 # LLM outputs (joins are fine to version, but not auto-generated errors or logs)
-data/jsonl/tmp/**
-data/jsonl/generated/**
+data/jsonl/**
 
 # Embeddings (too large for git)
 data/embeddings/**
