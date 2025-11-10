@@ -99,5 +99,19 @@ def llm_term_extract_cmd(
     from smart_library.pipelines.term_extraction import llm_term_extract
     llm_term_extract(model=model)
 
+@app.command("terms-verify")
+def terms_verify(
+    fuzzy: bool = Option(True, help="Use fuzzy verification (thefuzz). If unavailable, falls back to strict."),
+    tolerance: int = Option(80, help="Fuzzy tolerance 0..100 (higher=stricter). Ignored if fuzzy is False."),
+):
+    """
+    Verify term occurrences and write *_verified.jsonl outputs.
+    Inputs: data/jsonl/joins/terms_raw.jsonl, terms_pages_raw.jsonl, entities/pages.jsonl
+    Outputs: data/jsonl/joins/terms_verified.jsonl, terms_pages_verified.jsonl
+    """
+    from smart_library.pipelines.term_verification import verify_terms_pipeline
+    stats = verify_terms_pipeline(fuzzy=fuzzy, tolerance=tolerance)
+    echo(f"Verified terms: {stats['terms_verified']}, verified term-page associations: {stats['pages_verified']}")
+
 if __name__ == "__main__":
     app()
