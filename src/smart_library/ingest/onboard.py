@@ -60,15 +60,14 @@ def onboard_documents() -> List[str]:
         doc_id = pdf.stem
         dest = CURATED_DIR / pdf.name
         shutil.move(str(pdf), dest)
-        meta = by_id.get(doc_id, {})
-        meta.update({
+
+        # Keep only the allowed fields; do not carry over any old metadata keys.
+        prev = by_id.get(doc_id)
+        meta = {
             "document_id": doc_id,
-            "title": meta.get("title", ""),
-            "venue": meta.get("venue", ""),
-            "year": meta.get("year", None),
-            "page_count": meta.get("page_count", None),
             "pdf_path": str(dest),
-        })
+            "page_count": (prev.get("page_count") if prev else None),
+        }
         by_id[doc_id] = meta
         changed.append(doc_id)
 

@@ -12,18 +12,12 @@ def import_documents():
             cur.execute("""
                 INSERT OR REPLACE INTO documents (
                     document_id,
-                    title,
-                    venue,
-                    year,
                     page_count,
                     pdf_path
                 )
-                VALUES (?, ?, ?, ?, ?, ?)
+                VALUES (?, ?, ?)
             """, (
                 p["document_id"],
-                p["title"],
-                p.get("venue"),
-                p.get("year"),
                 p.get("page_count"),
                 p.get("pdf_path")
             ))
@@ -54,6 +48,6 @@ def import_pages():
     db.close()
     print("Imported pages.")
 
-
-if __name__ == "__main__":
+def import_entities():
+    import_documents()
     import_pages()

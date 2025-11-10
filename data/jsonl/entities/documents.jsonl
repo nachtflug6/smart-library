@@ -1,94 +1,94 @@
-{"document_id": "LuoCai2018", "venue": "NeurIPS", "year": 2018, "page_count": 12, "title": "Multivariate Time Series Imputation with Generative Adversarial Networks", "pdf_path": "data/pdf/curated/LuoCai2018.pdf"}
-{"document_id": "LiuYu2019", "venue": "NeurIPS", "year": 2019, "page_count": 11, "title": " NAOMI: Non-Autoregressive Multiresolution Sequence Imputation", "pdf_path": "data/pdf/curated/LiuYu2019.pdf"}
-{"document_id": "LuoZhang2019", "venue": "IJCAI", "year": 2019, "page_count": 7, "title": "E2GAN: end-to-end generative adversarial network for multivariate time series imputation", "pdf_path": "data/pdf/curated/LuoZhang2019.pdf"}
-{"document_id": "TangYao2020", "venue": "AAAI", "year": 2020, "page_count": 8, "title": "Joint Modeling of Local and Global Temporal Dynamics for Multivariate Time Series Forecasting with Missing Values", "pdf_path": "data/pdf/curated/TangYao2020.pdf"}
-{"document_id": "Li2020", "venue": "ICML", "year": 2020, "page_count": 10, "title": "Learning from Irregularly-Sampled Time Series: A Missing Data Perspective", "pdf_path": "data/pdf/curated/Li2020.pdf"}
-{"document_id": "KidgerFoster2021", "venue": "ICML", "year": 2021, "page_count": 11, "title": "Neural SDEs as Infinite-Dimensional GANs", "pdf_path": "data/pdf/curated/KidgerFoster2021.pdf"}
-{"document_id": "OhKim2021", "venue": "ICDM", "year": 2021, "page_count": 6, "title": "STING: Self-attention based Time-series Imputation Networks using GAN", "pdf_path": "data/pdf/curated/OhKim2021.pdf"}
-{"document_id": "MiaoWu2021", "venue": "AAAI", "year": 2021, "page_count": 9, "title": "Generative Semi-supervised Learning for Multivariate Time Series Imputation", "pdf_path": "data/pdf/curated/MiaoWu2021.pdf"}
-{"document_id": "JeonKim2022", "venue": "NeurIPS", "year": 2022, "page_count": 12, "title": "GT-GAN: General Purpose Time Series Synthesis with Generative Adversarial Networks", "pdf_path": "data/pdf/curated/JeonKim2022.pdf"}
-{"document_id": "MulyadiJun2022", "venue": "IEEE TC", "year": 2022, "page_count": 11, "title": "Uncertainty-Aware Variational-Recurrent Imputation Network for Clinical Time Series", "pdf_path": "data/pdf/curated/MulyadiJun2022.pdf"}
-{"document_id": "JhinJo2023", "venue": "AAAI", "year": 2023, "page_count": 9, "title": "Learnable Path in Neural Controlled Differential Equations", "pdf_path": "data/pdf/curated/JhinJo2023.pdf"}
-{"document_id": "Bignoumba2024", "venue": "E ESWA", "year": 2024, "page_count": 20, "title": "A new efficient ALignment-driven Neural Network for Mortality Prediction from Irregular Multivariate Time Series data", "pdf_path": "data/pdf/curated/Bignoumba2024.pdf"}
-{"document_id": "FutomaHariharan2017", "venue": "ICML", "year": 2017, "page_count": 9, "title": "Learning to Detect Sepsis with a Multitask Gaussian Process RNN Classifier", "pdf_path": "data/pdf/curated/FutomaHariharan2017.pdf"}
-{"document_id": "ShuklaMarlin2019", "venue": "ICLR", "year": 2019, "page_count": 14, "title": "Interpolation-Prediction Networks for Irregularly Sampled Time Series", "pdf_path": "data/pdf/curated/ShuklaMarlin2019.pdf"}
-{"document_id": "LeeJun2022", "venue": "IEEE JBHI", "year": 2022, "page_count": 11, "title": "Multi-View Integrative Attention-Based Deep Representation Learning for Irregular Clinical Time-Series Data", "pdf_path": "data/pdf/curated/LeeJun2022.pdf"}
-{"document_id": "ShenMa2018", "venue": "ACML", "year": 2018, "page_count": 16, "title": "End-to-End Time Series Imputation via Residual Short Paths", "pdf_path": "data/pdf/curated/ShenMa2018.pdf"}
-{"document_id": "SongRajan2018", "venue": "AAAI", "year": 2018, "page_count": 8, "title": "Attend and Diagnose: Clinical Time Series Analysis Using Attention Models", "pdf_path": "data/pdf/curated/SongRajan2018.pdf"}
-{"document_id": "JhinJo2021", "venue": "KDD", "year": 2021, "page_count": 10, "title": "ACE-NODE: Attentive Co-Evolving Neural Ordinary Differential Equations", "pdf_path": "data/pdf/curated/JhinJo2021.pdf"}
-{"document_id": "ZhangZeman2022", "venue": "ICLR", "year": 2022, "page_count": 21, "title": "Graph-Guided Network for Irregularly Sampled Multivariate Time Series", "pdf_path": "data/pdf/curated/ZhangZeman2022.pdf"}
-{"document_id": "HerreraKrach2021", "venue": "ICLR", "year": 2021, "page_count": 44, "title": "Neural jump ordinary differential equations: Consistent continuous-time prediction and filtering", "pdf_path": "data/pdf/curated/HerreraKrach2021.pdf"}
-{"document_id": "TashiroSong2021", "venue": "NeurIPS", "year": 2021, "page_count": 13, "title": "CSDI: Conditional Score-based Diffusion Models for Probabilistic Time Series Imputation", "pdf_path": "data/pdf/curated/TashiroSong2021.pdf"}
-{"document_id": "XiaoGou2023", "venue": "KDD", "year": 2023, "page_count": 10, "title": "Imputation-based Time-Series Anomaly Detection with Conditional Weight-Incremental Diffusion Models", "pdf_path": "data/pdf/curated/XiaoGou2023.pdf"}
-{"document_id": "WangZhang2023", "venue": "KDD", "year": 2023, "page_count": 10, "title": "An Observed Value Consistent Diffusion Model for Imputing Missing Values in Multivariate Time Series", "pdf_path": "data/pdf/curated/WangZhang2023.pdf"}
-{"document_id": "AlcarazStrodthoff2023", "venue": "TMLR", "year": 2023, "page_count": 36, "title": "Diffusion-based Time Series Imputation and Forecasting with Structured State Space Models", "pdf_path": "data/pdf/curated/AlcarazStrodthoff2023.pdf"}
-{"document_id": "DuDai2016", "venue": "KDD", "year": 2016, "page_count": 10, "title": "Recurrent Marked Temporal Point Processes: Embedding Event History to Vector", "pdf_path": "data/pdf/curated/DuDai2016.pdf"}
-{"document_id": "XiaoYan2017", "venue": "AAAI", "year": 2017, "page_count": 7, "title": "Modeling the Intensity Function of Point Process Via Recurrent Neural Networks", "pdf_path": "data/pdf/curated/XiaoYan2017.pdf"}
-{"document_id": "MeiEisner2017", "venue": "NeurIPS", "year": 2017, "page_count": 11, "title": "The neural hawkes process: A neurally self-modulating multivariate point process", "pdf_path": "data/pdf/curated/MeiEisner2017.pdf"}
-{"document_id": "OmiUeda2019", "venue": "NeurIPS", "year": 2019, "page_count": 11, "title": "Fully Neural Network based Model for General Temporal Point Processes", "pdf_path": "data/pdf/curated/OmiUeda2019.pdf"}
-{"document_id": "JiaBenson2019", "venue": "NeurIPS", "year": 2019, "page_count": 12, "title": "Neural Jump Stochastic Differential Equations", "pdf_path": "data/pdf/curated/JiaBenson2019.pdf"}
-{"document_id": "BeckerPandya2019", "venue": "ICML", "year": 2019, "page_count": 9, "title": "Recurrent Kalman Networks: Factorized Inference in High-Dimensional Deep Feature Spaces", "pdf_path": "data/pdf/curated/BeckerPandya2019.pdf"}
-{"document_id": "Zuo2020", "venue": "ICML", "year": 2020, "page_count": 11, "title": "Transformer Hawkes Process", "pdf_path": "data/pdf/curated/Zuo2020.pdf"}
-{"document_id": "ZhangLipani2020", "venue": "ICML", "year": 2020, "page_count": 11, "title": "Self-Attentive Hawkes Process", "pdf_path": "data/pdf/curated/ZhangLipani2020.pdf"}
-{"document_id": "ShchurBilos2020", "venue": "ICLR", "year": 2020, "page_count": 21, "title": "Intensity-Free Learning of Temporal Point Processes", "pdf_path": "data/pdf/curated/ShchurBilos2020.pdf"}
-{"document_id": "DengChang2020", "venue": "NeurIPS", "year": 2020, "page_count": 11, "title": "Modeling Continuous Stochastic Processes with Dynamic Normalizing Flows", "pdf_path": "data/pdf/curated/DengChang2020.pdf"}
-{"document_id": "BilosSommer2021", "venue": "NeurIPS", "year": 2021, "page_count": 13, "title": "Neural Flows: Efficient Alternative to Neural ODEs", "pdf_path": "data/pdf/curated/BilosSommer2021.pdf"}
-{"document_id": "DengBrubaker2021", "venue": "NeurIPS", "year": 2021, "page_count": 12, "title": "Continuous Latent Process Flows", "pdf_path": "data/pdf/curated/DengBrubaker2021.pdf"}
-{"document_id": "Schirmer2022", "venue": "ICML", "year": 2022, "page_count": 18, "title": "Modeling Irregular Time Series with Continuous Recurrent Units", "pdf_path": "data/pdf/curated/Schirmer2022.pdf"}
-{"document_id": "Smith2023", "venue": "ICLR", "year": 2023, "page_count": 35, "title": "Simplified state space layers for sequence modeling", "pdf_path": "data/pdf/curated/Smith2023.pdf"}
-{"document_id": "XiaoXu2025", "venue": "AAAI", "year": 2025, "page_count": 9, "title": "XTSFormer: Cross-Temporal-Scale Transformer for Irregular-Time Event Prediction in Clinical Applications", "pdf_path": "data/pdf/curated/XiaoXu2025.pdf"}
-{"document_id": "Xu2019", "venue": "NeurIPS", "year": 2019, "page_count": 11, "title": "Self-attention with Functional Time Representation\nLearning", "pdf_path": "data/pdf/curated/Xu2019.pdf"}
-{"document_id": "BrouwerSimm2019", "venue": "NeurIPS", "year": 2019, "page_count": 22, "title": "GRU-ODE-Bayes: Continuous modeling of sporadically-observed time series", "pdf_path": "data/pdf/curated/BrouwerSimm2019.pdf"}
-{"document_id": "Ma2022", "venue": "KDD", "year": 2022, "page_count": 9, "title": "Non-stationary time-aware kernelized attention for temporal event prediction", "pdf_path": "data/pdf/curated/Ma2022.pdf"}
-{"document_id": "BaytasXiao2017", "venue": "KDD", "year": 2017, "page_count": 10, "title": "Patient Subtyping via Time-Aware LSTM Networks", "pdf_path": "data/pdf/curated/BaytasXiao2017.pdf"}
-{"document_id": "YoonZame2018", "venue": "IEEE TBE", "year": 2018, "page_count": 14, "title": "Estimating Missing Data in Temporal Data Streams Using Multi-Directional Recurrent Neural Networks", "pdf_path": "data/pdf/curated/YoonZame2018.pdf"}
-{"document_id": "CaoWang2018", "venue": "NeurIPS", "year": 2018, "page_count": 11, "title": "BRITS: Bidirectional Recurrent Imputation for Time Series", "pdf_path": "data/pdf/curated/CaoWang2018.pdf"}
-{"document_id": "SuoZhong2020", "venue": "ICDM", "year": 2020, "page_count": 10, "title": "GLIMA: Global and Local Time Series Imputation with Multi-directional Attention Learning", "pdf_path": "data/pdf/curated/SuoZhong2020.pdf"}
-{"document_id": "YildizKoc2022", "venue": "IEEE SPL", "year": 2022, "page_count": 5, "title": "Multivariate Time Series Imputation With Transformers", "pdf_path": "data/pdf/curated/YildizKoc2022.pdf"}
-{"document_id": "DuCote2023", "venue": "E ESWA", "year": 2023, "page_count": 15, "title": "SAITS: Self-attention-based imputation for time series", "pdf_path": "data/pdf/curated/DuCote2023.pdf"}
-{"document_id": "JhinLee2023", "venue": "KDD", "year": 2023, "page_count": 15, "title": "Precursor-of-Anomaly Detection for Irregular Time Series", "pdf_path": "data/pdf/curated/JhinLee2023.pdf"}
-{"document_id": "ShanLi2023", "venue": "ICASSP", "year": 2023, "page_count": 5, "title": "NRTSI: Non-Recurrent Time Series Imputation", "pdf_path": "data/pdf/curated/ShanLi2023.pdf"}
-{"document_id": "YueWang2022", "venue": "AAAI", "year": 2022, "page_count": 8, "title": "Ts2vec: Towards universal representation of time series", "pdf_path": "data/pdf/curated/YueWang2022.pdf"}
-{"document_id": "ChoiBahadori2016", "venue": "NeurIPS", "year": 2016, "page_count": 9, "title": "RETAIN: An Interpretable Predictive Model for Healthcare using Reverse Time Attention Mechanism", "pdf_path": "data/pdf/curated/ChoiBahadori2016.pdf"}
-{"document_id": "LiptonKale2016", "venue": "MLHC", "year": 2016, "page_count": 17, "title": "Modeling Missing Data in Clinical Time Series with RNNs", "pdf_path": "data/pdf/curated/LiptonKale2016.pdf"}
-{"document_id": "PhamTran2016", "venue": "PKADD", "year": 2016, "page_count": 12, "title": "DeepCare: A Deep Dynamic Memory Model for Predictive Medicine", "pdf_path": "data/pdf/curated/PhamTran2016.pdf"}
-{"document_id": "Neil2016", "venue": "NeurIPS", "year": 2016, "page_count": 9, "title": "Phased LSTM: Accelerating Recurrent Network Training for Long or Event-based Sequences", "pdf_path": "data/pdf/curated/Neil2016.pdf"}
-{"document_id": "MozerKazakov2017", "venue": "arXiv", "year": 2017, "page_count": 21, "title": "Discrete-Event Continuous-Time Recurrent Nets", "pdf_path": "data/pdf/curated/MozerKazakov2017.pdf"}
-{"document_id": "KimChi2018", "venue": "IJCAI", "year": 2018, "page_count": 7, "title": "Temporal Belief Memory: Imputing Missing Data during RNN Training", "pdf_path": "data/pdf/curated/KimChi2018.pdf"}
-{"document_id": "ChePurushotham2018", "venue": "N SR", "year": 2018, "page_count": 12, "title": "Recurrent Neural Networks for Multivariate Time Series with Missing Values", "pdf_path": "data/pdf/curated/ChePurushotham2018.pdf"}
-{"document_id": "ZhangYang2019", "venue": "IJCAI", "year": 2019, "page_count": 7, "title": "ATTAIN: Attention-based Time-Aware LSTM Networks for Disease Progression Modeling", "pdf_path": "data/pdf/curated/ZhangYang2019.pdf"}
-{"document_id": "BahadoriLipton2019", "venue": "ACM CHIL", "year": 2019, "page_count": 16, "title": "Temporal-Clustering Invariance in Irregular Healthcare Time Series", "pdf_path": "data/pdf/curated/BahadoriLipton2019.pdf"}
-{"document_id": "Rubanova2019", "venue": "NeurIPS", "year": 2019, "page_count": 22, "title": "Latent ODEs for Irregularly-Sampled Time Series", "pdf_path": "data/pdf/incoming/Rubanova2019.pdf"}
-{"document_id": "Horn2020", "venue": "ICML", "year": 2020, "page_count": 11, "title": "Set Functions for Time Series", "pdf_path": "data/pdf/curated/Horn2020.pdf"}
-{"document_id": "LuoYe2020", "venue": "KDD", "year": 2020, "page_count": 10, "title": "HiTANet: Hierarchical Time-Aware Attention Networks for Risk Prediction on Electronic Health Records", "pdf_path": "data/pdf/curated/LuoYe2020.pdf"}
-{"document_id": "CuiKe2020", "venue": "E TRPC", "year": 2020, "page_count": 14, "title": "Stacked bidirectional and unidirectional LSTM recurrent neural network for forecasting network-wide traffic state with missing values", "pdf_path": "data/pdf/curated/CuiKe2020.pdf"}
-{"document_id": "KidgerMorrill2020", "venue": "NeurIPS", "year": 2020, "page_count": 25, "title": "Neural Controlled Differential Equations for Irregular Time Series", "pdf_path": "data/pdf/curated/KidgerMorrill2020.pdf"}
-{"document_id": "LechnerHasani2020", "venue": "arXiv", "year": 2020, "page_count": 19, "title": "Learning Long-Term Dependencies in Irregularly-Sampled Time Series", "pdf_path": "data/pdf/curated/LechnerHasani2020.pdf"}
-{"document_id": "TanYe2020", "venue": "AAAI", "year": 2020, "page_count": 8, "title": "DATA-GRU: Dual-attention time-aware gated recurrent unit for irregular multivariate time series", "pdf_path": "data/pdf/curated/TanYe2020.pdf"}
-{"document_id": "ShuklaMarlin2021", "venue": "ICLR", "year": 2021, "page_count": 15, "title": "Multi-Time Attention Networks for Irregularly Sampled Time Series", "pdf_path": "data/pdf/curated/ShuklaMarlin2021.pdf"}
-{"document_id": "MorrillSalvi2021", "venue": "ICML", "year": 2021, "page_count": 10, "title": "Neural Rough Differential Equations for Long Time Series", "pdf_path": "data/pdf/curated/MorrillSalvi2021.pdf"}
-{"document_id": "HasaniLechner2021", "venue": "AAAI", "year": 2021, "page_count": 10, "title": "Liquid Time-Constant Networks", "pdf_path": "data/pdf/curated/HasaniLechner2021.pdf"}
-{"document_id": "XiaSuliafu2021", "venue": "NeurIPS", "year": 2021, "page_count": 14, "title": "Heavy Ball Neural Ordinary Differential Equations", "pdf_path": "data/pdf/curated/XiaSuliafu2021.pdf"}
-{"document_id": "ChienChen2021", "venue": "ICASSP", "year": 2021, "page_count": 5, "title": "Continuous-time self-attention in neural differential equation", "pdf_path": "data/pdf/curated/ChienChen2021.pdf"}
-{"document_id": "XuRuan2021", "venue": "ICLR", "year": 2021, "page_count": 33, "title": "A Temporal Kernel Approach for Deep Learning with Continuous-time Information ", "pdf_path": "data/pdf/curated/XuRuan2021.pdf"}
-{"document_id": "ZhangZheng2023", "venue": "KDD", "year": 2023, "page_count": 13, "title": "Warpformer: A Multi-scale Modeling Approach for Irregular Clinical Time Series", "pdf_path": "data/pdf/curated/ZhangZheng2023.pdf"}
-{"document_id": "WeiPeng2023", "venue": "ICDM", "year": 2023, "page_count": 6, "title": "Compatible Transformer for Irregularly Sampled Multivariate Time Series", "pdf_path": "data/pdf/curated/WeiPeng2023.pdf"}
-{"document_id": "JhinShin2023", "venue": "S KIS", "year": 2023, "page_count": 31, "title": "Attentive neural controlled differential equations for time-series classification and forecasting", "pdf_path": "data/pdf/curated/JhinShin2023.pdf"}
-{"document_id": "HuangYang2024", "venue": "IEEE JBHI", "year": 2024, "page_count": 14, "title": "DNA-T: Deformable Neighborhood Attention Transformer for Irregular Medical Time Series", "pdf_path": "data/pdf/curated/HuangYang2024.pdf"}
-{"document_id": "ChenRen2024", "venue": "NeurIPS", "year": 2024, "page_count": 33, "title": "ContiFormer: Continuous-Time Transformer for Irregular Time Series Modeling", "pdf_path": "data/pdf/curated/ChenRen2024.pdf"}
-{"document_id": "ZhangYin2024", "venue": "ICLR", "year": 2024, "page_count": 18, "title": "Irregular Multivariate Time Series Forecasting: A Transformable Patching Graph Neural Networks Approach", "pdf_path": "data/pdf/curated/ZhangYin2024.pdf"}
-{"document_id": "Yalavarthi2024", "venue": "AAAI", "year": 2024, "page_count": 9, "title": "GraFITi: Graphs for Forecasting Irregularly Sampled Time Series", "pdf_path": "data/pdf/curated/Yalavarthi2024.pdf"}
-{"document_id": "ChenZhou2025", "venue": null, "year": 2025, "page_count": 9, "title": "Efficient Anomaly Detection of Irregular Sequences in Ct-Echo Model Space", "pdf_path": "data/pdf/curated/ChenZhou2025.pdf"}
-{"document_id": "LiMarlin2016", "venue": "NeurIPS", "year": 2016, "page_count": 9, "title": null, "pdf_path": "data/pdf/curated/LiMarlin2016.pdf"}
-{"document_id": "ChePurushothamLi2018", "venue": "ICML", "year": 2018, "page_count": 10, "title": "Hierarchical Deep Generative Models for Multi-Rate Multivariate Time Series", "pdf_path": "data/pdf/curated/ChePurushothamLi2018.pdf"}
-{"document_id": "ChenRubanova2018", "venue": "NeurIPS", "year": 2018, "page_count": 19, "title": "Neural Ordinary Differential Equations", "pdf_path": "data/pdf/curated/ChenRubanova2018.pdf"}
-{"document_id": "LiWong2020", "venue": "AISTATS", "year": 2020, "page_count": 12, "title": "Scalable Gradients for Stochastic Differential Equations", "pdf_path": "data/pdf/curated/LiWong2020.pdf"}
-{"document_id": "WuNi2021", "venue": "AAAI", "year": 2021, "page_count": 9, "title": "Dynamic Gaussian Mixture based Deep Generative Model For Robust Forecasting on Sparse Multivariate Time Series", "pdf_path": "data/pdf/curated/WuNi2021.pdf"}
-{"document_id": "HessMelnychuk2024", "venue": null, "year": 2024, "page_count": 37, "title": "Bayesian Neural Controlled Differential Equations for Treatment Effect Estimation", "pdf_path": "data/pdf/curated/HessMelnychuk2024.pdf"}
-{"document_id": "NaimanErichson2024", "venue": "ICLR", "year": 2024, "page_count": 27, "title": "Generative modeling of regular and irregular time series data via koopman VAEs", "pdf_path": "data/pdf/curated/NaimanErichson2024.pdf"}
-{"document_id": "DupontDoucet2019", "venue": "NeurIPS", "year": 2019, "page_count": 11, "title": "Augmented Neural ODEs", "pdf_path": "data/pdf/curated/DupontDoucet2019.pdf"}
-{"document_id": "YildizHeinonen2019", "venue": "NeurIPS", "year": 2019, "page_count": 10, "title": "ODE2VAE: Deep generative second order ODEs\nwith Bayesian neural networks", "pdf_path": "data/pdf/curated/YildizHeinonen2019.pdf"}
-{"document_id": "FortuinBaranchuck2020", "venue": "AISTATS", "year": 2020, "page_count": 10, "title": "GP-VAE: Deep Probabilistic Multivariate Time Series Imputation", "pdf_path": "data/pdf/curated/FortuinBaranchuck2020.pdf"}
-{"document_id": "NordcliffeBodnar2020", "venue": "NeurIPS", "year": 2020, "page_count": 11, "title": "On Second Order Behaviour\nin Augmented Neural ODEs", "pdf_path": "data/pdf/curated/NordcliffeBodnar2020.pdf"}
-{"document_id": "CoelhoFernanda2024", "venue": null, "year": null, "page_count": 22, "title": "Time-series Generative Adversarial Networks", "pdf_path": "data/pdf/curated/CoelhoFernanda2024.pdf"}
-{"document_id": "Yoon2019", "venue": "NeurIPS", "year": 2019, "page_count": 11, "title": "Static S and temporal Features X", "pdf_path": "data/pdf/curated/Yoon2019.pdf"}
+{"document_id":"LuoCai2018","pdf_path":"data/pdf/curated/LuoCai2018.pdf","page_count":12}
+{"document_id":"LiuYu2019","pdf_path":"data/pdf/curated/LiuYu2019.pdf","page_count":11}
+{"document_id":"LuoZhang2019","pdf_path":"data/pdf/curated/LuoZhang2019.pdf","page_count":7}
+{"document_id":"TangYao2020","pdf_path":"data/pdf/curated/TangYao2020.pdf","page_count":8}
+{"document_id":"Li2020","pdf_path":"data/pdf/curated/Li2020.pdf","page_count":10}
+{"document_id":"KidgerFoster2021","pdf_path":"data/pdf/curated/KidgerFoster2021.pdf","page_count":11}
+{"document_id":"OhKim2021","pdf_path":"data/pdf/curated/OhKim2021.pdf","page_count":6}
+{"document_id":"MiaoWu2021","pdf_path":"data/pdf/curated/MiaoWu2021.pdf","page_count":9}
+{"document_id":"JeonKim2022","pdf_path":"data/pdf/curated/JeonKim2022.pdf","page_count":12}
+{"document_id":"MulyadiJun2022","pdf_path":"data/pdf/curated/MulyadiJun2022.pdf","page_count":11}
+{"document_id":"JhinJo2023","pdf_path":"data/pdf/curated/JhinJo2023.pdf","page_count":9}
+{"document_id":"Bignoumba2024","pdf_path":"data/pdf/curated/Bignoumba2024.pdf","page_count":20}
+{"document_id":"FutomaHariharan2017","pdf_path":"data/pdf/curated/FutomaHariharan2017.pdf","page_count":9}
+{"document_id":"ShuklaMarlin2019","pdf_path":"data/pdf/curated/ShuklaMarlin2019.pdf","page_count":14}
+{"document_id":"LeeJun2022","pdf_path":"data/pdf/curated/LeeJun2022.pdf","page_count":11}
+{"document_id":"ShenMa2018","pdf_path":"data/pdf/curated/ShenMa2018.pdf","page_count":16}
+{"document_id":"SongRajan2018","pdf_path":"data/pdf/curated/SongRajan2018.pdf","page_count":8}
+{"document_id":"JhinJo2021","pdf_path":"data/pdf/curated/JhinJo2021.pdf","page_count":10}
+{"document_id":"ZhangZeman2022","pdf_path":"data/pdf/curated/ZhangZeman2022.pdf","page_count":21}
+{"document_id":"HerreraKrach2021","pdf_path":"data/pdf/curated/HerreraKrach2021.pdf","page_count":44}
+{"document_id":"TashiroSong2021","pdf_path":"data/pdf/curated/TashiroSong2021.pdf","page_count":13}
+{"document_id":"XiaoGou2023","pdf_path":"data/pdf/curated/XiaoGou2023.pdf","page_count":10}
+{"document_id":"WangZhang2023","pdf_path":"data/pdf/curated/WangZhang2023.pdf","page_count":10}
+{"document_id":"AlcarazStrodthoff2023","pdf_path":"data/pdf/curated/AlcarazStrodthoff2023.pdf","page_count":36}
+{"document_id":"DuDai2016","pdf_path":"data/pdf/curated/DuDai2016.pdf","page_count":10}
+{"document_id":"XiaoYan2017","pdf_path":"data/pdf/curated/XiaoYan2017.pdf","page_count":7}
+{"document_id":"MeiEisner2017","pdf_path":"data/pdf/curated/MeiEisner2017.pdf","page_count":11}
+{"document_id":"OmiUeda2019","pdf_path":"data/pdf/curated/OmiUeda2019.pdf","page_count":11}
+{"document_id":"JiaBenson2019","pdf_path":"data/pdf/curated/JiaBenson2019.pdf","page_count":12}
+{"document_id":"BeckerPandya2019","pdf_path":"data/pdf/curated/BeckerPandya2019.pdf","page_count":9}
+{"document_id":"Zuo2020","pdf_path":"data/pdf/curated/Zuo2020.pdf","page_count":11}
+{"document_id":"ZhangLipani2020","pdf_path":"data/pdf/curated/ZhangLipani2020.pdf","page_count":11}
+{"document_id":"ShchurBilos2020","pdf_path":"data/pdf/curated/ShchurBilos2020.pdf","page_count":21}
+{"document_id":"DengChang2020","pdf_path":"data/pdf/curated/DengChang2020.pdf","page_count":11}
+{"document_id":"BilosSommer2021","pdf_path":"data/pdf/curated/BilosSommer2021.pdf","page_count":13}
+{"document_id":"DengBrubaker2021","pdf_path":"data/pdf/curated/DengBrubaker2021.pdf","page_count":12}
+{"document_id":"Schirmer2022","pdf_path":"data/pdf/curated/Schirmer2022.pdf","page_count":18}
+{"document_id":"Smith2023","pdf_path":"data/pdf/curated/Smith2023.pdf","page_count":35}
+{"document_id":"XiaoXu2025","pdf_path":"data/pdf/curated/XiaoXu2025.pdf","page_count":9}
+{"document_id":"Xu2019","pdf_path":"data/pdf/curated/Xu2019.pdf","page_count":11}
+{"document_id":"BrouwerSimm2019","pdf_path":"data/pdf/curated/BrouwerSimm2019.pdf","page_count":22}
+{"document_id":"Ma2022","pdf_path":"data/pdf/curated/Ma2022.pdf","page_count":9}
+{"document_id":"BaytasXiao2017","pdf_path":"data/pdf/curated/BaytasXiao2017.pdf","page_count":10}
+{"document_id":"YoonZame2018","pdf_path":"data/pdf/curated/YoonZame2018.pdf","page_count":14}
+{"document_id":"CaoWang2018","pdf_path":"data/pdf/curated/CaoWang2018.pdf","page_count":11}
+{"document_id":"SuoZhong2020","pdf_path":"data/pdf/curated/SuoZhong2020.pdf","page_count":10}
+{"document_id":"YildizKoc2022","pdf_path":"data/pdf/curated/YildizKoc2022.pdf","page_count":5}
+{"document_id":"DuCote2023","pdf_path":"data/pdf/curated/DuCote2023.pdf","page_count":15}
+{"document_id":"JhinLee2023","pdf_path":"data/pdf/curated/JhinLee2023.pdf","page_count":15}
+{"document_id":"ShanLi2023","pdf_path":"data/pdf/curated/ShanLi2023.pdf","page_count":5}
+{"document_id":"YueWang2022","pdf_path":"data/pdf/curated/YueWang2022.pdf","page_count":8}
+{"document_id":"ChoiBahadori2016","pdf_path":"data/pdf/curated/ChoiBahadori2016.pdf","page_count":9}
+{"document_id":"LiptonKale2016","pdf_path":"data/pdf/curated/LiptonKale2016.pdf","page_count":17}
+{"document_id":"PhamTran2016","pdf_path":"data/pdf/curated/PhamTran2016.pdf","page_count":12}
+{"document_id":"Neil2016","pdf_path":"data/pdf/curated/Neil2016.pdf","page_count":9}
+{"document_id":"MozerKazakov2017","pdf_path":"data/pdf/curated/MozerKazakov2017.pdf","page_count":21}
+{"document_id":"KimChi2018","pdf_path":"data/pdf/curated/KimChi2018.pdf","page_count":7}
+{"document_id":"ChePurushotham2018","pdf_path":"data/pdf/curated/ChePurushotham2018.pdf","page_count":12}
+{"document_id":"ZhangYang2019","pdf_path":"data/pdf/curated/ZhangYang2019.pdf","page_count":7}
+{"document_id":"BahadoriLipton2019","pdf_path":"data/pdf/curated/BahadoriLipton2019.pdf","page_count":16}
+{"document_id":"Rubanova2019","pdf_path":"data/pdf/incoming/Rubanova2019.pdf","page_count":22}
+{"document_id":"Horn2020","pdf_path":"data/pdf/curated/Horn2020.pdf","page_count":11}
+{"document_id":"LuoYe2020","pdf_path":"data/pdf/curated/LuoYe2020.pdf","page_count":10}
+{"document_id":"CuiKe2020","pdf_path":"data/pdf/curated/CuiKe2020.pdf","page_count":14}
+{"document_id":"KidgerMorrill2020","pdf_path":"data/pdf/curated/KidgerMorrill2020.pdf","page_count":25}
+{"document_id":"LechnerHasani2020","pdf_path":"data/pdf/curated/LechnerHasani2020.pdf","page_count":19}
+{"document_id":"TanYe2020","pdf_path":"data/pdf/curated/TanYe2020.pdf","page_count":8}
+{"document_id":"ShuklaMarlin2021","pdf_path":"data/pdf/curated/ShuklaMarlin2021.pdf","page_count":15}
+{"document_id":"MorrillSalvi2021","pdf_path":"data/pdf/curated/MorrillSalvi2021.pdf","page_count":10}
+{"document_id":"HasaniLechner2021","pdf_path":"data/pdf/curated/HasaniLechner2021.pdf","page_count":10}
+{"document_id":"XiaSuliafu2021","pdf_path":"data/pdf/curated/XiaSuliafu2021.pdf","page_count":14}
+{"document_id":"ChienChen2021","pdf_path":"data/pdf/curated/ChienChen2021.pdf","page_count":5}
+{"document_id":"XuRuan2021","pdf_path":"data/pdf/curated/XuRuan2021.pdf","page_count":33}
+{"document_id":"ZhangZheng2023","pdf_path":"data/pdf/curated/ZhangZheng2023.pdf","page_count":13}
+{"document_id":"WeiPeng2023","pdf_path":"data/pdf/curated/WeiPeng2023.pdf","page_count":6}
+{"document_id":"JhinShin2023","pdf_path":"data/pdf/curated/JhinShin2023.pdf","page_count":31}
+{"document_id":"HuangYang2024","pdf_path":"data/pdf/curated/HuangYang2024.pdf","page_count":14}
+{"document_id":"ChenRen2024","pdf_path":"data/pdf/curated/ChenRen2024.pdf","page_count":33}
+{"document_id":"ZhangYin2024","pdf_path":"data/pdf/curated/ZhangYin2024.pdf","page_count":18}
+{"document_id":"Yalavarthi2024","pdf_path":"data/pdf/curated/Yalavarthi2024.pdf","page_count":9}
+{"document_id":"ChenZhou2025","pdf_path":"data/pdf/curated/ChenZhou2025.pdf","page_count":9}
+{"document_id":"LiMarlin2016","pdf_path":"data/pdf/curated/LiMarlin2016.pdf","page_count":9}
+{"document_id":"ChePurushothamLi2018","pdf_path":"data/pdf/curated/ChePurushothamLi2018.pdf","page_count":10}
+{"document_id":"ChenRubanova2018","pdf_path":"data/pdf/curated/ChenRubanova2018.pdf","page_count":19}
+{"document_id":"LiWong2020","pdf_path":"data/pdf/curated/LiWong2020.pdf","page_count":12}
+{"document_id":"WuNi2021","pdf_path":"data/pdf/curated/WuNi2021.pdf","page_count":9}
+{"document_id":"HessMelnychuk2024","pdf_path":"data/pdf/curated/HessMelnychuk2024.pdf","page_count":37}
+{"document_id":"NaimanErichson2024","pdf_path":"data/pdf/curated/NaimanErichson2024.pdf","page_count":27}
+{"document_id":"DupontDoucet2019","pdf_path":"data/pdf/curated/DupontDoucet2019.pdf","page_count":11}
+{"document_id":"YildizHeinonen2019","pdf_path":"data/pdf/curated/YildizHeinonen2019.pdf","page_count":10}
+{"document_id":"FortuinBaranchuck2020","pdf_path":"data/pdf/curated/FortuinBaranchuck2020.pdf","page_count":10}
+{"document_id":"NordcliffeBodnar2020","pdf_path":"data/pdf/curated/NordcliffeBodnar2020.pdf","page_count":11}
+{"document_id":"CoelhoFernanda2024","pdf_path":"data/pdf/curated/CoelhoFernanda2024.pdf","page_count":22}
+{"document_id":"Yoon2019","pdf_path":"data/pdf/curated/Yoon2019.pdf","page_count":11}

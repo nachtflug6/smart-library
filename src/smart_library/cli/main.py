@@ -19,6 +19,13 @@ def import_pages_cmd():
     from smart_library.db.import_entities import import_pages
     import_pages()
 
+@app.command("import-entities")
+def import_entities_cmd():
+    """Import all Entities (Documents + Pages)."""
+    from smart_library.db.import_entities import import_entities
+    import_entities()
+
+
 @app.command("db-check")
 def db_check():
     """Check DB consistency and file links."""
@@ -72,6 +79,17 @@ def onboard_all_cmd():
     from smart_library.ingest.onboard import onboard_all
     onboard_all()
     echo("Completed full onboarding pipeline.")
+
+@app.command("llm-metadata-extract")
+def llm_metadata_extract_cmd(
+    model: str = Option("gpt-5-mini", help="LLM model name."),
+    output: str = Option("data/jsonl/joins/documents_metadata_llm.jsonl", help="Output JSONL path."),
+):
+    """Extract metadata via LLM and write to documents_metadata_llm.jsonl."""
+    from pathlib import Path
+    from smart_library.pipelines.metadata_extraction import llm_metadata_extract
+    
+    llm_metadata_extract(model=model, output=Path(output))
 
 if __name__ == "__main__":
     app()
