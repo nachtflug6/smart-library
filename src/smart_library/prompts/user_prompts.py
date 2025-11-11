@@ -76,21 +76,41 @@ TEXT:
 """
 
 
+# EXPORT shared constants for term-context classification
+TERM_CONTEXT_TAGS = ['task',
+ 'objective',
+ 'challenge',
+ 'dataset',
+ 'feature',
+ 'label',
+ 'model',
+ 'method',
+ 'architecture',
+ 'observation',
+ 'application',
+ 'metric',
+ 'example',
+ 'concept']
+
+TERM_CONTEXT_CLASSES = [
+    "title","heading","prose","list","footnote","table","math","code","caption","reference"
+]
+
 def term_context_classification_prompt(items: list[dict]) -> str:
     """
-    Classify each (term, context) with tags and a context_class.
-    Return STRICT JSON: an array of objects with fields:
-      - term (string)
-      - tags (array of strings, subset of TAGS)
-      - context_class (string, one of CONTEXT_CLASSES)
+    Classify each (term, context) with:
+      - tags (list from TERM_CONTEXT_TAGS)
+      - context_class (one from TERM_CONTEXT_CLASSES)
+      - information_content (float in [0,1]; 0 = none, 1 = highly informative)
     """
-    TAGS = ["problem","objective","sample", "example", "name", "parameter", "dataset","challenge","architecture","framework","theory","domain","concept","proposition","hypothesis","assumption","definition","model","method","algorithm","protocol","experiment","feature","label","evaluation","metric","baseline","ablation","validation","verification","reproducibility","generalization","robustness","sensitivity","uncertainty","interpretability","fairness","bias","privacy","security","safety","compliance","scalability","efficiency","latency","cost","impact","limitation","risk"]
-    CONTEXT_CLASSES = ["title","heading","prose","list", "footnote", "table","math","code","caption","citation","reference"]
+    TAGS = TERM_CONTEXT_TAGS
+    CONTEXT_CLASSES = TERM_CONTEXT_CLASSES
 
     example = {
         "term": "diffusion model",
-        "tags": ["model","generative","scientific"],
-        "context_class": "prose"
+        "tags": ["model","concept"],
+        "context_class": "prose",
+        "information_content": 0.85
     }
 
     def _fmt_item(i: dict) -> str:
@@ -102,33 +122,33 @@ def term_context_classification_prompt(items: list[dict]) -> str:
 
     return f"""You are classifying technical terms in their local text context.
 
-For EACH term below, choose:
-- tags: zero or more from this fixed list (no others, lowercase): {TAGS}
-- context_class: one of: {CONTEXT_CLASSES}
+For EACH term below, choose ONLY:
+- tags: zero, one or multiple from this fixed list (no others): {TAGS}
+- context_class: exactly one from: {CONTEXT_CLASSES}
+- information_content: a decimal number in [0,1]
+
+information_content scale (choose a value; may use one decimal place):
+  0.0  = trivial / generic mention / out-of-context (no added knowledge)
+  0.2  = minimal hint
+  0.4  = some detail
+  0.6  = clear descriptive / functional info
+  0.8  = rich explanation / relationships / properties
+  1.0  = highly informative, definition-like or multi-faceted insight
 
 Guidelines:
-- tags should reflect the role of the term in the context (e.g., model vs method vs dataset).
-- Prefer few precise tags over many generic ones.
-- If unsure, return an empty array for tags.
-- context_class describes the surrounding text type:
-  - 'references' for bibliographic/citation lines
-  - 'prose' for normal narrative text
-  - 'title' for section/paper titles
-  - 'abstract' for abstract sections
-  - 'caption' for figure/table captions
-  - 'footnote' for footnotes
+- Never invent tags outside the list. If none fit, return [].
+- Prefer the most specific semantic/functional role.
+- context_class reflects structural region.
+- If unsure on information_content, bias lower.
+- Use standard JSON number (no quotes).
 
-Return STRICT JSON ONLY (array of objects):
-[
-  {{
-    "term": string,
-    "tags": string[],
-    "context_class": string
-  }},
-  ...
-]
+Return STRICT JSON ONLY (array of objects). Each object MUST have:
+  "term": string,
+  "tags": string[],
+  "context_class": string,
+  "information_content": number (0 <= value <= 1)
 
-Example output shape:
+Example shape (illustrative):
 {example}
 
 Items to classify:

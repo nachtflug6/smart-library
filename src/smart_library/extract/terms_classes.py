@@ -6,8 +6,11 @@ import json
 import re
 
 from smart_library.llm.client import BaseLLMClient
-from smart_library.prompts.system_prompts import deterministic_extraction_prompt
-from smart_library.prompts.user_prompts import term_context_classification_prompt
+from smart_library.prompts.user_prompts import (
+    term_context_classification_prompt,
+    TERM_CONTEXT_TAGS,
+    TERM_CONTEXT_CLASSES,
+)
 
 def _coerce_json_array(text: str) -> Tuple[List[Dict[str, Any]] | None, str | None]:
     """
@@ -83,6 +86,8 @@ def classify_term_contexts_bulk(
     out: List[Dict[str, Any]] = []
     if not rows:
         return out
+    allowed_tags = set(TERM_CONTEXT_TAGS)
+    allowed_classes = set(TERM_CONTEXT_CLASSES)
 
     # Chunk rows into batches
     for i in range(0, len(rows), batch_size):
@@ -110,12 +115,23 @@ def classify_term_contexts_bulk(
             cls = parsed[idx] if idx < len(parsed) else {}
             tags = cls.get("tags", []) if isinstance(cls, dict) else []
             ctxc = cls.get("context_class", "prose") if isinstance(cls, dict) else "prose"
-            if not isinstance(tags, list):
-                tags = []
-            if not isinstance(ctxc, str):
-                ctxc = "prose"
-            o["tags"] = [t for t in tags if isinstance(t, str)]
-            o["context_class"] = ctxc
+            info = cls.get("information_content", 0) if isinstance(cls, dict) else 0
+            # Normalize information_content to float in [0,1]
+            if isinstance(info, (int, float)):
+                info = float(info)
+            elif isinstance(info, str):
+                try:
+                    info = float(info.strip())
+                except Exception:
+                    info = 0.0
+            else:
+                info = 0.0
+            if info < 0: info = 0.0
+            if info > 1: info = 1.0
+            # Filter to allowed sets
+            o["tags"] = [t for t in tags if isinstance(t, str) and t in allowed_tags]
+            o["context_class"] = ctxc if ctxc in allowed_classes else "prose"
+            o["information_content"] = info
             out.append(o)
 
     return out
