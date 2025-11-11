@@ -74,3 +74,63 @@ Rules:
 TEXT:
 {text}
 """
+
+
+def term_context_classification_prompt(items: list[dict]) -> str:
+    """
+    Classify each (term, context) with tags and a context_class.
+    Return STRICT JSON: an array of objects with fields:
+      - term (string)
+      - tags (array of strings, subset of TAGS)
+      - context_class (string, one of CONTEXT_CLASSES)
+    """
+    TAGS = ["problem","objective","sample", "example", "name", "parameter", "dataset","challenge","architecture","framework","theory","domain","concept","proposition","hypothesis","assumption","definition","model","method","algorithm","protocol","experiment","feature","label","evaluation","metric","baseline","ablation","validation","verification","reproducibility","generalization","robustness","sensitivity","uncertainty","interpretability","fairness","bias","privacy","security","safety","compliance","scalability","efficiency","latency","cost","impact","limitation","risk"]
+    CONTEXT_CLASSES = ["title","heading","prose","list", "footnote", "table","math","code","caption","citation","reference"]
+
+    example = {
+        "term": "diffusion model",
+        "tags": ["model","generative","scientific"],
+        "context_class": "prose"
+    }
+
+    def _fmt_item(i: dict) -> str:
+        term = i.get("term","")
+        ctx  = i.get("context","")
+        return f"- term: {term}\n  context: {ctx}"
+
+    items_block = "\n".join(_fmt_item(i) for i in items)
+
+    return f"""You are classifying technical terms in their local text context.
+
+For EACH term below, choose:
+- tags: zero or more from this fixed list (no others, lowercase): {TAGS}
+- context_class: one of: {CONTEXT_CLASSES}
+
+Guidelines:
+- tags should reflect the role of the term in the context (e.g., model vs method vs dataset).
+- Prefer few precise tags over many generic ones.
+- If unsure, return an empty array for tags.
+- context_class describes the surrounding text type:
+  - 'references' for bibliographic/citation lines
+  - 'prose' for normal narrative text
+  - 'title' for section/paper titles
+  - 'abstract' for abstract sections
+  - 'caption' for figure/table captions
+  - 'footnote' for footnotes
+
+Return STRICT JSON ONLY (array of objects):
+[
+  {{
+    "term": string,
+    "tags": string[],
+    "context_class": string
+  }},
+  ...
+]
+
+Example output shape:
+{example}
+
+Items to classify:
+{items_block}
+"""

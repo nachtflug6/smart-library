@@ -113,5 +113,39 @@ def terms_verify(
     stats = verify_terms_pipeline(fuzzy=fuzzy, tolerance=tolerance)
     echo(f"Verified terms: {stats['terms_verified']}, verified term-page associations: {stats['pages_verified']}")
 
+@app.command("terms-context")
+def terms_context(
+    window_tokens: int = Option(40, help="Token window size for context."),
+    fuzzy: bool = Option(True, help="Use fuzzy fallback."),
+    tolerance: int = Option(80, help="Fuzzy tolerance 0..100."),
+):
+    """Add context snippets around each verified term occurrence."""
+    from smart_library.pipelines.term_context_extraction import enrich_term_page_context
+    count = enrich_term_page_context(window_tokens=window_tokens, fuzzy=fuzzy, tolerance=tolerance)
+    echo(f"Context enrichment completed for {count} rows")
+
+@app.command("terms-classify")
+def terms_classify(
+    model: str = Option("gpt-5-mini", help="LLM model."),
+    temperature: float = Option(0.2, help="Sampling temperature."),
+    batch_size: int = Option(20, help="Items per LLM prompt."),
+    include_unfound: bool = Option(True, help="Include rows without located context."),
+    debug: bool = Option(False, help="Debug logging."),
+):
+    """
+    Classify term contexts (tags + context_class) in batches using the LLM.
+    Input:  data/jsonl/joins/terms_pages_context.jsonl
+    Output: data/jsonl/joins/terms_pages_classified.jsonl
+    """
+    from smart_library.pipelines.term_classification import llm_term_context_classify
+    count = llm_term_context_classify(
+        model=model,
+        temperature=temperature,
+        batch_size=batch_size,
+        include_unfound=include_unfound,
+        debug=debug,
+    )
+    echo(f"Classified rows written: {count}")
+
 if __name__ == "__main__":
     app()
