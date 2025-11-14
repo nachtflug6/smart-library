@@ -126,24 +126,34 @@ def terms_context(
 
 @app.command("terms-classify")
 def terms_classify(
-    model: str = Option("gpt-5-mini", help="LLM model."),
+    model: str = Option("gpt-5-mini", help="LLM model name."),
     temperature: float = Option(0.2, help="Sampling temperature."),
-    batch_size: int = Option(20, help="Items per LLM prompt."),
+    batch_size: int = Option(20, help="Items per LLM prompt (one API call per batch)."),
     include_unfound: bool = Option(True, help="Include rows without located context."),
-    debug: bool = Option(False, help="Debug logging."),
+    debug: bool = Option(False, help="Debug mode (process only first batch)."),
+    workers: int = Option(1, help="Parallel batches inside each checkpoint."),
+    checkpoint_size: int = Option(
+        0,
+        help="High-level bucket size for checkpointed writes (0 means all rows in one checkpoint).",
+    ),
+    api_key: str | None = Option(None, help="API key override (defaults to OPENAI_API_KEY)."),
 ):
     """
-    Classify term contexts (tags + context_class) in batches using the LLM.
-    Input:  data/jsonl/joins/terms_pages_context.jsonl
-    Output: data/jsonl/joins/terms_pages_classified.jsonl
+    Classify term contexts into tags, context_class, and information_content.
+    Writes to data/jsonl/joins/terms_pages_classified.jsonl (JSONL).
     """
     from smart_library.pipelines.term_classification import llm_term_context_classify
+
+    ckpt = None if not checkpoint_size or checkpoint_size <= 0 else checkpoint_size
     count = llm_term_context_classify(
         model=model,
+        api_key=api_key,
         temperature=temperature,
         batch_size=batch_size,
         include_unfound=include_unfound,
         debug=debug,
+        workers=workers,
+        checkpoint_size=ckpt,
     )
     echo(f"Classified rows written: {count}")
 
