@@ -2,6 +2,10 @@
 # SMART-LIBRARY DATA
 #########################
 
+# Dev data (ignore everything under data_dev/)
+data_dev/
+data_dev/**
+
 # SQLite database files
 db/*.db
 db/*.sqlite

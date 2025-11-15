@@ -6,6 +6,7 @@ pydantic
 
 # pdf/text
 PyPDF2>=3.0.0
+reportlab  # for test PDF generation
 
 # data + utils
 numpy

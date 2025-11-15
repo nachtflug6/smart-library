@@ -1,136 +1,161 @@
 # src/smart_library/ingest/onboard.py
 from __future__ import annotations
-import os
-import json
 import shutil
 from pathlib import Path
 from typing import Iterable, List, Dict, Set, Optional
-from PyPDF2 import PdfReader
 
-INCOMING_DIR = Path("data/pdf/incoming")
-CURATED_DIR = Path("data/pdf/curated")
-PAGES_DIR = Path("data/pdf/pages")
-DOC_JSONL = Path("data/jsonl/entities/documents.jsonl")
-PAGES_JSONL = Path("data/jsonl/entities/pages.jsonl")
+from smart_library.config import DOC_PDF_DIR, DOC_TEXT_DIR, ENTITIES_JSONL
+from smart_library.utils.jsonl import read_jsonl, write_jsonl
+from smart_library.utils.pdf import extract_pages_to_text
 
-def _read_jsonl(path: Path) -> List[Dict]:
-    if not path.exists():
-        return []
-    with path.open() as f:
-        return [json.loads(line) for line in f if line.strip()]
 
-def _write_jsonl_atomic(path: Path, rows: Iterable[Dict]):
-    path.parent.mkdir(parents=True, exist_ok=True)
-    tmp = path.with_suffix(path.suffix + ".tmp")
-    with tmp.open("w") as f:
-        for obj in rows:
-            f.write(json.dumps(obj, ensure_ascii=False) + "\n")
-    tmp.replace(path)
-
-def _extract_pages(pdf_path: Path) -> List[Dict]:
+def onboard_document(pdf_path: Path | str, *, label: Optional[str] = None) -> str:
     """
-    Extract each page's text from the PDF and write to per-page .txt files.
-    Returns list of {page: int, path: str}.
+    Onboard a single PDF document:
+    - Copy to curated PDF directory
+    - Create/update document entity in entities.jsonl
+    - Extract pages and create page entities
+    
+    Args:
+        pdf_path: Path to PDF file to onboard
+        label: Optional human-readable label for the document
+        
+    Returns:
+        document_id (e.g., "doc:stem")
     """
-    pages_dir = PAGES_DIR / pdf_path.stem
-    pages_dir.mkdir(parents=True, exist_ok=True)
-
-    reader = PdfReader(str(pdf_path))
-    records: List[Dict] = []
-
-    for idx, page in enumerate(reader.pages, start=1):
-        text = page.extract_text() or ""
-        fname = f"p{idx:02d}.txt"
-        out_path = pages_dir / fname
-        out_path.write_text(text, encoding="utf-8")
-        records.append({"page": idx, "path": str(out_path)})
-
-    return records
-
-def onboard_documents() -> List[str]:
-    INCOMING_DIR.mkdir(parents=True, exist_ok=True)
-    CURATED_DIR.mkdir(parents=True, exist_ok=True)
-
-    existing_docs = _read_jsonl(DOC_JSONL)
-    by_id = {d["document_id"]: d for d in existing_docs}
-
-    changed: List[str] = []
-
-    for pdf in sorted(INCOMING_DIR.glob("*.pdf")):
-        doc_id = pdf.stem
-        dest = CURATED_DIR / pdf.name
-        shutil.move(str(pdf), dest)
-
-        # Keep only the allowed fields; do not carry over any old metadata keys.
-        prev = by_id.get(doc_id)
-        meta = {
-            "document_id": doc_id,
+    pdf_path = Path(pdf_path)
+    if not pdf_path.exists():
+        raise FileNotFoundError(f"PDF not found: {pdf_path}")
+    if not pdf_path.suffix.lower() == ".pdf":
+        raise ValueError(f"Not a PDF file: {pdf_path}")
+    
+    DOC_PDF_DIR.mkdir(parents=True, exist_ok=True)
+    DOC_TEXT_DIR.mkdir(parents=True, exist_ok=True)
+    
+    stem = pdf_path.stem
+    doc_id = f"doc:{stem}"
+    dest = DOC_PDF_DIR / pdf_path.name
+    
+    # Copy PDF to curated location
+    shutil.copy2(str(pdf_path), dest)
+    
+    # Load existing entities
+    existing_entities = read_jsonl(ENTITIES_JSONL)
+    by_id = {e["id"]: e for e in existing_entities if e.get("id")}
+    
+    # Create/update document entity
+    prev = by_id.get(doc_id)
+    prev_label = prev.get("label") if prev else None
+    doc_entity = {
+        "id": doc_id,
+        "type": "document",
+        "label": label or prev_label or stem,
+        "data": {
             "pdf_path": str(dest),
-            "page_count": (prev.get("page_count") if prev else None),
         }
-        by_id[doc_id] = meta
-        changed.append(doc_id)
+    }
+    
+    # Preserve existing data fields if present
+    if prev and "data" in prev:
+        doc_entity["data"].update(prev["data"])
+        doc_entity["data"]["pdf_path"] = str(dest)  # Always update path
+    
+    by_id[doc_id] = doc_entity
+    
+    # Persist document entity
+    write_jsonl(ENTITIES_JSONL, by_id.values())
+    
+    # Extract and persist pages
+    onboard_pages(document_ids=[stem])
+    
+    return doc_id
 
-    if changed:
-        _write_jsonl_atomic(DOC_JSONL, by_id.values())
 
-    return changed
+def _to_stem(value: str) -> str:
+    """Normalize 'doc:STEM' or 'STEM' to STEM."""
+    return value[4:] if value.startswith("doc:") else value
+
 
 def onboard_pages(document_ids: Optional[Iterable[str]] = None):
+    """
+    Extract pages for specified documents (accepts stems or 'doc:' IDs).
+    Pass e.g., ['ZhangZheng2023'] or ['doc:ZhangZheng2023'].
+    """
     if document_ids is None:
         return
-    target_ids: Set[str] = set(document_ids)
-    if not target_ids:
+    target_stems: Set[str] = { _to_stem(s) for s in document_ids }
+    if not target_stems:
         return
 
-    docs = {d["document_id"]: d for d in _read_jsonl(DOC_JSONL)}
-    pages_existing = _read_jsonl(PAGES_JSONL)
+    # Load all entities
+    entities = read_jsonl(ENTITIES_JSONL)
+    by_id = {e["id"]: e for e in entities if e.get("id")}
 
-    # Drop existing JSONL entries for target docs
-    retained = [p for p in pages_existing if p.get("document_id") not in target_ids]
+    # Find document entities for target stems
+    docs: Dict[str, Dict] = {}
+    for stem in target_stems:
+        doc_id = f"doc:{stem}"
+        if doc_id in by_id:
+            docs[stem] = by_id[doc_id]
 
-    new_pages: List[Dict] = []
+    # Remove existing page entities for target documents
+    retained = [e for e in entities if not (
+        e.get("type") == "page" and
+        _to_stem(e.get("data", {}).get("document_id", "")) in target_stems
+    )]
+    by_id = {e["id"]: e for e in retained}
 
-    for doc_id in sorted(target_ids):
-        doc = docs.get(doc_id)
-        if not doc:
-            print(f"{doc_id}: skipped (no metadata)")
+    for stem in sorted(target_stems):
+        doc_entity = docs.get(stem)
+        if not doc_entity:
+            print(f"{stem}: skipped (no document entity)")
             continue
 
-        pdf_path = Path(doc["pdf_path"])
+        pdf_path = Path(doc_entity["data"]["pdf_path"])
         if not pdf_path.exists():
-            print(f"{doc_id}: skipped (pdf missing)")
+            print(f"{stem}: skipped (pdf missing)")
             continue
-
-        # Did we have extracted pages before?
-        doc_pages_dir = PAGES_DIR / doc_id
-        had_old_files = doc_pages_dir.exists()
 
         # Clean old extracted pages and re-extract
+        doc_pages_dir = DOC_TEXT_DIR / stem
+        had_old_files = doc_pages_dir.exists()
         if had_old_files:
             shutil.rmtree(doc_pages_dir)
 
-        extracted = _extract_pages(pdf_path)
+        extracted = extract_pages_to_text(pdf_path, doc_pages_dir)
 
         for rec in extracted:
-            new_pages.append({
-                "document_id": doc_id,
-                "page": rec["page"],
-                "path": rec["path"]
-            })
+            page_num = rec["page"]
+            page_id = f"page:{stem}:{page_num:02d}"
+            page_entity = {
+                "id": page_id,
+                "type": "page",
+                "label": f"{stem} p{page_num:02d}",
+                "data": {
+                    "document_id": f"doc:{stem}",
+                    "page": page_num,
+                    "text_path": rec["path"],
+                }
+            }
+            by_id[page_id] = page_entity
 
-        # Update page_count
-        doc["page_count"] = len(extracted)
+        # Update page_count in document entity
+        doc_entity["data"]["page_count"] = len(extracted)
+        by_id[f"doc:{stem}"] = doc_entity
 
-        # One-liner per document
-        print(f"{doc_id}: {'updated' if had_old_files else 'added'}, pages={len(extracted)}")
+        print(f"{stem}: {'updated' if had_old_files else 'added'}, pages={len(extracted)}")
 
-    # Persist updates
-    _write_jsonl_atomic(DOC_JSONL, docs.values())
-    combined = retained + sorted(new_pages, key=lambda r: (r["document_id"], r["page"]))
-    _write_jsonl_atomic(PAGES_JSONL, combined)
+    # Persist all entities
+    write_jsonl(ENTITIES_JSONL, by_id.values())
 
-def onboard_all():
-    changed = onboard_documents()
-    if changed:
-        onboard_pages(document_ids=changed)
+
+def onboard_documents(pdf_paths: Iterable[Path | str]) -> List[str]:
+    """Onboard multiple PDF documents."""
+    onboarded: List[str] = []
+    for pdf_path in pdf_paths:
+        try:
+            doc_id = onboard_document(pdf_path)
+            onboarded.append(doc_id)
+        except (FileNotFoundError, ValueError) as e:
+            print(f"Skipping {pdf_path}: {e}")
+    return onboarded
