@@ -5,7 +5,6 @@ Default behavior assumes gpt-5 family quirks; 4o/4* models get legacy params.
 
 from __future__ import annotations
 from typing import List, Optional, Dict, Any
-import logging
 import os
 import json
 
@@ -13,9 +12,6 @@ from openai import OpenAI
 
 from smart_library.llm.client import BaseLLMClient
 from smart_library.llm.rates import get_model_limits, estimate_message_tokens
-
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
 
 
 def _is_4o(model: str) -> bool:
@@ -74,7 +70,7 @@ class OpenAIClient(BaseLLMClient):
         if is4o:
             if temperature is not None:
                 kwargs["temperature"] = temperature
-        # else: omit for gpt-5 family (defaults to model’s allowed setting)
+        # else: omit for gpt-5 family
 
         # Response format
         if is4o and response_format is not None:
@@ -121,7 +117,6 @@ class OpenAIClient(BaseLLMClient):
                 parsed = getattr(resp.choices[0].message, "parsed", None)
                 if parsed is not None:
                     try:
-                        # parsed can be dict-like
                         content = json.dumps(parsed, ensure_ascii=False)
                     except Exception:
                         content = str(parsed)

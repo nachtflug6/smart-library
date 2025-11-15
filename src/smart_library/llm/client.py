@@ -10,11 +10,8 @@ from __future__ import annotations
 from abc import ABC, abstractmethod
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from typing import List, Optional, Dict, Any, Callable, Tuple
-import logging
 
 from .rates import MinuteRateLimiter, estimate_message_tokens, get_model_limits
-
-logger = logging.getLogger(__name__)
 
 
 class BaseLLMClient(ABC):
@@ -135,8 +132,8 @@ class BaseLLMClient(ABC):
                     apply_rate_limit=apply_rate_limit,
                 )
                 return i, txt
-            except Exception as e:
-                logger.error(f"Concurrent task {i} failed: {e}")
+            except Exception:
+                # Swallow errors and return empty content to preserve order/count.
                 return i, ""
 
         results: List[tuple[int, str]] = []
@@ -147,9 +144,8 @@ class BaseLLMClient(ABC):
             for fut in as_completed(future_map):
                 try:
                     results.append(fut.result())
-                except Exception as e:
+                except Exception:
                     idx = future_map[fut]
-                    logger.error(f"Future {idx} exception: {e}")
                     results.append((idx, ""))
 
         results.sort(key=lambda x: x[0])

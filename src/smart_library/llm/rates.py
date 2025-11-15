@@ -2,9 +2,6 @@ from __future__ import annotations
 from typing import List, Dict, Any, Tuple, Optional
 import threading
 import time
-import logging
-
-logger = logging.getLogger(__name__)
 
 # Hard-coded per-model limits based on OpenAI quotas.
 # TPD (tokens per day) not enforced in this limiter (minute-window only).
@@ -41,8 +38,7 @@ def estimate_message_tokens(messages: List[Dict[str, Any]], model: str) -> int:
             enc = tiktoken.encoding_for_model(model)
         except KeyError:
             enc = tiktoken.get_encoding("cl100k_base")
-    except Exception as e:
-        logger.debug(f"tiktoken unavailable, using char/4 fallback: {e}")
+    except Exception:
         # Rough fallback: chars/4 + small overhead
         return sum(
             (len(m.get("role", "")) + len(m.get("content", "") or "")) // 4 + 4
@@ -64,9 +60,14 @@ def get_model_limits(
     default_tpm: int | None = None,
 ) -> Tuple[int | None, int | None]:
     """
-    Generic provider: returns defaults (no model-specific lookups).
-    Subclasses can override with vendor-specific logic.
+    Look up per-model limits from MODEL_LIMITS, falling back to provided defaults.
     """
+    if model:
+        key = norm_model(model)
+        cfg = MODEL_LIMITS.get(key)
+        if cfg:
+            return cfg.get("rpm"), cfg.get("tpm")
+
     return default_rpm, default_tpm
 
 class MinuteRateLimiter:

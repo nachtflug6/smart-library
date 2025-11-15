@@ -4,34 +4,20 @@ rich
 tqdm
 pydantic
 
-# PDF & text extraction
-pdfminer.six
-pymupdf
-camelot-py[all]
-tabula-py
-pillow
+# pdf/text
 PyPDF2>=3.0.0
 
 # data + utils
-pandas
 numpy
-python-dateutil
+pandas
 
-# SQLite helpers (optional but handy)
-sqlalchemy
-alembic
-
-# embeddings / optional LLM support
+# embeddings
 sentence-transformers
-transformers
 
-# QA or retrieval glue
-faiss-cpu
-
-# testing
-pytest
-pytest-cov
-
-# LLM
+# LLM (for your existing pipelines)
 openai
 tiktoken
+
+# testing (dev)
+pytest
+pytest-cov
