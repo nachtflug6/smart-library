@@ -1,129 +1,130 @@
 """
-OpenAI-specific implementation of BaseLLMClient with adaptive parameter handling.
-Default behavior assumes gpt-5 family quirks; 4o/4* models get legacy params.
+OpenAI API client implementation.
 """
-
 from __future__ import annotations
-from typing import List, Optional, Dict, Any
 import os
-import json
+import logging
+import time
+from typing import Any, Dict, List, Optional
 
+import openai
 from openai import OpenAI
 
-from smart_library.llm.client import BaseLLMClient
-from smart_library.llm.rates import get_model_limits, estimate_message_tokens
+from smart_library.llm.client import LLMClient
+
+logger = logging.getLogger(__name__)
 
 
-def _is_4o(model: str) -> bool:
-    m = model.lower()
-    return ("gpt-4" in m) or ("4o" in m)
+class OpenAIClient(LLMClient):
+    """OpenAI API client."""
 
-
-class OpenAIClient(BaseLLMClient):
     def __init__(
         self,
-        api_key: Optional[str] = None,
-        *,
-        default_model: Optional[str] = None,
-        default_rpm: int | None = None,
-        default_tpm: int | None = None,
+        api_key: str,
+        default_model: str = "gpt-4o-mini",
+        max_retries: int = 3,
+        retry_delay: float = 1.0,
+        validate_key: bool = True,
     ):
-        super().__init__(
-            default_model=default_model,
-            default_rpm=default_rpm,
-            default_tpm=default_tpm,
-            limits_provider=get_model_limits,
-            token_estimator=estimate_message_tokens,
-        )
+        """
+        Initialize OpenAI client.
+
+        Args:
+            api_key: OpenAI API key
+            default_model: Default model to use
+            max_retries: Maximum number of retries on failure
+            retry_delay: Base delay between retries (exponential backoff)
+            validate_key: If True, validate API key on initialization
+
+        Raises:
+            openai.AuthenticationError: If validate_key=True and key is invalid
+            openai.APIConnectionError: If validate_key=True and connection fails
+        """
+        super().__init__(api_key=api_key, default_model=default_model)
+        self.max_retries = max_retries
+        self.retry_delay = retry_delay
         self.client = OpenAI(api_key=api_key)
+
+        if validate_key:
+            self._validate_api_key()
+
+    def _validate_api_key(self):
+        """
+        Validate API key by making a minimal request to OpenAI.
+
+        Raises:
+            openai.AuthenticationError: If API key is invalid
+            openai.APIConnectionError: If connection fails
+        """
+        logger.info("Validating OpenAI API key...")
+        try:
+            # Make a minimal request to validate the key
+            response = self.client.chat.completions.create(
+                model=self.default_model,
+                messages=[{"role": "user", "content": "test"}],
+                max_tokens=1,
+            )
+            logger.info("OpenAI API key validated successfully (model=%s)", self.default_model)
+        except openai.AuthenticationError as e:
+            logger.error("Invalid OpenAI API key: %s", e)
+            raise
+        except openai.APIConnectionError as e:
+            logger.error("Failed to connect to OpenAI API: %s", e)
+            raise
+        except Exception as e:
+            logger.warning("Unexpected error during API key validation: %s", e)
+            raise
 
     def _call_api(
         self,
         model: str,
-        messages: List[Dict[str, Any]],
-        *,
-        max_output_tokens: int | None = None,
-        temperature: float | None = 1.0,
-        response_format: Optional[dict] = None,
+        messages: List[Dict[str, str]],
+        temperature: float,
+        max_output_tokens: int,
+        **kwargs,
     ) -> str:
-        """
-        Defaults to gpt-5 behavior:
-          - Uses max_completion_tokens
-          - Omits temperature
-          - Ignores response_format (JSON mode)
-        For 4o/gpt-4 models:
-          - Uses max_tokens
-          - Includes temperature if provided
-          - Allows response_format
-        On 400s, adapt by swapping/removing offending params.
-        """
-        is4o = _is_4o(model)
+        """Call OpenAI API with retry logic."""
+        kwargs_api = {
+            "model": model,
+            "messages": messages,
+            "temperature": temperature,
+            "max_tokens": max_output_tokens,
+        }
 
-        kwargs: Dict[str, Any] = {"model": model, "messages": messages}
+        # Pass through additional kwargs (e.g., response_format)
+        for key in ("response_format", "top_p", "frequency_penalty", "presence_penalty", "stop"):
+            if key in kwargs:
+                kwargs_api[key] = kwargs[key]
 
-        # Token parameter
-        token_param = "max_tokens" if is4o else "max_completion_tokens"
-        if max_output_tokens is not None:
-            kwargs[token_param] = max_output_tokens
-
-        # Temperature
-        if is4o:
-            if temperature is not None:
-                kwargs["temperature"] = temperature
-        # else: omit for gpt-5 family
-
-        # Response format
-        if is4o and response_format is not None:
-            kwargs["response_format"] = response_format
-        # else: omit for gpt-5 family
-
-        def _attempt(k: Dict[str, Any]):
+        def _attempt(k: dict) -> Any:
             return self.client.chat.completions.create(**k)
 
-        try:
-            resp = _attempt(kwargs)
-        except Exception as e:
-            msg = str(e).lower()
-
-            # Swap token param if rejected
-            if "unsupported parameter" in msg and "max_tokens" in msg and "max_tokens" in kwargs:
-                val = kwargs.pop("max_tokens")
-                kwargs["max_completion_tokens"] = val
-                resp = _attempt(kwargs)
-            elif "unsupported parameter" in msg and "max_completion_tokens" in msg and "max_completion_tokens" in kwargs:
-                val = kwargs.pop("max_completion_tokens")
-                kwargs["max_tokens"] = val
-                resp = _attempt(kwargs)
-            # Drop temperature if rejected
-            elif "unsupported value" in msg and "temperature" in msg and "temperature" in kwargs:
-                kwargs.pop("temperature", None)
-                resp = _attempt(kwargs)
-            # Drop response_format if rejected
-            elif "unsupported parameter" in msg and "response_format" in msg and "response_format" in kwargs:
-                kwargs.pop("response_format", None)
-                resp = _attempt(kwargs)
-            else:
+        for attempt in range(self.max_retries):
+            try:
+                resp = _attempt(kwargs_api)
+                content = resp.choices[0].message.content or ""
+                return content
+            except openai.RateLimitError as e:
+                if attempt < self.max_retries - 1:
+                    delay = self.retry_delay * (2 ** attempt)
+                    logger.warning("Rate limit hit, retrying in %.1fs... (attempt %d/%d)", delay, attempt + 1, self.max_retries)
+                    time.sleep(delay)
+                else:
+                    logger.error("Rate limit exceeded after %d retries", self.max_retries)
+                    raise
+            except openai.APIError as e:
+                if attempt < self.max_retries - 1:
+                    delay = self.retry_delay * (2 ** attempt)
+                    logger.warning("API error: %s, retrying in %.1fs... (attempt %d/%d)", e, delay, attempt + 1, self.max_retries)
+                    time.sleep(delay)
+                else:
+                    logger.error("API error after %d retries: %s", self.max_retries, e)
+                    raise
+            except Exception as e:
+                logger.error("Unexpected error calling OpenAI API: %s", e)
                 raise
 
-        # Extract content (try parsed if content is empty)
-        try:
-            content = (resp.choices[0].message.content or "").strip()
-        except Exception:
-            content = ""
-
-        if not content:
-            # Some newer models may return parsed structured output
-            try:
-                parsed = getattr(resp.choices[0].message, "parsed", None)
-                if parsed is not None:
-                    try:
-                        content = json.dumps(parsed, ensure_ascii=False)
-                    except Exception:
-                        content = str(parsed)
-            except Exception:
-                pass
-
-        return content or ""
+        raise RuntimeError("Should not reach here")
 
 
 if __name__ == "__main__":

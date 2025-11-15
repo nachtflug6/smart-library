@@ -4,6 +4,7 @@ import logging
 import pytest
 
 from smart_library.llm.openai_client import OpenAIClient
+import openai
 
 RUN_LIVE = os.getenv("RUN_OPENAI_LIVE") == "1"
 API_KEY = os.getenv("OPENAI_API_KEY")
@@ -42,7 +43,8 @@ def client():
     # Extra guard in case mark didn’t apply
     if not _valid_api_key(API_KEY):
         pytest.skip("Invalid or missing OPENAI_API_KEY; skipping live OpenAI tests.")
-    return OpenAIClient(api_key=API_KEY, default_model=MODEL)
+    # This will validate the key on init
+    return OpenAIClient(api_key=API_KEY, default_model=MODEL, validate_key=True)
 
 
 def chat_and_log(client: OpenAIClient, *, model: str, messages, **kwargs) -> str:
@@ -56,6 +58,19 @@ def chat_and_log(client: OpenAIClient, *, model: str, messages, **kwargs) -> str
         preview = preview[:300] + "…"
     logger.info("Response len=%d preview=%s", len(out), preview)
     return out
+
+
+def test_api_key_validation_on_init():
+    """Test that API key is validated during initialization."""
+    # Should succeed with valid key (already done in client fixture)
+    client = OpenAIClient(api_key=API_KEY, default_model=MODEL, validate_key=True)
+    assert client is not None
+
+
+def test_invalid_api_key_rejected():
+    """Test that invalid API key is rejected during initialization."""
+    with pytest.raises(openai.AuthenticationError):
+        OpenAIClient(api_key="sk-invalid-key-test", default_model=MODEL, validate_key=True)
 
 
 def test_simple_completion(client):
