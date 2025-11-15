@@ -21,3 +21,6 @@ tiktoken
 # testing (dev)
 pytest
 pytest-cov
+
+# additional
+thefuzz

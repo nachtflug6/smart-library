@@ -1,28 +1,29 @@
 from __future__ import annotations
 
-def normalize_term(term: str) -> str:
-    # lowercase
-    term = (term or "").lower()
-    # strip whitespace, collapse multiple spaces
-    term = " ".join(term.split())
-    # strip common punctuation
-    chars = "()[]{}:,.;"
-    term = term.strip(chars)
-    # remove extraction markup
-    term = term.replace("term:", "").replace("[term:", "").replace("]", "")
-    # cleanup linebreaks + hyphenation artifacts
-    term = term.replace("\n", " ")
-    term = term.replace("- ", "-")
-    term = term.replace(" -", "-")
-    # safe plural removal
-    if term.endswith("s") and not term.endswith("ss"):
-        term = term[:-1]
-    return term
+_PUNCT_STRIP = "()[]{}:,.;"
 
-def normalize_text_window(text: str) -> str:
-    # light-weight cleanup for context windows
-    s = (text or "").lower()
-    s = " ".join(s.split())          # collapse whitespace
-    s = s.replace("\n", " ")
-    s = s.replace("- ", "-").replace(" -", "-")
-    return s.strip()
+def _normalize_newlines(text: str) -> str:
+    # Replace line breaks with spaces first
+    return (text or "").replace("\r\n", "\n").replace("\r", "\n").replace("\n", " ")
+
+def _collapse_whitespace(text: str) -> str:
+    return " ".join((text or "").split())
+
+def _normalize_hyphenation(text: str) -> str:
+    # Remove artifacts like "- " or " -"
+    return text.replace("- ", "-").replace(" -", "-")
+
+def normalize_text(text: str) -> str:
+    """
+    General-purpose normalization:
+    1. Newline flattening
+    2. Lowercasing
+    3. Hyphenation artifact cleanup
+    4. Whitespace collapse
+    5. Edge punctuation trim
+    """
+    s = _normalize_newlines(text)
+    s = s.lower()
+    s = _normalize_hyphenation(s)
+    s = _collapse_whitespace(s)
+    return s.strip(_PUNCT_STRIP)
