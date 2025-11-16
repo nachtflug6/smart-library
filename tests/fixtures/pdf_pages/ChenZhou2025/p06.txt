@@ -1,0 +1,108 @@
+CWRU
+SU
+WHU
+A
+B
+C
+D
+E
+G20
+G30
+B20
+B30
+NFFT-SVM 32.56 ± 1.20 23.28 ± 1.18 21.83 ± 1.33 22.67 ± 1.25 18.74 ± 1.07 84.06 ± 1.67 69.19 ± 1.35 79.10 ± 1.23 64.44 ± 1.91 34.09 ± 2.90
+GRU-∆t
+70.69 ± 4.75 63.56 ± 2.80 58.85 ± 4.71 71.38 ± 3.94 55.63 ± 2.97 97.39 ± 0.82 94.77 ± 1.72 96.95 ± 1.03 97.49 ± 1.10 67.11 ± 1.31
+GRU-Int
+33.63 ± 4.57 21.31 ± 5.43 27.94 ± 5.68 43.69 ± 4.21 34.94 ± 6.55 93.02 ± 1.57 83.86 ± 1.40 90.70 ± 2.28 90.51 ± 2.65 81.58 ± 3.57
+mTANs
+13.33 ± 1.35 13.38 ± 0.96 12.79 ± 1.41 13.06 ± 1.03 10.78 ± 1.22 84.56 ± 1.34 64.73 ± 1.58 75.25 ± 1.11 59.52 ± 1.89 32.23 ± 4.23
+Warpformer 81.94 ± 1.13 64.67 ± 1.58 67.11 ± 1.76 80.22 ± 1.07 61.60 ± 1.66 90.31 ± 1.73 82.04 ± 2.13 97.56 ± 1.11 97.50 ± 1.05 93.33 ± 2.11
+ODE-RNN
+20.25 ± 2.25 31.25 ± 3.88 26.25 ± 2.75 23.75 ± 2.51 27.87 ± 2.18 44.40 ± 1.31 25.20 ± 1.27 26.35 ± 3.39 31.85 ± 3.77 23.68 ± 0.23
+Neural CDE 10.22 ± 0.25 10.09 ± 0.27 11.13 ± 0.21 10.58 ± 0.25 10.34 ± 0.22 19.37 ± 0.26 19.16 ± 0.28 20.83 ± 0.21 21.22 ± 0.32 25.34 ± 1.54
+MBM-Int
+61.22 ± 1.45 67.67 ± 1.05 68.89 ± 0.99 82.22 ± 0.84 65.13 ± 0.62 73.83 ± 1.58 83.67 ± 1.27 96.08 ± 1.32 95.69 ± 1.01 95.56 ± 2.19
+MBM-∆t
+66.91 ± 1.01 64.83 ± 0.98 67.23 ± 1.02 81.00 ± 0.72 61.61 ± 0.82 91.13 ± 1.30 96.44 ± 0.50 98.30 ± 0.29 98.14 ± 0.26 91.93 ± 2.85
+Proposed
+(Decay)
+75.22 ± 2.10 75.78 ± 1.66 80.72 ± 2.36 86.67 ± 1.22 70.09 ± 1.10 94.31 ± 0.96 98.15 ± 0.55 99.21 ± 0.28 99.69 ± 0.13 95.56 ± 2.03
+Proposed
+(Leaky)
+83.06 ± 0.88 82.83 ± 1.06 87.67 ± 1.20 92.67 ± 0.81 78.27 ± 0.65 91.25 ± 0.58 97.10 ± 0.58 99.50 ± 0.11 99.69 ± 0.09 96.67 ± 1.87
+Table 1: Accuracy(%) (mean±std across ﬁve runs) of Classiﬁcation on Multiple Datasets with 50% Missing Rate
+Hz. Each instance is 2048 time steps long, with 45 in-
+stances per category. It encompasses four categories: nor-
+mal, contact-rubbing, unbalanced, and misalignment.
+The Evaluated Methods
+Addressing irregular sequence, we employ nine baseline
+methods: 1) Feature extraction with traditional machine
+learning: NFFT-SVM utilizes Nonequispaced Fast Fourier
+Transforms (NFFT) (Keiner, Kunis, and Potts 2009) for fea-
+ture extraction from irregular sequence data, followed by
+classiﬁcation using SVM. 2) RNN-based methods: GRU-∆t
+enhances GRU by incorporating the time intervals between
+data points as additional input; GRU-Int enhances GRU
+by interpolating irregular sequence data to regular intervals.
+3) Transformer-based methods: mTANs (Shukla and Mar-
+lin 2021) and Warpformer (Zhang et al. 2023). 4) ODE-
+based methods: ODE-RNN (Rubanova, Chen, and Duve-
+naud 2019) and Neural CDE (Kidger et al. 2020). 5) MBM
+methods: MBM-Int involves interpolation of irregular data,
+followed by SVM classiﬁcation in model space; MBM-∆t
+incorporates the time intervals between data points as addi-
+tional input, followed by SVM classiﬁcation in model space.
+Two variants of the proposed method9 are denoted as:
+1) Proposed(Decay) employs Ct-Echo-Decay for ﬁtting ir-
+regular sequences; 2) Proposed(Leaky) employs Ct-Echo-
+Leaky for ﬁtting irregular sequences. Both methods choose
+SVM for the classiﬁcation in the Ct-Echo model space.
+Experimental Results and Disscussions
+Results in Table 1 show that while NFFT-SVM and MBMs
+exhibit some capability when handling irregular sequences,
+they lack overall accuracy due to their reliance on discrete
+representations, which fail to capture the continuous-time
+dynamic characteristics. Deep learning methods encounter
+limitations in data-scarce environments due to their reliance
+on comprehensive and diverse datasets for optimization.
+Speciﬁcally, mTANs, ODE-RNN, and Neural CDE exhibit
+underperformance. Warpformer, GRU-∆t, and GRU-Int, al-
+though comparatively more effective, still fall short of ours.
+9In our experiments, the spectral radius and size of the reser-
+voir are set to 0.8 and 10 respectively. The decay rate of Pro-
+posed(Decay) is -0.05 and the leaky rate of Proposed(Leaky) is 1.
+normal
+fault1
+fault2
+fault3
+fault4
+(a) MBM-Int
+(b) MBM-∆t
+(c) Proposed(Decay)
+(d) Proposed(Leaky)
+Figure 5: t-SNE visualizations of the B30 dataset after pro-
+cessing by two MBMs and two proposed methods. Each sub-
+plot represents the data clustered into ﬁve categories, show-
+casing the separation achieved by (a) MBM-Int, (b) MBM-
+∆t, (c) Proposed(Decay), and (d) Proposed(Leaky).
+The proposed methods show considerable results, with
+the Proposed(Leaky) demonstrating overall superior perfor-
+mance. As Figure 5, the proposed methods exhibit better
+clustering across different categories compared to those that
+solely rely on interpolation or intervals. The results stem
+from: 1) We utilize “Echo” to preserve the temporal depen-
+dencies within each sequence and incorporate ODE within
+the hidden layer to manage continuous-time transitions be-
+tween irregular data points, effectively and efﬁciently cap-
+turing dynamic characteristics within irregular sequences;
+2) Capturing sequence-inherent dynamic characteristics, Ct-
+Echo facilitates the transformation of irregular sequences
+from data space to Ct-Echo model space, enabling more ef-
+ﬁcient classiﬁcation with limited data.
+Discussion about Training Time
+We evaluate the train-
+ing times of ﬁve better-performed methods (GRU-∆t, GRU-
+Int, Warpformer, MBM-Int, and MBM-∆t) with the Pro-
+posed(Decay) and Proposed(Leaky). Table 2 illustrates the
+15736

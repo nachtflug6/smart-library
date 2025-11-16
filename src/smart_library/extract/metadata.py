@@ -4,12 +4,9 @@ from __future__ import annotations
 from typing import Dict, Any, List, Optional
 import re
 
-from smart_library.llm.client import BaseLLMClient
-from smart_library.prompts.system_prompts import deterministic_extraction_prompt
-from smart_library.prompts.user_prompts import metadata_extraction_prompt
+from smart_library.llm.client import LLMClient
 from smart_library.extract.author_utils import clean_author
-from smart_library.utils.parsing import parse_structured_obj
-from smart_library.extract.base import extract_with_llm, extract_bulk_with_llm
+from smart_library.extract.base import extract_with_llm
 
 EXPECTED_FIELDS = {
     "title",
@@ -36,7 +33,8 @@ def _normalize_metadata(raw: Dict[str, Any]) -> Dict[str, Any]:
                 cleaned = [c for a in v if (c := clean_author(str(a)))]
                 out[k] = cleaned or None
             elif isinstance(v, str):
-                parts = [p.strip() for p in re.split(r"[;,]", v) if p.strip()]
+                import re as _re
+                parts = [p.strip() for p in _re.split(r"[;,]", v) if p.strip()]
                 cleaned = [c for a in parts if (c := clean_author(a))]
                 out[k] = cleaned or None
             else:
@@ -48,7 +46,8 @@ def _normalize_metadata(raw: Dict[str, Any]) -> Dict[str, Any]:
                 kw = [str(x).strip().lower() for x in v if str(x).strip()]
                 out[k] = kw or None
             elif isinstance(v, str):
-                parts = [p.strip().lower() for p in re.split(r"[;,]", v) if p.strip()]
+                import re as _re
+                parts = [p.strip().lower() for p in _re.split(r"[;,]", v) if p.strip()]
                 out[k] = parts or None
             else:
                 out[k] = None
@@ -65,90 +64,130 @@ def _normalize_metadata(raw: Dict[str, Any]) -> Dict[str, Any]:
     return out
 
 
-def extract_metadata(
-    texts: List[str],
-    client: BaseLLMClient,
-    *,
-    model: str = "gpt-5-mini",
-    temperature: float = 1.0,
-    enforce_json: bool = True,
-    debug: bool = False,
-) -> Dict[str, Any]:
-    """Extract metadata from text using LLM."""
-    if not texts:
-        return {"error": "no_texts"}
-    
-    combined = "\n\n".join(t for t in texts if t)
-    data, reason = extract_with_llm(
-        combined,
-        client,
-        deterministic_extraction_prompt(),
-        metadata_extraction_prompt,
-        model=model,
-        temperature=temperature,
-        enforce_json=enforce_json,
-        debug=debug,
+def deterministic_extraction_prompt() -> str:
+    return (
+        "You are a deterministic metadata extractor.\n"
+        "- Do not hallucinate.\n"
+        "- Use null for uncertain or missing fields.\n"
+        "- When JSON is requested, return only valid JSON with no extra text.\n"
     )
-    
-    if not isinstance(data, dict):
-        return {"error": "invalid_json", "why": reason}
-    return _normalize_metadata(data)
 
 
-def extract_metadata_for_document(
-    document_id: str,
-    page_texts: List[str],
-    client: BaseLLMClient,
-    *,
-    model: str = "gpt-5-mini",
-    max_pages: Optional[int] = 2,
-) -> Dict[str, Any]:
-    sample = page_texts[: max_pages] if max_pages else page_texts
-    result = extract_metadata(sample, client, model=model)
-    result["document_id"] = document_id
-    return result
+def metadata_extraction_prompt(text: str, expected_format: str | None = None) -> str:
+    fmt = expected_format or """
+{
+  "title": string | null,
+  "authors": string[] | null,
+  "venue": string | null,
+  "year": integer | null,
+  "doi": string | null,
+  "abstract": string | null,
+  "keywords": string[] | null,
+  "arxiv_id": string | null,
+  "url": string | null
+}
+""".strip()
+    return f"""Extract bibliographic metadata from the paper TEXT.
+
+Return STRICT JSON matching exactly this shape (no extra keys, no markdown):
+{fmt}
+
+Author formatting rules:
+- Output each author as: Last, First Middle (academic format).
+- If source is "First Middle Last", convert to "Last, First Middle".
+- Preserve multi-word surnames and particles (e.g., "De Brouwer" -> "De Brouwer, Edward").
+- Keep initials with periods (e.g., "J. B. Oliva" -> "Oliva, J. B.").
+- Remove emails, ORCIDs, degrees, and markers (*, †, ‡, digits, indices).
+- Collapse spaces; drop empty results; preserve original author order.
+
+Other rules:
+- Use null for missing or uncertain fields.
+- year: integer (e.g., 2019).
+- keywords: short lowercase phrases.
+- Output ONLY the JSON object.
+
+TEXT:
+{text}
+"""
 
 
-def extract_metadata_bulk(
-    doc_texts: Dict[str, List[str]],
-    client: BaseLLMClient,
-    *,
-    model: str = "gpt-5-mini",
-    temperature: float = 1.0,
-    max_workers: int = 6,
-    max_pages_per_doc: int | None = 1,
-    enforce_json: bool = True,
-) -> List[Dict[str, Any]]:
-    # Prepare inputs
-    batch_inputs = []
-    for doc_id, pages in doc_texts.items():
-        usable = pages[: max_pages_per_doc] if max_pages_per_doc else pages
-        text = "\n\n".join(p for p in usable if p)
-        if text:
-            batch_inputs.append((text, doc_id))
-    
-    # Extract
-    bulk_results = extract_bulk_with_llm(
-        batch_inputs,
-        client,
-        deterministic_extraction_prompt(),
-        metadata_extraction_prompt,
-        model=model,
-        temperature=temperature,
-        max_workers=max_workers,
-        enforce_json=enforce_json,
-    )
-    
-    # Process results
-    results: List[Dict[str, Any]] = []
-    for doc_id, raw, _ in bulk_results:
-        data, reason = parse_structured_obj(raw)
+class MetadataExtractor:
+    """Extracts bibliographic metadata from document text using LLM."""
+
+    def __init__(
+        self,
+        client: LLMClient,
+        *,
+        model: str = "gpt-4o-mini",
+        temperature: float = 1.0,
+        enforce_json: bool = True,
+        debug: bool = False,
+    ):
+        """
+        Initialize metadata extractor.
+
+        Args:
+            client: LLM client instance
+            model: Model to use for extraction
+            temperature: Sampling temperature
+            enforce_json: Whether to enforce JSON response format
+            debug: Enable debug logging
+        """
+        self.client = client
+        self.model = model
+        self.temperature = temperature
+        self.enforce_json = enforce_json
+        self.debug = debug
+
+    def extract(self, texts: List[str]) -> Dict[str, Any]:
+        """
+        Extract metadata from text using LLM (single API call).
+
+        Args:
+            texts: List of text strings (typically pages from a document)
+
+        Returns:
+            Dict with normalized metadata fields
+        """
+        if not texts:
+            return {"error": "no_texts"}
+
+        combined = "\n\n".join(t for t in texts if t)
+        data, reason = extract_with_llm(
+            combined,
+            self.client,
+            deterministic_extraction_prompt(),
+            metadata_extraction_prompt,
+            model=self.model,
+            temperature=self.temperature,
+            enforce_json=self.enforce_json,
+            debug=self.debug,
+        )
+
         if not isinstance(data, dict):
-            results.append({"document_id": doc_id, "error": "invalid_json", "why": reason})
-            continue
-        norm = _normalize_metadata(data)
-        norm["document_id"] = doc_id
-        results.append(norm)
-    return results
+            return {"error": "invalid_json", "why": reason}
+        return _normalize_metadata(data)
 
+    def extract_bulk(
+        self,
+        doc_texts: Dict[str, List[str]],
+        *,
+        max_pages_per_doc: Optional[int] = 1,
+    ) -> List[Dict[str, Any]]:
+        """
+        Extract metadata for multiple documents sequentially (one call per doc).
 
+        Args:
+            doc_texts: Dict mapping document_id to list of page texts
+            max_pages_per_doc: Max pages to use per document (None = use all)
+
+        Returns:
+            List of metadata dicts with 'document_id' field added
+        """
+        results: List[Dict[str, Any]] = []
+        for doc_id, pages in doc_texts.items():
+            sample = pages[:max_pages_per_doc] if max_pages_per_doc else pages
+            out = self.extract(sample)
+            out["document_id"] = doc_id
+            results.append(out)
+        return results

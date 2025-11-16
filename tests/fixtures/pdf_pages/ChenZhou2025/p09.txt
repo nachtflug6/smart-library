@@ -1,0 +1,6 @@
+Zhang, J.; Zheng, S.; Cao, W.; Bian, J.; and Li, J. 2023.
+Warpformer: A Multi-Scale Modeling Approach for Irregu-
+lar Clinical Time Series. In Proceedings of the 29th ACM
+SIGKDD Conference on Knowledge Discovery and Data
+Mining, 3273–3285. Association for Computing Machinery.
+15739

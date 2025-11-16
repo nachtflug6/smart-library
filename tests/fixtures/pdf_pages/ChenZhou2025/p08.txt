@@ -1,0 +1,113 @@
+Acknowledgments
+This work was supported in part by the National Nature
+Science Foundation of China (No. 62206261, 62176245,
+62137002).
+References
+Altman, N. S. 1992. An introduction to kernel and nearest-
+neighbor nonparametric regression. The American Statisti-
+cian, 46(3): 175–185.
+Che, Z.; Purushotham, S.; Cho, K.; Sontag, D.; and Liu, Y.
+2018. Recurrent neural networks for multivariate time series
+with missing values. Scientiﬁc reports, 8(1): 6085.
+Chen, A.; Zhou, X.; Fan, Y.; and Chen, H. 2023. Under-
+ground Diagnosis Based on GPR and Learning in the Model
+Space. IEEE Transactions on Pattern Analysis and Machine
+Intelligence, 1–14.
+Chen, H.; Tang, F.; Tino, P.; Cohn, A. G.; and Yao, X. 2015.
+Model metric co-learning for time series classiﬁcation. In
+Twenty-fourth international joint conference on artiﬁcial in-
+telligence.
+Chen, H.; Tiˇno, P.; Rodan, A.; and Yao, X. 2013. Learning in
+the model space for cognitive fault diagnosis. IEEE transac-
+tions on neural networks and learning systems, 25(1): 124–
+136.
+Chen, L.; Zhou, X.; and Chen, H. 2024. Audio Scanning
+Network: Bridging Time and Frequency Domains for Au-
+dio Classiﬁcation. Proceedings of the AAAI Conference on
+Artiﬁcial Intelligence, 38(10): 11355–11363.
+Chen, R. T.; Rubanova, Y.; Bettencourt, J.; and Duvenaud,
+D. K. 2018.
+Neural ordinary differential equations.
+Ad-
+vances in neural information processing systems, 31.
+Chowdhury, R. R.; Li, J.; Zhang, X.; Hong, D.; Gupta, R. K.;
+and Shang, J. 2023. PrimeNet: Pre-Training for Irregular
+Multivariate Time Series. In Proceedings of the AAAI Con-
+ference on Artiﬁcial Intelligence.
+Cortes, C.; and Vapnik, V. 1995. Support-vector networks.
+Machine learning, 20(3): 273–297.
+De Boor, C. 1978. A practical guide to splines, volume 27.
+Springer-Verlag New York.
+Dormand, J. R.; and Prince, P. J. 1980. A family of embed-
+ded Runge-Kutta formulae. Journal of computational and
+applied mathematics, 6(1): 19–26.
+Gong, Z.; Chen, H.; Yuan, B.; and Yao, X. 2018. Multiobjec-
+tive learning in the model space for time series classiﬁcation.
+IEEE Transactions on Cybernetics, 49(3): 918–932.
+Jaeger, H. 2001.
+The “echo state” approach to analysing
+and training recurrent neural networks-with an erratum note.
+Bonn, Germany: German National Research Center for In-
+formation Technology GMD Technical Report, 148(34): 13.
+Jaeger, H.; Lukoˇseviˇcius, M.; Popovici, D.; and Siewert, U.
+2007. Optimization and applications of echo state networks
+with leaky-integrator neurons. Neural networks, 20(3): 335–
+352.
+Jhin, S. Y.; Lee, J.; and Park, N. 2023.
+Precursor-of-
+Anomaly Detection for Irregular Time Series. In Proceed-
+ings of the 29th ACM SIGKDD Conference on Knowledge
+Discovery and Data Mining, 917–929.
+Keiner, J.; Kunis, S.; and Potts, D. 2009. Using NFFT 3—
+A Software Library for Various Nonequispaced Fast Fourier
+Transforms. ACM Trans. Math. Softw., 36(4).
+Kidger, P.; Morrill, J.; Foster, J.; and Lyons, T. 2020. Neu-
+ral controlled differential equations for irregular time se-
+ries. Advances in Neural Information Processing Systems,
+33: 6696–6707.
+Liu, D.; Xiao, Z.; Hu, X.; Zhang, C.; and Malik, O. 2019.
+Feature extraction of rotor fault based on EEMD and curve
+code. Measurement, 135: 712–724.
+Liu, S.; Zhou, X.; and Chen, H. 2024. From Data to D3
+Model: Adaptive Subsurface Anomaly Detection in GPR
+Data. IEEE Transactions on Geoscience and Remote Sens-
+ing, 62: 1–12.
+Loparo, K. 2012. Case western reserve university bearing
+data center.
+Bearings Vibration Data Sets, Case Western
+Reserve University, 22–28.
+Ma, Q.; Li, S.; Zhuang, W.; Wang, J.; and Zeng, D. 2020.
+Self-supervised time series clustering with model-based dy-
+namics. IEEE Transactions on Neural Networks and Learn-
+ing Systems, 32(9): 3942–3955.
+Quevedo, J.; Chen, H.; Cuguer´o, M. `A.; Tino, P.; Puig, V.;
+Garci´a, D.; Sarrate, R.; and Yao, X. 2014. Combining learn-
+ing in model space fault diagnosis with data validation/re-
+construction: Application to the Barcelona water network.
+Engineering Applications of Artiﬁcial Intelligence, 30: 18–
+29.
+Rodan, A.; and Tiˇno, P. 2012. Simple deterministically con-
+structed cycle reservoirs with regular jumps. Neural compu-
+tation, 24(7): 1822–1852.
+Rubanova, Y.; Chen, R. T.; and Duvenaud, D. K. 2019. La-
+tent ordinary differential equations for irregularly-sampled
+time series. Advances in neural information processing sys-
+tems, 32.
+Shao, S.; McAleer, S.; Yan, R.; and Baldi, P. 2019. Highly
+Accurate Machine Fault Diagnosis Using Deep Transfer
+Learning.
+IEEE Transactions on Industrial Informatics,
+15(4): 2446–2455.
+Shukla, S. N.; and Marlin, B. 2021. Multi-Time Attention
+Networks for Irregularly Sampled Time Series. In Interna-
+tional Conference on Learning Representations.
+Sterne, J. A.; White, I. R.; Carlin, J. B.; Spratt, M.; Royston,
+P.; Kenward, M. G.; Wood, A. M.; and Carpenter, J. R. 2009.
+Multiple imputation for missing data in epidemiological and
+clinical research: potential and pitfalls. Bmj, 338.
+Yuan, Z.; Ban, X.; Zhang, Z.; Li, X.; and Dai, H.-N. 2023.
+ODE-RSSM: Learning Stochastic Recurrent State Space
+Model from Irregularly Sampled Data. Proceedings of the
+AAAI Conference on Artiﬁcial Intelligence, 37(9): 11060–
+11068.
+15738

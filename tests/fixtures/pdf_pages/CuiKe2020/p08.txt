@@ -1,0 +1,97 @@
+memory. All the neural network-based models are trained and evaluated on a single NVIDIA GeForece GTX 1080 Ti with 11 GB
+Memory.
+4.2.2. Baselines
+As indicated by multiple existing studies, the classical statistical models and machine learning models cannot outperform the
+LSTM model for traffic forecasting. Thus, those classical statistical models, such as ARIMA Williams and Hoel (2003) and machine
+learning models, such as support vector regression Wu et al. (2004) and random forest Zarei et al. (2013), are not compared in this
+study.
+The compared models tested on datasets without missing values include LSTM, BDLSTM, and multiple combinations of LSTM and
+BDLSTM. The baseline models tested on datasets with missing values include Bayesian Gaussian CANDECOMP/PARAFAC decom-
+position(BGCP) Chen et al. (2019b), gated recurrent unit RNN with a decay mechanism (GRU-D) Che et al. (2018), LSTM, and several
+combainations of LSTM-I and BDLSTM-I.
+4.2.3. Parameters
+The neural network models are implemented by PyTorch 1.0.1. In the training process, we use the mini-batch training strategy.
+The input of the forecasting models is a 3-D vector
+× ×
+X
+b T D. The batch size b is set as 64 and D is the number of sensors depending
+on the specific dataset. The length of input sequence T is set as 10, which is within a reasonable range according to Yu et al. (2017b),
+Lv et al. (2015). The samples are randomized and divided into the training, validation, and test set with the ratio 6:2:2. All the RNN-
+based models are trained by minimizing the mean square error (MSE) using the Adam optimization method Kingma and Ba (2014).
+The early stopping mechanism is used to avoid over-fitting. If the model improvement, i.e. the descrease of the validation loss, cannot
+exceed a threshold, set as 0.00001 (MSE), in 5 consecutive epochs, the training process will be terminated. We also design a learning
+rate decay mechanism for the training process to speed up the models’ convergence. The initial learning rate of all models is set as
+10 3. If the model improvement cannot surpass the threshold, the learning rate will reduce an order of magnitude until it reaches 10 5.
+4.2.4. Missing scenarios
+When forecasting models are evaluated based on traffic state data with missing values, both the amount and the distribution of
+missing values will affect the prediction performance. Hence, we create a random scenario and a non-random scenario to generate
+datasets with different missing patterns according to Chen et al. (2019a). The random scenario is created by randomly setting a
+specific proportion of values in the input as zeroes. The non-random scenario is created by randomly setting the values at a specific
+proportion of time steps as zeroes. The masking vectors for the two scenarios can be generated accordingly. For generating datasets
+with different amounts of missing values, datasets with 10%, 20%, 40%, and 80% missing values are created and tested in this study.
+When generating datasets with missing values, we use the identical random seed to ensure all models are evaluated on the identical
+datasets.
+4.2.5. Evaluation
+To measure the effectiveness of different traffic state prediction algorithms, widely used traffic prediction metrics Li and Shahabi
+(2018), including Mean Absolute Error (MAE), Mean Absolute Percentage Error (MAPE), and Root Mean Square Error (RMSE), are
+computed using the following equations:
+=
+=
+MAE
+n
+i
+x i
+x i
+1
+_
+1
+_
+_
+n
+(23)
+=
+=
+MAPE
+n
+i
+x i
+x i
+x i
+100
+_
+1
+_
+_
+_
+n
+(24)
+=
+=
+RMSE
+i
+x i
+x i
+n
+_
+1
+_
+_
+n
+2
+(25)
+where x i
+_ is the observed traffic speed, and x i_ is the predicted speed.
+4.3. Experimental results
+In this section, the evaluation results of stacked and bidirectional LSTM-based models tested on the LOOP-SEA and PEMS-BAY
+datasets are shown in Table 1 and 2, respectively. The ”N DBLSTM + LSTM” refers to a n-layer BDLSTMs with an LSTM layer as the
+last layer. The ”N LSTM + BDLSTM” is named in the similar way.
+From the experimental results shown in the two tables, we can observe at least three main similar patterns. Firstly, compared with
+multi-layer LSTMs and BDLSTMs, the one-layer models performs worst, which indicates the stacking mechanism can improve the
+prediction performance. Among the multi-layer models, the two-layer models outperforms the models with more layers. The pre-
+diction performance decreases along with the increase of amount of layers. The two-layer BDLSTM achieves the minimum MAEs of
+2.336 and 1.186 on the LOOP-SEA and PEMS-BAY datasets, respectively. The second main finding is that the BDLSTM model with a
+specific number of layers performs better than the LSTM model with the same number of layers. This phenomenon is perticularly
+evident on the results of the PEMS-BAY data. The third finding is that the BDLSTM is more suitable than the LSTM for being the last
+Z. Cui, et al.
+Transportation Research Part C 118 (2020) 102674
+8

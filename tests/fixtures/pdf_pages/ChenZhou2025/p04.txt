@@ -1,0 +1,237 @@
+Algorithm 1: Ct-Echo-Decay
+Input: Sequence x, sampling time t, number of sampling points
+E, input and hidden weights Whx and Whh, function fθ.
+Output: The output weights {Wyh, b}
+1: Initialize h(t1) = tanh(Whx · x(t1))
+2: for n = 2 to E do
+3:
+hm(tn) = ODESolver(fθ(h), h(tn−1), (tn−1, tn)),
+4:
+h(tn) = tanh(Whh · hm(tn) + Whx · x(tn)),
+5: Compute weights of x(t + 1) = Wyhh(t) + b on observed
+timestep through Ridge Regression
+6: return {Wyh, b}
+Algorithm 2: Ct-Echo-Leaky
+Input: Sequence x, sampling time t, number of sampling points
+E, input weight Whx, hidden weight Whh, function fθ.
+Output: The output weights {Wyh, b}
+1: Initialize h(t0) = ˜0
+2: x ←CubicSplineInterpolation(x)
+3: for n = 1 to E do
+4:
+hm(tn) = ODESolver(fθ(h, x), h(tn−1), (tn−1, tn)),
+5:
+h(tn) = tanh(hm(tn)),
+6: Compute weights of x(t + 1) = Wyhh(t) + b on observed
+timestep through Ridge Regression
+7: return {Wyh, b}
+cess. The analytical solution with an initial value h(tn−1) at
+any time t is given by
+h(tn−1) · eτ·(t−tn−1).
+(3)
+Therefore, the intermediate state hm(tn) in Formula (1) is
+given by value at tn:
+hm(tn) = h(tn−1) · eτ·(tn−tn−1).
+(4)
+Consequently, the decay mechanism leads to the gradual
+fading of the previous information in the hidden states,
+which is modulated by the variability of the time intervals.
+The pseudocode of the ﬁtting process of a sequence x using
+Ct-Echo-Decay is presented in Algorithm 1.
+Ct-Echo-Leaky
+The second variant of Ct-Echo incorpo-
+rates the ODE into the reservoir, making the ODE directly
+consider input x. As shown in Figure 4(a), sending the input
+x into the hidden layer through the input layer sequentially,
+the iterative process in Ct-Echo-Leaky is deﬁned as follows:
+hm(tn) = ODESolver(fθ(h, x), h(tn−1), (tn−1, tn)),
+h(tn) = tanh(hm(tn)),
+(5)
+where hm(tn) is the intermediate state computed by the
+ODE solver4, which integrates the ODE function over the
+time interval (tn−1, tn). The hidden state h(tn) is obtained
+by applying the tanh function.
+According to the iteration (Figure 4(b)) of Ct-Echo-
+Leaky, the input sequence is ﬁrst represented by a spline
+4In this variant, the ODE complicates the integration process,
+requiring numerical solution methods. Runge-Kutta (4,5) is uti-
+lizied in this paper (Dormand and Prince 1980).
+Input Layer
+Hidden Layer
+Output Layer
+hx
+W
+hh
+W
+yh
+W
+Reservoir
+1
+2
+3
+( )
+( )
+( )
+...
+(
+)
+E
+y t
+y t
+y t
+y t
+ª
+º
+«
+»
+«
+»
+«
+»
+«
+»
+«
+»
+«
+»
+¬
+¼
+1
+2
+3
+( )
+( )
+( )
+...
+(
+)
+E
+h t
+h t
+h t
+h t
+ª
+º
+«
+»
+«
+»
+«
+»
+«
+»
+«
+»
+«
+»
+¬
+¼
+y
+1
+2
+3
+( )
+( )
+( )
+...
+(
+)
+E
+x t
+x t
+x t
+x t
+ª
+º
+«
+»
+«
+»
+«
+»
+«
+»
+«
+»
+«
+»
+¬
+¼
+x
+h
+( )
+n
+x t
+ODESolver
+(a) Structure of Ct-Echo-Leaky
+1
+( )
+x t
+2
+( )
+x t
+3
+( )
+x t
+4
+( )
+x t
+5
+( )
+x t
+Input
+Hidden
+state
+Spline
+curve
+1
+( )
+h t
+2
+( )
+h t
+3
+( )
+h t
+4
+( )
+h t
+5
+( )
+h t
+(b) Flow of Ct-Echo-Leaky in hidden layer
+Figure 4: Illustration of Ct-Echo-Leaky. (a) is the structure,
+consisting of an input layer, a hidden layer, and an output
+layer. It integrates ODEs into the reservoir in the hidden
+layer to establish continuous-time hidden states. (b) is the
+processing ﬂow in the hidden layer. The green line is the
+spline curve achieved through the input, and the blue line is
+the continuous-time hidden state obtained in the reservoir.
+curve5. Subsequently, the ODE integrates considering both
+the input and proceeding hidden states to generate a contin-
+uous hidden process, giving hidden states at any time step.
+Notebly in Ct-Echo-Leaky, we utilize the leaky integrator
+(Jaeger et al. 2007) to model irregular sequences, given as:
+dh
+dt = fθ(h, x) = −a·h+tanh(Whh ·h+Whx ·x), (6)
+where a acts as the leaky rate, and the tanh function captures
+the non-linear interactions between the hidden state h and
+the input x. This design ensures a balanced consideration
+of both inputs and hidden states, useful for modeling time-
+dependent processes. The pseudocode of Ct-Echo-Leaky is
+presented in Algorithm 2.
+Fitting Sequence by “Next-Step Prediction”
+To ﬁt the
+sequence and capture its dynamic characteristics via Ct-
+Echo, we adopt the “next-step prediction” approach (Chen
+et al. 2015). This approach predicts the next step value using
+current and past values in the series, effectively capturing the
+dynamic characteristics of the data and obtaining the readout
+model as the representation of the original data.
+Speciﬁcally, 1) a sequence x is sequentially sent into the
+hidden layer through the input layer. 2) x is then iterated in
+the hidden layer to obtain the hidden states h. During the it-
+eration process through Formula (1) or (5), the hidden state
+5To handle irregularly sampled input data x, cubic spline inter-
+polation (De Boor 1978) is employed.
+15734
