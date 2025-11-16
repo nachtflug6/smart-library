@@ -24,13 +24,6 @@ MODELS_TO_TEST = [
 ]
 
 
-def _valid_api_key(k: str | None) -> bool:
-    if not k:
-        return False
-    s = k.strip().strip('"').strip("'")
-    return s.startswith("sk-") and len(s) > 20
-
-
 # Skip unless explicitly opted-in and API key is present
 pytestmark = pytest.mark.skipif(
     not (RUN_LIVE and bool(API_KEY)),
