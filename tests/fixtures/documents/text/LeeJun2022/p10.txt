@@ -1,0 +1,60 @@
+LEE et al.: MULTI-VIEW INTEGRATIVE ATTENTION-BASED DEEP REPRESENTATION LEARNING
+4279
+Fig. 4.
+Visualization of (top) normalized raw data for observation (X), missing indicator (M), and time interval (Δ), (middle) relevance score map
+for observation (RX), missing indicator (RM), and time interval (RΔ), and (bottom) bar graph for changes of the highlighted relevance scores on
+their time points (HCT: hematocrit, RespRate: respiration rate, BUN: blood urea nitrogen) of a patient with low mortality (ˆy = 0.1542). Here, we
+visualized only positive relevance scores for simplicity.
+relevance scores, i.e., those with scores greater than μ + 1.2σ.
+Fig. 3 and Fig. 4 show the raw observation, missing indicators,
+and time interval (X, M, Δ), their corresponding relevance
+score map (RX, RM, RΔ), and the changes of highlighted
+relevance scores over the time points for the two patients with
+the highest and lowest probability among test samples with a
+ground truth label of 1, i.e. mortality.
+1) Case I: Patient With the Highest Predicted Mortality Prob-
+ability: Fig. 3 shows the input data and relevance scores of a
+patient with the highest predicted probability for in-hospital
+mortality. The relevance scores of all the input data showed
+relatively similar patterns, especially between RX and RM. It
+can be inferred that the model effectively employed both the
+observation and missingness information during the decision
+process. The variables with high relevance score were Hemat-
+ocrit (HCT), Glasgow coma score (GCS), systolic arterial blood
+pressure (SysABP), and heart rate (HR). HCT, which refers to
+the volume percentage of red blood cells in blood, is an indicator
+of heart failure in the ICU [28]. The raw signal at the time
+point of the high relevance scores showed a distinct change,
+affecting the increase in the mortality. The GCS is a clinical
+scale used to reliably measure a patient’s level of consciousness
+after brain injury. The frequent measurement of the GCS and
+its changes indicate the severity of the patient’s status, which
+is related to the increase in the mortality of the patient. Lastly,
+SysABP and HR presented high relevance scores over the time
+points at which they were frequently measured. The frequent
+measurement of both variables may indicate deterioration of
+the patient’s condition, leading to the increased in-hospital
+mortality.
+2) Case II: Patient With the Lowest Predicted Mortality Prob-
+ability: Fig. 4 shows the input data and relevance scores of a
+patient with a mispredicted low probability, despite an actual
+ground truth label of 1. The variables with high relevance scores
+were respiration rate (RespRate), blood urea nitrogen (BUN),
+and HCT. RespRate indicates the number of breaths per minute,
+and thus, a rapid change in this value is considered abnormal.
+However, the relevance score of the patient was high when
+the RespRate exhibited minor changes. The BUN indicates the
+amount of urea nitrogen, a waste product of the digestion of
+protein, found in the blood. Although the BUN is the indicator
+for renal failure, it is not a distinct indicator of high in-hospital
+mortality.
+The relevance scores of the patient with high mortality pre-
+diction were high in variables that are directly related to the mor-
+tality prediction, as well as in the time points involving distinct
+changes in the values. However, the patient with low mortality
+prediction showed a high relevance score for the variables or
+time points with low correlation to the in-hospital mortality. In
+addition, the experimental results for the high similarity of the
+relevance scores for the observations, missing indicators, and
+time interval data showed that the use of the representation of
+Authorized licensed use limited to: Chalmers University of Technology Sweden. Downloaded on August 14,2025 at 08:41:20 UTC from IEEE Xplore.  Restrictions apply. 

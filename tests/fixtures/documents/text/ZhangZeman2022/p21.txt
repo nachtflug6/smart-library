@@ -1,0 +1,70 @@
+Published as a conference paper at ICLR 2022
+32
+2
+6
+25
+3
+13
+8
+28
+33
+26
+20
+18
+31
+14
+4
+11
+16
+7
+15
+1
+5
+17
+29
+10
+30
+19
+22
+12
+9
+24
+23
+27
+Figure 5: Differential structure of dependency graphs between positive and negative samples. The edges are
+directed. We select the top 50 edges with largest difference (in absolute value) between two patterns. The edges
+are colored by the divergences. The darker color denotes the connection is more crucial to classiﬁcation task.
+Node 0 is not included in this ﬁgure as it is not connected with any sensor. We can infer that the heart rate is
+stable whether the patient will get sepsis or not. Moreover, we can see the edge from node 3 (systolic BP) to
+node 13 (Oxygen saturation from arterial blood) and the connection from node 6 (Respiration rate) to node 25
+(Potassium) are informative for distinguishing sample classes.
+https://physionet.org/content/challenge-2019/1.0.0/. We list the sensor names here: 0: HR; 1: O2Sat;
+2: Temp; 3: SBP; 4: MAP; 5: DBP; 6: Resp; 7: EtCO2; 8: BaseExcess; 9: HCO3; 10: FiO2; 11:
+pH; 12: PaCO2; 13: SaO2; 14: AST; 15: BUN; 16: Alkalinephos; 17: Calcium; 18: Chloride; 19:
+Creatinine; 20: Bilirubin_direct; 21: Glucose; 22: Lactate; 23: Magnesium; 24: Phosphate; 25:
+Potassium; 26: Bilirubin_total; 27: TroponinI; 28: Hct; 29: Hgb; 30: PTT; 31: WBC; 32: Fibrinogen;
+33: Platelets.
+We also visualize the differential inter-sensor connections between the learned dependency graphs
+from patients who are likely to have sepsis and the graphs from patients who are unlikely to suffer
+from sepsis. Based on the aggregated graph structures of positive and negative samples, we calculate
+the divergence between two groups of patients and report the results in Figure 5. In detail, we sort
+edges by the absolute difference of edge weights across negative and positive samples. On top of
+the visualization of the 50 most distinctive edges, we can have a series of concrete insights. For
+example, the dependency between node 6 (Respiration rate) to node 25 (Potassium) is important to
+the early prediction of sepsis. Note these data-driven observations could be biased and still need
+conﬁrmation and future analysis from healthcare professionals. The edges in both Figure 4 and
+Figure 5 are directed. The edge arrows might be difﬁcult to recognize due to the small ﬁgure size.
+We will provide high-resolution ﬁgures to our public repository.
+Furthermore, we statistically measure the similarities across samples within the same class and
+dissimilarities across samples from different classes. Speciﬁcally, for every sample, we calculate:
+1) the average Euclidean distance between its dependency graph and the dependency graphs of all
+samples from the same class; 2) the average distance with all samples from the different classes. The
+P19 dataset has 38,803 samples including 1,623 positive samples and 37,180 negative samples. For
+a fair comparison, we randomly select 1,623 samples from the negative cohort, then mixed them
+with an equal number of positive samples to measure the averaged Euclidean distances intra- and
+inter-classes. We select the cohort for 5 independent times with replacement. We ﬁnd that the distance
+((8.6 ± 1.7) × 10−5) among dependency graphs of positive samples is smaller than the distance
+((12.9 ± 3.1) × 10−5) across samples. The results show that the learned dependency graphs are
+similar within the same class and dissimilar across classes, which demonstrates RAINDROP can learn
+label-sensitive dependency graphs.
+21

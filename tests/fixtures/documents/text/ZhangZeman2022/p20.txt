@@ -1,0 +1,169 @@
+Published as a conference paper at ICLR 2022
+23
+22
+20
+19
+18
+17
+16
+15
+14
+13
+12
+11
+10
+9
+8
+7
+5
+1
+21
+0
+6
+4
+3
+2
+33
+32
+31
+30
+29
+28
+27
+26
+25
+24
+(a) Negative samples
+11
+10
+9
+8
+7
+6
+28
+3
+21
+0
+12
+5
+4
+2
+1
+33
+32
+31
+30
+29
+27
+26
+25
+24
+23
+22
+20
+19
+18
+17
+16
+15
+14
+13
+(b) Positive samples
+Figure 4: Learned structure for negative and positive samples (P19; Setting 1). The nodes numbered from 0 to
+33 denote 34 sensors used in P19 (sensor names are listed in Appendix A.15). To make the visualized structures
+easier to understand, we use darker green to denote higher weight value and yellow to denote lower weight value.
+We can observe distinguishable patterns across two learned sensor dependency graphs, indicating RAINDROP is
+able to adaptively learn graph structures that are sensitive to the classiﬁcation task. For example, we ﬁnd that the
+nodes 1 (pulse oximetry), 5 (diastolic BP), and 12 (partial pressure of carbon dioxide from arterial blood) have
+lower weights in negative samples.
+Table 8: Classiﬁcation results when train and test samples originate from different groups (P19).
+Model
+Generalizing to a new patient group
+Train: Young →Test: Old
+Train: Old →Test: Young
+Train: Male →Test: Female
+Train: Female →Test: Male
+AUROC
+AUPRC
+AUROC
+AUPRC
+AUROC
+AUPRC
+AUROC
+AUPRC
+Transformer
+76.2 ± 0.7
+30.5 ± 4.8
+76.5 ± 1.1
+33.7 ± 5.7
+77.8 ± 1.1
+26.0 ± 6.2
+75.2 ± 1.0
+30.3 ± 5.5
+Trans-mean
+80.6 ± 1.4
+39.8 ± 4.2
+78.4 ± 1.1
+35.8 ± 2.9
+80.2 ± 1.7
+32.1 ± 1.9
+76.4 ± 0.8
+32.5 ± 3.3
+GRU-D
+76.5 ± 1.7
+29.5 ± 2.3
+79.6 ± 1.7
+35.2 ± 4.6
+78.5 ± 1.6
+31.9 ± 4.8
+76.3 ± 2.5
+31.1 ± 2.6
+SeFT
+77.5 ± 0.7
+26.6 ± 1.2
+78.9 ± 1.0
+32.7 ± 2.7
+78.6 ± 0.6
+31.1 ± 1.2
+76.9 ± 0.5
+26.4 ± 1.1
+mTAND
+79.0 ± 0.8
+28.8 ± 2.3
+79.4 ± 0.6
+29.8 ± 1.2
+78.0 ± 0.9
+26.5 ± 1.7
+78.9 ± 1.2
+29.2 ± 2.0
+RAINDROP
+83.2 ± 1.6
+43.6 ± 4.7
+82.0 ± 4.4
+44.3 ± 3.6
+85.0 ± 1.4
+45.2 ± 2.9
+81.2 ± 3.8
+40.7 ± 2.9
+A.14
+FURTHER DETAILS ON ABLATION STUDY
+We provide ablation study, taking PAM at Setting 1 as an example, in Table 7. In the setup of ‘W/o
+sensor level concatenation’, we take the average of all sensor embeddings (in stead of concatenating
+them together) to obtain sample embedding. Experimental results show that the full RAINDROP
+model achieves the best performance, indicating every component or designed structure is useful
+to the model. For example, we ﬁnd that excluding inter-sensor attention weights αt
+i,uv will cause a
+decrease of 3.9% in accuracy while excluding edge weights ei,uv (i.e., dependency graphs) will drop
+the accuracy by 7.1%.
+A.15
+VISUALIZATION OF INTER-SENSOR DEPENDENCY GRAPHS LEARNED BY RAINDROP
+We visualize the learned inter-sensor dependencies (i.e., ei,uv before the averaging operation in Eq. 3)
+on P19 in early sepsis prediction. The visualizations are implemented with Cytoscape (Shannon
+et al., 2003). The data shown are for testing set of P19 including 3,881 samples (3708 negative
+and 173 positive). As RAINDROP learns the speciﬁc graph for each sample, we take average of all
+positive samples and visualize it in Figure 4b; and visualize the average of all negative samples in
+Figure 4b. As we take average, the edges with weights smaller than 0.1 (means they rarely appear
+in graphs) are ignored. The averaged edge weights range from 0.1 to 1. We initialize all sample
+graphs as complete graph that has 1,156 = 34 × 34 edges, then prune out 50% of them in training
+phase, remaining 578 edges. The 34 nodes in ﬁgures denote 34 sensors measured in P19, as listed
+20

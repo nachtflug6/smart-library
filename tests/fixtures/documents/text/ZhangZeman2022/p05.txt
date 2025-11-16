@@ -1,0 +1,108 @@
+Published as a conference paper at ICLR 2022
+Sensor-level
+processing in sample
+Sensor
+embedding
+Attention 
+weights
+u
+v
+u
+v
+u
+v
+Observation-level 
+processing in sample
+Message passing
+Sensors
+Time representation
+Learned embeddings
+Dot product
+Weight vector
+Observation (input)
+v
+u
+Edge weight
+attention weight
+Inter-sensor
+a
+b
+Stacked observation
+embeddings
+Sample      records the value 
+of sensor     at time 
+c
+Update edge weight          in
+Sample      at layer 
+β
+Figure 3: (a) RAINDROP generates observation embedding ht
+i,u based on observed value xt
+i,u at t, passes
+message to neighbor sensors such as v, and generates ht
+i,v through inter-sensor dependencies. The αt
+i,uv denotes
+a time-speciﬁc attention weight, calculated based on time representation pt
+i and weight vector rv. Edge weight
+ei,uv is shared by all timestamps. (b) An illustration of generating sensor embedding. Apply the message
+passing in (a) to all timestamps and produce corresponding observation embeddings. We aggregate arbitrary
+number of observation embeddings into a ﬁxed-length sensor embedding zi,v while paying distinctive attentions
+to different observations. We independently apply the processing procedure to all sensors. (c) RAINDROP
+updates edge weight e(l)
+i,uv based on the edge weight e(l−1)
+i,uv
+from previous layer and the learned inter-sensor
+attention weights in all time steps. We explicitly show layer index l as multiple layers are involved.
+Embedding an observation of an active sensor. Let u denote an active sensor whose value has just
+been observed as xt
+i,u. For sufﬁcient expressive power (Veliˇckovi´c et al., 2018), we map observation
+xt
+i,u to a high-dimensional space using a nonlinear transformation: ht
+i,u = σ(xt
+i,uRu). We use sensor-
+speciﬁc transformations because values recorded at different sensors can follow different distributions,
+which is achieved by trainable weight vectors Ru depending on what sensor is activated (Li et al.,
+2020b). Alternatives, such as a multilayer perceptron, can be considered to transform xt
+i,u into ht
+i,u.
+As ht
+i,u represents information brought on by observing xt
+i,u, we regard ht
+i,u as the embedding of u’s
+observation at t. Sensor-speciﬁc weight vectors Ru are shared across samples.
+Passing messages along sensor dependency graphs. For sensors that are not active at timestamp
+t but are neighbors of the active sensor u in the sensor dependency graph Gi, RAINDROP uses
+relationships between u and those sensors to estimate observation embeddings for them. We proceed
+by describing how RAINDROP generates observation embedding ht
+i,v for sensor v assuming v is a
+neighbor of u in Gi. Given ht
+i,u and edge (u, ei,uv, v), we ﬁrst calculate inter-sensor attention weight
+αt
+i,uv ∈[0, 1], representing how important u is to v via the following equation:
+αt
+i,uv = σ(ht
+i,uD[rv||pt
+i]T ),
+(1)
+where rv ∈Rdr is a trainable weight vector that is speciﬁc to the sensor receiving the message
+(i.e., ht
+i,u). Vector rv allows the model to learn distinct attention weights for different edges going
+out from the same sensor u. Further, pt
+i ∈Rdt is the time representation obtained by converting
+a 1-dimensional timestamp t into a multi-dimensional vector pt
+i by passing t through a series of
+trigonometric functions (Horn et al., 2020). See Appendix A.1 for details. RAINDROP uses pt
+i to
+calculate attention weights that are sensitive to time. Finally, D is a trainable weight matrix mapping
+ht
+i,u from dh dimensions to (dr +dt) dimensions. Taken this together, we can estimate the embedding
+ht
+i,v for u’s neighbor v as follows:
+ht
+i,v = σ(ht
+i,uwuwT
+v αt
+i,uvei,uv),
+(2)
+where wu, wv ∈Rdh are trainable weight vectors shared across all samples. The wu is speciﬁc to
+active sensor u and wv is speciﬁc to neighboring sensor v. In the above equation, ei,uv denotes edge
+5

@@ -1,0 +1,131 @@
+MIMIC-III Benchmarks & Formulation
+In this section, we describe the MIMIC-III benchmark tasks
+and the application of the SAnD framework to these tasks,
+along with a joint multi-task formulation.
+The MIMIC-III database consists of de-identiﬁed infor-
+mation about patients admitted to critical care units between
+2001 and 2012 (Johnson et al. 2016). It encompasses an ar-
+ray of data types such as diagnostic codes, survival rates,
+and more. Following (Harutyunyan et al. 2017), we used the
+cohort of 33, 798 unique patients with a total of 42, 276 hos-
+pital admissions and ICU stays. Using raw data from Phy-
+sionet, each patient’s data has been divided into separate
+episodes containing both time-series of events, and episode-
+level outcomes (Harutyunyan et al. 2017). The time-series
+measurements were then transformed into a 76-dimensional
+vector at each time-step. The size of the benchmark dataset
+for each task is highlighted in Table 1.
+In Hospital Mortality:
+Mortality prediction is vital dur-
+ing rapid triage and risk/severity assessment. In Hospital
+Mortality is deﬁned as the outcome of whether a patient dies
+during the period of hospital admission or lives to be dis-
+charged. This problem is posed as a binary classiﬁcation one
+where each data sample spans a 24-hour time window. True
+mortality labels were curated by comparing date of death
+(DOD) with hospital admission and discharge times. The
+mortality rate within the benchmark cohort is only 13%.
+Decompensation:
+Another aspect that affects treatment
+planning is deterioration of organ functionality during hos-
+pitalization. Physiologic decompensation is formulated as
+a problem of predicting if a patient would die within the
+next 24 hours by continuously monitoring the patient within
+ﬁxed time-windows. Therefore, the benchmark dataset for
+this task requires prediction at each time-step. True decom-
+pensation labels were curated based on occurrence of pa-
+tient’s DOD within the next 24 hours, and only about 4.2%
+of samples are positive in the benchmark.
+Length of Stay:
+Forecasting length of a patient’s stay is
+important in healthcare management. Such an estimation
+is carried out by analyzing events occurring within a ﬁxed
+time-window, once every hour from the time of admission.
+As part of the benchmark, hourly remaining length of stay
+values are provided for every patient. These true range of
+values were then transformed into ten buckets to repose this
+into a classiﬁcation task, namely: a bucket for less than a day,
+seven one day long buckets for each day of the 1st week, and
+two outlier buckets-one for stays more than a week but less
+than two weeks, and one for stays greater than two weeks
+(Harutyunyan et al. 2017).
+Phenotyping:
+Given information about a patient’s ICU
+stay, one can retrospectively predict the likely disease condi-
+tions. This process is referred to as acute care phenotyping.
+The benchmark dataset deals with 25 disease conditions of
+which 12 are critical such as respiratory/renal failure, 8 con-
+ditions are chronic such as diabetes, atherosclerosis, and 5
+are ’mixed’ conditions such as liver infections. Typically, a
+patient is diagnosed with multiple conditions and hence this
+can be posed as a multi-label classiﬁcation problem.
+Table 1: Task-speciﬁc sample sizes of MIMIC-III dataset.
+Benchmark
+Train
+Validation
+Test
+Mortality
+14,659
+3,244
+3,236
+Decompensation
+2,396,001
+512,413
+523,208
+Length of Stay
+2,392,950
+532,484
+525,912
+Phenotyping
+29,152
+6,469
+6,281
+Applying SAnD to MIMIC-III Tasks
+In order to solve the afore-mentioned benchmark tasks with
+SAnD, we need to make a few key parameter choices for
+effective modeling. These include: size of the self-attention
+mask (r), dense interpolation factor (M) and the number of
+attention blocks (N). While attention models are computa-
+tionally more efﬁcient than RNNs, their memory require-
+ments can be quite high when N is signiﬁcantly large. How-
+ever, in practice, we are able to produce state-of-the-art re-
+sults with small values of N. As described in the previous
+section, the total number of computations directly relies on
+the size of the mask, r and interestingly our experiments
+show that smaller mask sizes are sufﬁcient to capture all
+required dependencies in 3 out of 4 tasks, except pheno-
+typing, which needed modeling of much longer-range de-
+pendencies. The dependency of performance on the dense
+interpolation factor, M is more challenging to understand,
+since it relies directly on the amount of variability in the
+measurements across the sequence. The other hyperparam-
+eters of network such as the learning rate, batch size and
+embedding sizes were determined using the validation data.
+Note, in all cases, we used the Adam optimizer (Kingma
+and Ba 2014) with parameters β1 = 0.9, β2 = 0.98 and
+ϵ = 10−8. The training was particularly challenging for the
+decompensation and length of stay tasks because of the large
+training sizes. Consequently, training was done by dividing
+the data into chunks of 20000 samples and convergence was
+observed with just 20-30 randomly chosen chunks. Further-
+more, due to the imbalance in the label distribution, using a
+larger batch size (256) helped in some of the cases.
+Multi-task Learning:
+In several recent results from the
+deep learning community, it has been observed that joint in-
+ferencing with multiple related tasks can lead to superior
+performance in each of the individual tasks, while drasti-
+cally improving the training behavior. Hence, similar to the
+approach in (Harutyunyan et al. 2017), we implemented a
+multi-task version of our approach, SAnD-Multi, that uses
+a loss function that jointly evaluates the performance of all
+tasks, which can be expressed as follows:
+ℓmt = λpℓph + λiℓihm + λdℓdc + λlℓlos,
+(2)
+where ℓph, ℓihm, ℓdc, ℓlos correspond to the losses for the
+four tasks. The input embedding and attention modules are
+shared across the tasks, while the ﬁnal representations and
+the prediction layers are unique to each task. Our approach
+allows the use of different mask sizes and interpolation fac-
+tors for each task, but requires the use of the same N.
+4095

@@ -1,0 +1,76 @@
+Published as a conference paper at ICLR 2022
+RAINDROP learns informative embeddings for irregularly samples time series. The learned embed-
+dings capture temporal patterns of irregular observations and explicitly consider varying dependencies
+between sensors. While we focus on time-series classiﬁcation in this work, the proposed method can
+be easily extended to broader applications such as regression, clustering and generation tasks.
+3.1
+OVERVIEW OF RAINDROP
+Sample 
+Sensor
+Observation
+(Section 3.3)
+(Section 3.4)
+(Section 3.5)
+Figure 2: Hierarchical structure
+of irregular multivariate time se-
+ries dataset. RAINDROP embeds
+individual observations consid-
+ering inter-sensor dependencies
+(Sec. 3.3), aggregates them into
+a sensor embedding using tempo-
+ral attention (Sec. 3.4), and ﬁnally
+integrates sensor embeddings into
+a sample embedding (Sec. 3.5).
+RAINDROP aims to learn a ﬁxed-dimensional embedding zi for a
+given sample Si and predict the associated label ˆyi. To this end,
+it generates sample embeddings using a hierarchical architecture
+composed of three levels to model observations (sensor readouts),
+sensors, and whole samples (Figure 2). Without loss of generality,
+we describe RAINDROP’s procedure as if observations arrive one
+at a time (one sensor is observed at time t and other sensors do not
+have observations). If there are multiple observations at the same
+time, RAINDROP can effortlessly process them in parallel.
+RAINDROP ﬁrst constructs a graph for every sample where nodes rep-
+resent sensors and edges indicate relations between sensors (Sec. 3.2).
+We use Gi to denote the sensor graph for sample Si and ei,uv to rep-
+resent the weight of a directed edge from sensor u to sensor v in Gi.
+Sensor graphs are automatically optimized considering sample-wise
+and time-wise speciﬁcity.
+The key idea of RAINDROP is to borrow information from u’s neigh-
+bors based on estimated relationships between u and other sensors.
+This is achieved via message passing carried out on Si’s dependency
+graph and initiated at node u in the graph. When an observation
+(t, xt
+i,u) is recorded for sample Si at time t, RAINDROP ﬁrst em-
+beds the observation at active sensor u (i.e., sensor whose value
+was recorded) and then propagates messages (i.e., the observation
+embeddings) from u to neighboring sensors along edges in sensor
+dependency graph Gi. As a result, recording the value of u can affect
+u’s embedding as well as embeddings of other sensors that related to u (Sec. 3.3). Finally, RAINDROP
+generates sensor embeddings by aggregating all observation embeddings for each sensor (across all
+timestamps) using temporal attention weights (Sec. 3.4). At last, RAINDROP embeds sample Si based
+on sensor embeddings (Sec. 3.5) and feeds the sample embedding into a downstream predictor.
+3.2
+CONSTRUCTING SENSOR DEPENDENCY GRAPHS
+We build a directed weighted graph Gi = {V, Ei} for every sample Si and refer to it as the sensor
+dependency graph for Si. Nodes V represent sensors and edges Ei describe dependencies between
+sensors in sample Si that RAINDROP infers. As we show in experiments, RAINDROP can be directly
+used with samples that only contain a subset of sensors in V. We denote edge from u to v as a
+triplet (u, ei,uv, v), where ei,uv ∈[0, 1] represents the strength of relationship between sensors u
+and v in sample Si. Edge (u, ei,uv, v) describes the relationship between u and v: when u receives
+an observation, it will send a neural message to v following edge ei,uv. If ei,uv = 0, there is no
+exchange of neural information between u and v, indicating that the two sensors are unrelated. We
+assume that the importance of u to v is different than the importance of v to u, and so we treat sensor
+dependency graphs as directed, i.e., ei,uv ̸= ei,vu. All graphs are initialized as fully-connected graphs
+(i.e., ei,uv = 1 for any u, v and Si) and edge weights ei,uv are updated following Eq. 3 during model
+training. If available, it is easy to integrate additional domain knowledge into graph initialization.
+3.3
+GENERATING EMBEDDINGS OF INDIVIDUAL OBSERVATIONS
+Let u indicate active sensor at time t ∈Ti,u, i.e., sensor whose value xt
+i,u is observed at t, and let u be
+connected to v through edge (u, ei,uv, v). We next describe how to produce observation embeddings
+ht
+i,u ∈Rdh and ht
+i,v ∈Rdh for sensors u and v, respectively (Figure 3a). We omit layer index l and
+note that the proposed strategy applies to any number of layers.
+4

@@ -1,0 +1,76 @@
+Published as a conference paper at ICLR 2022
+performance (Wells et al., 2013; Li & Marlin, 2016). Thus, recent methods circumvent the imputation
+stage and directly model irregularly sampled time series (Che et al., 2018; Horn et al., 2020).
+Previous studies (Wu et al., 2021; Li et al., 2020a; Zhang et al., 2019) have noted that inter-sensor
+correlations bring rich information in modeling time series. However, only few studies consider
+relational structure of irregularly sampled time series, and those which do have limited ability in
+capturing inter-sensor connections (Wu et al., 2021; Shukla & Marlin, 2018). In contrast, we integrate
+recent advances in graph neural networks to take advantage of relational structure among sensors. We
+learn latent graphs from multivariate time series and model time-varying inter-sensor dependencies
+through neural message passing, establishing graph neural networks as a way to model sample-varying
+and time-varying structure in complex time series.
+v
+u
+Observation 
+Heart rate
+Blood pressure
+Blood test
+Temperature
+Survival
+Death
+Observations (raindrops)
+are unaligned across
+different sensors 
+and have irregular time
+intervals between them
+Figure 1: The RAINDROP approach. For
+sample Si, sensor u is recorded at time t1 as
+value xt1
+i,u, triggering a propagation and trans-
+formation of neural messages along edges of
+Si’s sensor dependency graph.
+Present work. To address the characteristics of irregu-
+larly sampled time series, we propose to model temporal
+dynamics of sensor dependencies and how those relation-
+ships evolve over time. Our intuitive assumption is that the
+observed sensors can indicate how the unobserved sensors
+currently behave, which can further improve the represen-
+tation learning of irregular multivariate time series. We
+develop RAINDROP1, a graph neural network that lever-
+ages relational structure to embed and classify irregularly
+sampled multivariate time series. RAINDROP takes sam-
+ples as input, each sample containing multiple sensors and
+each sensor consisting of irregularly recorded observa-
+tions (e.g., in clinical data, an individual patient’s state of
+health is recorded at irregular time intervals with different
+subsets of sensors observed at different times). RAINDROP
+model is inspired by how raindrops hit a surface at varying
+times and create ripple effects that propagate through the
+surface. Mathematically, in RAINDROP, observations (i.e.,
+raindrops) hit a sensor graph (i.e., surface) asynchronously
+and at irregular time intervals. Every observation is processed by passing messages to neighboring
+sensors (i.e., creating ripples), taking into account the learned sensor dependencies (Figure 1). As
+such, RAINDROP can handle misaligned observations, varying time gaps, arbitrary numbers of
+observations, and produce multi-scale embeddings via a novel hierarchical attention.
+We represent dependencies with a separate sensor graph for every sample wherein nodes indicate
+sensors and edges denote relationships between them. Sensor graphs are latent in the sense that
+graph connectivity is learned by RAINDROP purely from observational time series. In addition to
+capturing sensor dependencies within each sample, RAINDROP i) takes advantage of similarities
+between different samples by sharing parameters when calculating attention weights, and ii) considers
+importance of sequential sensor observations via temporal attention.
+RAINDROP adaptively estimates observations based on both neighboring readouts in the temporal
+domain and similar sensors as determined by the connectivity of optimized sensor graphs. We
+compare RAINDROP to ﬁve state-of-the-art methods on two healthcare datasets and an activity
+recognition dataset across three experimental settings, including a setup where a subset of sensors
+in the test set is malfunctioning (i.e., have no readouts at all). Experiments show that RAINDROP
+outperforms baselines on all datasets with an average AUROC improvement of 3.5% in absolute
+points on various classiﬁcation tasks. Further, RAINDROP improves prior work by a 9.3% margin
+(absolute points in accuracy) when varying subsets of sensors malfunction.
+2
+RELATED WORK
+Our work here builds on time-series representation learning and notions of graph neural networks and
+attempts to resolve them by developing a single, uniﬁed approach for analysis of complex time series.
+Learning with irregularly sampled multivariate time series. Irregular time series are character-
+ized by varying time intervals between adjacent observations (Zerveas et al., 2021; Tipirneni &
+1Code and datasets are available at https://github.com/mims-harvard/Raindrop.
+2

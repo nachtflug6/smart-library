@@ -1,0 +1,113 @@
+4280
+IEEE JOURNAL OF BIOMEDICAL AND HEALTH INFORMATICS, VOL. 26, NO. 8, AUGUST 2022
+the missingness and observation contributed to more accurate
+predictions.
+VI. CONCLUSION
+In this work, we proposed a method to directly learn the
+integrated representations of multi-view features from irreg-
+ular multivariate time series data by using the self-attention
+mechanism without imputation. Speciﬁcally, we devised a novel
+multi-integration attention module (MIAM) to extract complex
+missingpatternsbyintegratingmissingindicatorsandtimeinter-
+vals, and further combine the observation and missing patterns
+in the representation space through a self-attention block. In
+addition, we built an attention-based decoder as a missing value
+imputer that helped empower the representation learning of the
+interrelations among multi-view observations; this imputer op-
+erated only in the training phase. We validated the effectiveness
+of our method in three downstream tasks, i.e., prediction of
+in-hospital mortality, LOS prediction, and phenotyping, over
+the public MIMIC-III and PhysioNet challenge 2012 datasets
+and compared its performance with SOTA methods; the pro-
+posed method outperformed the SOTA methods. Furthermore,
+we identiﬁed the informative observations and time points by
+applying LRP to the learned model.
+VI. DATA AVAILABILITY
+MIMIC-III database analyzed in this study is available on
+PhysioNet repository. All the codes used for our experiments
+and analysis are open at https://github.com/ku-milab/MIAM.
+REFERENCES
+[1] P. Nguyen, T. Tran, N. Wickramasinghe, and S. Venkatesh, “Deepr: A
+convolutional net for medical records,” IEEE J. Biomed., vol. 21, no. 1,
+pp. 22–30, Jan. 2017.
+[2] Q. Suo et al., “Personalized disease prediction using a CNN-based simi-
+larity learning method,” in Proc. Int. Conf. IEEE Bioinf. Biomed., 2017,
+pp. 811–816.
+[3] Z. C. Lipton, D. Kale, and R. Wetzel, “Directly modeling missing data in
+sequences with RNNs: Improved classiﬁcation of clinical time series,” in
+Proc. Mach. Learn. Health Conf., 2016, pp. 253–270.
+[4] J. Futoma, S. Hariharan, and K. Heller, “Learning to detect sepsis with
+a multitask Gaussian process RNN classiﬁer,” in Proc. Int. Conf. Mach.
+Learn., 2017, pp. 1174–1182.
+[5] S. N. Shukla and B. M. Marlin, “Interpolation-prediction networks for
+irregularly sampled time series,” in Proc. Int. Conf. Lern. Rep., 2019,
+pp. 1–14.
+[6] M. Lechner and R. Hasani, “Learning long-term dependencies in
+irregularly-sampled time series,” 2020, arXiv:2006.04418.
+[7] Z. Che, S. Purushotham, K. Cho, D. Sontag, and Y. Liu, “Recurrent neural
+networks for multivariate time series with missing values,” Sci. Rep., vol. 8,
+pp. 1–12, 2018.
+[8] I. M. Baytas, C. Xiao, X. Zhang, F. Wang, A. K. Jain, and J. Zhou, “Patient
+subtyping via time-aware LSTM networks,” in Proc. ACM SIGKDD Int.
+Conf. Knowl. Discov. Data Mining, 2017, pp. 65–74.
+[9] Y. Zhang, “ATTAIN: Attention-based time-aware LSTM networks for
+disease progression modeling,” in Proc. Int. Joint Conf. Artif. Intell., 2019,
+pp. 4369–4375.
+[10] Y. Zhang, X. Yang, J. Ivy, and M. Chi, “ATTAIN: Attention-based time-
+aware LSTM networks for disease progression modeling,” in Proc. Int.
+Joint Conf. Artif. Intell., 2020, vol. 34, pp. 930–937.
+[11] E. Choi, M. T. Bahadori, J. Sun, J. Kulas, A. Schuetz, and W. Stewart,
+“RETAIN: An interpretable predictive model for healthcare using reverse
+time attention mechanism,” in Proc. Adv. Neural Inf. Process. Syst., 2016,
+pp. 3504–3512.
+[12] E. Choi, M. T. Bahadori, L. Song, W. F. Stewart, and J. Sun, “GRAM:
+Graph-based attention model for healthcare representation learning,” in
+Proc. ACM SIGKDD Int. Conf. Knowl. Discov. Data Mining, 2017,
+pp. 787–795.
+[13] F. Ma, Q. You, H. Xiao, R. Chitta, J. Zhou, and J. Gao, “KAME:
+Knowledge-based attention model for diagnosis prediction in healthcare,”
+in Proc. ACM Int. Conf. Inf. Knowl. Manage., 2018, pp. 743–752.
+[14] H. Song, D. Rajan, J. J. Thiagarajan, and A. Spanias, “Attend and diagnose:
+Clinical time series analysis using attention models,” in Proc. Assoc. Adv.
+Artif. Intell., 2018, pp. 4091–4098.
+[15] M. Horn, M. Moor, C. Bock, B. Rieck, and K. Borgwardt, “Set functions
+for time series,” in Proc. Int. Conf. Mach. Learn., 2020, pp. 4353–4363.
+[16] A. Vaswani et al., “Attention is all you need,” in Proc. Adv. Neural Inf.
+Process. Syst., 2017, pp. 5998–6008.
+[17] W. Cao, D. Wang, J. Li, H. Zhou, L. Li, and Y. Li, “BRITS: Bidirectional
+recurrent imputation for time series,” in Proc. Adv. Neural Inf. Process.
+Syst., 2018, vol. 31, pp. 6775–6785.
+[18] J. Yoon, J. Jordon, and M. Schaar, “GAIN: Missing data imputation
+using generative adversarial nets,” in Proc. Int. Conf. Mach. Learn., 2018,
+pp. 5689–5698.
+[19] V. Fortuin, D. Baranchuk, G. Rätsch, and S. Mandt, “GP-VAE: Deep
+probabilistic time series imputation,” in Proc. Int. Conf. AISTATS, 2020,
+pp. 1651–1661.
+[20] E. Jun, A. W. Mulyadi, and H.-I. Suk, “Stochastic imputation and
+uncertainty-aware attention to EHR for mortality prediction,” in Proc. Int.
+Joint Conf. Neur. Netw., 2019, pp. 1–7.
+[21] E.Jun,A.W.Mulyadi,J.Choi,andH.I.Suk,“Uncertainty-gatedstochastic
+sequential model for EHR mortality prediction,” IEEE Trans. Neural Netw.
+Learn. Syst., vol. 32, no. 9, pp. 4052–4062, Sep. 2021.
+[22] M. Zaheer, S. Kottur, S. Ravanbakhsh, B. Poczos, R. R. Salakhutdinov,
+and A. J. Smola, “Deep sets,” in Proc. Adv. Neural Inf. Process. Syst.,
+2017, pp. 3391–3401.
+[23] T.-Y. Lin, P. Goyal, R. Girshick, K. He, and P. Dollár, “Focal loss for dense
+object detection,” in Proc. Int. Conf. Comput. Vis., 2017, pp. 2980–2988.
+[24] J. Devlin, M.-W. Chang, K. Lee, and K. Toutanova, “BERT: Pre-training
+of deep bidirectional transformers for language understanding,” in Proc.
+North Amer. Chapter Assoc. Comput. Linguistics: Hum. Lang. Technol.,
+2019, pp. 4171 4186.
+[25] L. Liu et al., “On the variance of the adaptive learning rate and beyond,”
+in Proc. Int. Conf. Learn. Rep., 2019, pp. 1–13.
+[26] S. Bach, A. Binder, G. Montavon, F. Klauschen, K.-R. Müller, and
+W. Samek, “On pixel-wise explanations for non-linear classiﬁer deci-
+sions by layer-wise relevance propagation,” PLoS One, vol. 10, 2015,
+Art. no. e0130140.
+[27] Z. Wu and D. C. Ong, “On explaining your explanations of bert: An empir-
+ical study with sequence classiﬁcation,” CoRR, 2021, arXiv:2101.00196.
+[28] B. D. Spiess et al., “Hematocrit value on intensive care unit entry inﬂu-
+ences the frequency of Q-wave myocardial infarction after coronary artery
+bypass grafting,” J. Thoracic. Cardiovasc. Surg., vol. 116, pp. 460–467,
+1998.
+Authorized licensed use limited to: Chalmers University of Technology Sweden. Downloaded on August 14,2025 at 08:41:20 UTC from IEEE Xplore.  Restrictions apply. 

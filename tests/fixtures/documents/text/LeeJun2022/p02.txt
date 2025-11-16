@@ -1,0 +1,97 @@
+LEE et al.: MULTI-VIEW INTEGRATIVE ATTENTION-BASED DEEP REPRESENTATION LEARNING
+4271
+Fig. 1.
+Visualization of multi-view data. An observation (X) represents
+the observed time series of all variables, missing indicators (M) indicate
+whether the variables are observed (1) or missing (0), and the time
+interval (Δ) indicates the difference between successive observation
+time points.
+discrete reference time points. In such approaches, the available
+observations in the input with the interpolants at these time
+points may inevitably introduce additional noise or information
+loss due to the assumption of a ﬁxed time interval.
+A more effective approach for handling irregular time series is
+to directly model the unequally spaced original data. Unlike the
+conventional RNN that relies on discrete time, ordinary differen-
+tial equation(ODE)-based recurrence models [6] generalized the
+hidden state transitions in an RNN to continuous time dynamics.
+An alternative is to exploit the source of missingness such as
+missing indicators and time interval to model the informative
+missingness pattern. The existing works [3], [7]–[10] used either
+missing indicators or the time interval, and applied the heuris-
+tic decaying function such as a monotonically non-increasing
+function, without learning the representations for missingness.
+Recently, attention-based methods [11]–[15] have been used
+to deal with irregular sampling instances. In particular, self-
+attention models [16] provide computational advantages over
+RNNs due to their fully parallelized sequence processing. Sev-
+eral works based on self-attention mechanism applied a simple
+modiﬁed self-attention scheme such as masked attention [14],
+or replaced the positional encoding with time encoding and
+concatenated encoding vectors and missing indicators [15].
+To address the aforementioned limitations, we consider the
+human knowledge such as regarding the aspects to be measured
+and time to measure them in different situations, which are
+indirectly represented in the data in the shape of incompleteness
+and imperfections. These facets are known as multi-view fea-
+tures, i.e., observations, missing indicators, and time intervals,
+as shown in Fig. 1. Speciﬁcally, we propose a novel method
+to jointly learn the deep representations of multi-view features
+from irregular multivariate time series data by using the self-
+attention mechanism in an imputation-free manner. The main
+contributions of this research can be summarized as follows:
+r We devise a novel multi-view integration attention module
+(MIAM) to learn complex missing patterns by integrating
+the missing indicators and time interval, and further com-
+bine the observation and missing patterns in the represen-
+tation space through a series of self-attention blocks.
+r We build an attention-based decoder on top of the MIAM
+as a missing data imputer that helps empower the repre-
+sentation learning of the interrelations among multi-view
+observations for the prediction task; this imputer operates
+only in the training phase.
+r We demonstrate that the proposed method can outperform
+state-of-the-art (SOTA) methods in downstream tasks,
+such as the prediction of the in-hospital mortality, pre-
+diction of the length of stay (LOS), and phenotyping on
+real-world EHR datasets, i.e., the Medical Information
+Mart for the Intensive Care (MIMIC-III) and PhysioNet
+2012 challenge datasets.
+r We analyze the trained model by applying layer-wise rele-
+vancepropagation(LRP) todemonstratetheexplainability
+of the highlighted variables and time points related to the
+ﬁnal prediction for an observation and its corresponding
+human knowledge information.
+II. RELATED WORK
+1) Irregular Time Series Modeling: To accommodate irreg-
+ularly sampled time series data, the widely-used approach is
+to discretize the time into consecutive and non-overlapping
+uniform intervals, i.e., temporal discretization [3], [4], which
+enables the use of models that operate on ﬁxed-dimensional
+vectors. Discretization reduces the problem from irregular time
+series data modeling to missing data imputation. Simple imputa-
+tion approaches range from simple zero imputation and forward
+ﬁlling to more sophisticated deep learning approaches [17]
+includingtheuseofagenerativeadversarialnetwork(GAN)[18]
+and variational autoencoder (VAE) [19], [20], etc. However, the
+explicit imputation of the missing data during discretization
+is primarily based on heuristic or unsupervised methods that
+are not universally applicable, and cannot consider the uncer-
+tainty [21] in downstream clinical tasks.
+Similar to discretization methods, interpolation methods re-
+quire the speciﬁcation of discrete reference time points. A
+multitask Gaussian process (MGP-RNN) model [4] conducted
+a probabilistic interpolation by transforming an irregular time
+series into a more uniform representation on evenly spaced
+reference time points, and feeding the latent function values into
+RNNs. Although this approach provided uncertainty, deﬁcien-
+cies exist in terms of the predeﬁned time interval between the
+reference time points and limited expressiveness of the model in
+terms of the sum of separable kernel functions. In contrast, the
+interpolation-prediction network (IPNet) [5] learns an optimal
+time interval to perform deterministic interpolation; ﬁrst by
+interpolating the irregular time series for each variable, and later
+merging all-time series across every variable. However, IPNet
+may unavoidably introduce additional noise or information loss
+because a ﬁxed time interval is assumed.
+Authorized licensed use limited to: Chalmers University of Technology Sweden. Downloaded on August 14,2025 at 08:41:20 UTC from IEEE Xplore.  Restrictions apply. 

@@ -1,0 +1,56 @@
+Published as a conference paper at ICLR 2022
+GRAPH-GUIDED NETWORK FOR IRREGULARLY
+SAMPLED MULTIVARIATE TIME SERIES
+Xiang Zhang
+Harvard University
+xiang_zhang@hms.harvard.edu
+Marko Zeman
+University of Ljubljana
+marko.zeman@fri.uni-lj.si
+Theodoros Tsiligkaridis
+MIT Lincoln Laboratory
+ttsili@ll.mit.edu
+Marinka Zitnik
+Harvard University
+marinka@hms.harvard.edu
+ABSTRACT
+In many domains, including healthcare, biology, and climate science, time series
+are irregularly sampled with varying time intervals between successive readouts
+and different subsets of variables (sensors) observed at different time points. Here,
+we introduce RAINDROP, a graph neural network that embeds irregularly sampled
+and multivariate time series while also learning the dynamics of sensors purely
+from observational data. RAINDROP represents every sample as a separate sensor
+graph and models time-varying dependencies between sensors with a novel mes-
+sage passing operator. It estimates the latent sensor graph structure and leverages
+the structure together with nearby observations to predict misaligned readouts. This
+model can be interpreted as a graph neural network that sends messages over graphs
+that are optimized for capturing time-varying dependencies among sensors. We use
+RAINDROP to classify time series and interpret temporal dynamics on three health-
+care and human activity datasets. RAINDROP outperforms state-of-the-art methods
+by up to 11.4% (absolute F1-score points), including techniques that deal with
+irregular sampling using ﬁxed discretization and set functions. RAINDROP shows
+superiority in diverse setups, including challenging leave-sensor-out settings.
+1
+INTRODUCTION
+Multivariate time series are prevalent in a variety of domains, including healthcare, space science,
+cyber security, biology, and ﬁnance (Ravuri et al., 2021; Sousa et al., 2020; Sezer et al., 2020; Fawaz
+et al., 2019). Practical issues often exist in collecting sensor measurements that lead to various
+types of irregularities caused by missing observations, such as saving costs, sensor failures, external
+forces in physical systems, medical interventions, to name a few (Choi et al., 2020). While temporal
+machine learning models typically assume fully observed and ﬁxed-size inputs, irregularly sampled
+time series raise considerable challenges (Shukla & Marlin, 2021; Hu et al., 2021). For example,
+observations of different sensors might not be aligned, time intervals among adjacent observations are
+different across sensors, and different samples have different numbers of observations for different
+subsets of sensors recorded at different time points (Horn et al., 2020; Wang et al., 2011).
+Prior methods for dealing with irregularly sampled time series involve ﬁlling in missing values using
+interpolation, kernel methods, and probabilistic approaches (Schafer & Graham, 2002). However,
+the absence of observations can be informative on its own (Little & Rubin, 2014) and thus imputing
+missing observations is not necessarily beneﬁcial (Agniel et al., 2018). While modern techniques
+involve recurrent neural network architectures (e.g., RNN, LSTM, GRU) (Cho et al., 2014) and
+transformers (Vaswani et al., 2017), they are restricted to regular sampling or assume aligned
+measurements across modalities. For misaligned measurements, existing methods tend to rely on a
+two-stage approach that ﬁrst imputes missing values to produce a regularly-sampled dataset and then
+optimizes a model of choice for downstream performance. This decoupled approach does not fully
+exploit informative missingness patterns or deal with irregular sampling, thus producing suboptimal
+1
+arXiv:2110.05357v2  [cs.LG]  16 Mar 2022

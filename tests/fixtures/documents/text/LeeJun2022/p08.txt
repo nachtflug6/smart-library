@@ -1,0 +1,72 @@
+LEE et al.: MULTI-VIEW INTEGRATIVE ATTENTION-BASED DEEP REPRESENTATION LEARNING
+4277
+TABLE V
+ABLATION STUDIES RELATED TO THE MISSING PATTERN GENERATION FOR
+THE PHYSIONET 2012 CHALLENGE DATASET
+TABLE VI
+ABLATION STUDIES RELATED TO THE ATTENTION-BASED IMPUTER FOR THE
+MIMIC-III DATASET
+and second highest performance over the MIMIC-III dataset and
+PhysioNet 2012 challenge datasets, respectively. This ﬁnding
+highlights the need for adjusting the time interval instead of
+using this information directly. Notably, T-LSTM [8] showed
+the highest RMSE and MAE in both PhysioNet 2012 and
+MIMIC-III datasets, suggesting the necessity of missing pattern
+information, as the T-LSTM only considers the time intervals,
+unlike the other methods.
+3) Phenotyping: The phenotyping result is available only for
+the MIMIC-III dataset as the PhysioNet 2012 challenge dataset
+does not provide phenotyping labels. The attention-based meth-
+ods outperformed the recurrence-based and imputation-based
+methods. In particular, our proposed method showed the best
+performance with an mAUC of 0.8359 and AUPRC of 0.5631,
+followed by the SAnD [14] model. Most recurrence-based
+methods presented relatively better performance compared to
+interpolation-based methods. GRU-D [7], which used both the
+missing indicators and time interval similar to the proposed
+method, demonstrated a competitive performance among the
+recurrence-based methods, which implies the necessity of uti-
+lizing the representations from the missing pattern. Furthermore,
+T-LSTM [8] exhibited the lowest performance, because it only
+considers the time intervals between the observations with a
+simple decay function.
+These experimental results validated the efﬁcacy of the pro-
+posed method that learns the multi-view representations of
+irregular time series data and their deep integration by the
+self-attention mechanism and further builds the auxiliary miss-
+ing data imputer, showing its superior performance in various
+downstream tasks.
+B. Ablation Study
+According to Table III and Table IV, integrating the ob-
+servation and sources of missingness yielded superior results
+than those obtained using only the observation, and the highest
+TABLE VII
+ABLATION STUDIES TO INVESTIGATE THE EFFECT OF USING THE IMPUTED
+DATA BY THE BRITS, AND AUXILIARY IMPUTER (IMP.) FOR THE PHYSIONET
+2012 CHALLENGE DATASET
+TABLE VIII
+ABLATION STUDIES TO INVESTIGATE THE EFFECT OF USING THE IMPUTED
+DATA BY THE BRITS, AND AUXILIARY IMPUTER (IMP.) FOR THE MIMIC-III
+DATASET
+TABLE IX
+ABLATION STUDIES RELATED TO THE MISSING PATTERN GENERATION USING
+THE MISSING INDICATOR (M) AND TIME INTERVAL (Δ) AS THE QUERY INPUT
+OF THE ATTENTION BLOCK FOR THE PHYSIONET 2012 CHALLENGE DATASET
+TABLE X
+ABLATION STUDIES RELATED TO THE MISSING PATTERN GENERATION USING
+THE MISSING INDICATOR (M) AND TIME INTERVAL (Δ) AS THE QUERY
+INPUT OF THE ATTENTION BLOCK FOR THE MIMIC-III DATASET
+performance over both the MIMIC-III and PhysioNet 2012
+datasets in all downstream tasks corresponded to the integration
+for triple views. This ﬁnding demonstrated the effectiveness of
+incorporating the observation and sources of missingness. In the
+double view cases, the scenario of (X + Δ) corresponded to a
+slightly higher performance in terms of the mortality and LOS
+prediction compared to that of the (X + M) case in both datasets
+for all downstream tasks.
+To further examine the observation and sources of missing-
+ness, we conducted an additional ablation study to extract the
+missingness. Table IX and Table X showed the performance
+of the proposed model with Δ or M as query input. In both
+datasets, the scenario of letting Δ as a query achieved superior
+Authorized licensed use limited to: Chalmers University of Technology Sweden. Downloaded on August 14,2025 at 08:41:20 UTC from IEEE Xplore.  Restrictions apply. 

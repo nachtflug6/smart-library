@@ -1,0 +1,171 @@
+LEE et al.: MULTI-VIEW INTEGRATIVE ATTENTION-BASED DEEP REPRESENTATION LEARNING
+4273
+In this study, given a clinical time series dataset D =
+{(X(n), M(n), Δ(n))}N
+n=1 for N subjects, we construct a map-
+ping function to deﬁne the prediction labels (y1, . . . , yN).
+For uncluttered, we will use functional notation that repre-
+sents information regarding a particular patient, omitting the
+superscript (n) for the n-th subject.
+B. Multi-View Integration Learning
+The key feature of missing data is that the missingness may
+convey meaningful information, and ignoring this dependence
+may lead to incorrect predictions. The existing works [3],
+[7]–[10] leveraged these sources of missingness, i.e., missing
+indicators and time interval, and applied the heuristic decaying
+function to use these aspects without learning their representa-
+tions. However, the inappropriate modeling of missingness may
+lead to the unreliable assessment of the feature importance and
+the generation of a model that is not robust to measurement
+changes.
+Considering these aspects, in this work, we learn a deep
+representation of the irregular time series data by effectively
+leveraging both missing indicators and time intervals. We con-
+sider these sources of missingness as human knowledge in
+terms of what to measure and when to measure it in different
+situations; these aspects are indirectly represented in the data.
+In this context, we regard the representations of the missing
+indicators and time interval as multi-view features of irregularly
+sampled observation. Speciﬁcally, we propose a multi-view fea-
+ture integration learning for modeling the interrelations among
+multi-view observations. To this end, a self-attention mechanism
+is used, in which the inner product of representations often
+reﬂects relationships such as a similarity.
+1) Input and Time Embedding: Given the D measurements
+at every time step, the ﬁrst step is to learn the respective input
+embeddings for the observation, missing indicators, and time
+interval. Compared to an existing approach [16] that considered
+only the sequence order instead of the temporal patterns in
+positional encoding, we employ a time embedding (TE) as a
+variant of positional encoding that takes continuous time values
+as input, and convert them into an encoding vector representa-
+tion. This approach deals with irregularly sampled time series
+by considering the exact time points and their time interval. For
+time embedding, the sine and cosine functions proposed in [16]
+are modiﬁed as follows:
+TE(t,d) =
+⎧
+⎨
+⎩
+sin
+
+t
+L
+2 d/dmodel
+max
+
+if d is even
+cos
+
+t
+L2 d/dmodel
+max
+
+if d is odd
+(2)
+where t, d, dmodel, and Lmax denote the exact time point, an index
+of the variable, the model dimension, and the maximum time
+length of data, respectively. The time embeddings are added to
+the learned input embeddings:
+X∗= WXX + TE(t, d)
+(3)
+M∗= WMM + TE(t, d)
+(4)
+Δ∗= WΔΔ + TE(t, d)
+(5)
+where WX, WM, and WΔ are corresponding embedding
+weight matrices for the respective multi-view inputs.
+2) Self-Attention: The basic building block for this approach
+is based on multi-head self-attention (MHA) [16], in which a
+scaled dot-product attention is calculated over a set of queries
+(Q), keys (K), and values (V). Based on the self-attention block,
+we learn the attention representations of multi-view irregular
+time series including the observation X, masking indicators M,
+and time interval Δ. Speciﬁcally, each input set (X∗, M∗, Δ∗)
+learns its own representation (HX, HM, HΔ) through self-
+attention block, in which each data point is linearly combined
+with its own weight matrix and fed to the corresponding Q, K,
+and V:
+HX = σ
+
+(WQ
+X∗X∗)(WK
+X∗X∗)
+⊤
+√dk
+	
+(WV
+X∗X∗)
+(6)
+HM = σ
+
+(WQ
+M∗M∗)(WK
+M∗M∗)
+⊤
+√dk
+	
+(WV
+M∗M∗)
+(7)
+HΔ = σ
+
+(WQ
+Δ∗Δ∗)(WK
+Δ∗Δ∗)
+⊤
+√dk
+	
+(WV
+Δ∗Δ∗)
+(8)
+where W are a set of the learnable weight matrices, σ is SoftMax
+activation function, and dk is the dimension of the key vector.
+3) Multi-View Integration Attention: In this work, we devise
+a novel multi-view integration attention module (MIAM) that
+consists of two submodules: (i) an integration module that relies
+mostly on the self-attention mechanism, and (ii) a position-wise
+fully connected feed-forward network (FFN) module. The in-
+tegration module aims to learn a complex missing pattern by
+integrating the missing indicators and time interval, and further
+combines the observation and learned missing pattern in the
+representation space. While most works in the literature [3],
+[7]–[10] exploited either the missing indicators or time interval
+and applied the heuristic decaying function to enable their use,
+we effectively learn the informative missing pattern by using
+both the missing indicators and time interval in the representa-
+tion space. We argue that learning the underlying representation
+from the missingness itself eliminates the need to impute values,
+and does not require the speciﬁcation of any heuristic function.
+The integration module involves two integration steps, i.e.,
+missingness integration and observation-missingness integra-
+tion. In the ﬁrst step, we incorporate the representation of the
+missing indicators with that of the time interval by self-attention
+block, thereby obtaining the representation of missing pattern
+(Hmiss).
+Hmiss = σ
+
+(WQ
+ΔHΔ)(WK
+MHM)
+⊤
+√dk
+	
+(WV
+MHM)
+(9)
+Similarly, in the second step, the representation of the ob-
+servation is combined with that of the missing pattern through
+another self-attention block to incorporate the information of the
+missing pattern to that of variables.
+Hobs-miss = σ
+
+(WQ
+missHmiss)(WK
+XHX)
+⊤
+√dk
+	
+(WV
+XHX) (10)
+Authorized licensed use limited to: Chalmers University of Technology Sweden. Downloaded on August 14,2025 at 08:41:20 UTC from IEEE Xplore.  Restrictions apply. 

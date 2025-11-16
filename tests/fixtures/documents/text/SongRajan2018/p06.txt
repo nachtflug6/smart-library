@@ -1,0 +1,62 @@
+(a) Phenotyping - Convergence Behavior
+(b) Phenotyping - Choice of r
+(c) Phenotyping - Choice of (N, M)
+(d) In Hospital Mortality - Choice of (N, M)
+(e) Decompensation - Choice of (N, M)
+(f) Length of Stay - Choice of (N, M)
+Figure 3: Applying SAnD to MIMIC-III benchmark tasks - We illustrate the training behavior and impact of the choice of the
+attention mask size, number of attention layers and dense interpolation factor on test performance.
+Performance Evaluation
+In this section we evaluate the proposed SAnD framework on
+the benchmark tasks and present comparisons to the state-
+of-the-art RNNs based on LSTM (Harutyunyan et al. 2017),
+and baseline logistic regression (LR) with hand-engineered
+features. To this end, we discuss the evaluation metrics and
+the choice of algorithm parameters. In particular, we analyze
+the impact of the choice of number of attention layers N,
+the dense interpolation factor M, and the mask size of the
+self-attention mechanism r on the test performance. Finally,
+we report the performance of the mutli-task variants of both
+RNN and proposed approaches on all tasks.
+Single-Task Case
+Phenotyping:
+This multi-label classiﬁcation problem in-
+volves retrospectively predicting acute disease conditions.
+Following (Lipton et al. 2015) and (Harutyunyan et al.
+2017), we use the following metrics to evaluate the different
+approaches on this task: (i) macro-averaged Area Under the
+ROC Curve (AUROC), which averages per-label AUROC,
+(ii) micro-averaged AUROC, which computes single AU-
+ROC score for all classes together, (iii) weighted AUROC,
+which takes disease prevalence into account. The learning
+rate was set to 0.0005, batch size was ﬁxed at 128 and a
+residue dropout probability of 0.4 was used. First, we ob-
+serve that the proposed attention model based architecture
+demonstrates good convergence characteristics as shown in
+Figure 3(a). Given the uneven distribution of the class labels,
+it tends to overﬁt to the training data. However, with both
+attention and residue dropout regularizations, it generalizes
+well to the validation and test sets. Since, the complexity of
+the proposed approach relies directly on the attention mask
+size (r), we studied the impact of r on test performance. As
+shown in Figure 3(b), this task requires long-term depen-
+dencies in order to make accurate predictions. Though all
+performance metrics improve upon the increase of r, there
+is no signiﬁcant improvement beyond r = 96 which is still
+lower than the feature dimensionality 256. As shown in Fig-
+ure 3(c), using a grid search on the parameters N (number
+of attention layers) and M (dense interpolation factor), we
+identiﬁed the optimal values. As described earlier, lowering
+the value of N reduces the memory requirements of SAnD.
+In this task, we observe that the values N = 2 and M = 120
+produced the best performance, and as shown in Table 2, it
+is highly competitive to the state-of-the-art results.
+In Hospital Mortality:
+In this binary classiﬁcation task,
+we used the following metrics for evaluation: (i) Area un-
+der Receiver Operator Curve (AUROC), (ii) Area under
+Precision-Recall Curve (AUPRC), and (iii) minimum of pre-
+cision and sensitivity (Min(Se,P+)). In this case, we set the
+batch size to 256, residue dropout to 0.3 and the learning rate
+at 0.0005. Since the prediction is carried out using measure-
+4096

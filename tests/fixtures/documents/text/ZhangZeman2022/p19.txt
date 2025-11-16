@@ -1,0 +1,164 @@
+Published as a conference paper at ICLR 2022
+Table 6: Comparison of results when excluding dependency graph in RAINDROP (P19; Setting 4). The results
+are the same as in Table 8 except the row of ‘RAINDROP w/o graph’, where we do not consider inter-sensor
+dependencies and set all sensors as independent in the dependency graph.
+Model
+Generalizing to a new patient group
+Train: Young →Test: Old
+Train: Old →Test: Young
+Train: Male →Test: Female
+Train: Female →Test: Male
+AUROC
+AUPRC
+AUROC
+AUPRC
+AUROC
+AUPRC
+AUROC
+AUPRC
+Transformer
+76.2 ± 0.7
+30.5 ± 4.8
+76.5 ± 1.1
+33.7 ± 5.7
+77.8 ± 1.1
+26.0 ± 6.2
+75.2 ± 1.0
+30.3 ± 5.5
+Trans-mean
+80.6 ± 1.4
+39.8 ± 4.2
+78.4 ± 1.1
+35.8 ± 2.9
+80.2 ± 1.7
+32.1 ± 1.9
+76.4 ± 0.8
+32.5 ± 3.3
+GRU-D
+76.5 ± 1.7
+29.5 ± 2.3
+79.6 ± 1.7
+35.2 ± 4.6
+78.5 ± 1.6
+31.9 ± 4.8
+76.3 ± 2.5
+31.1 ± 2.6
+SeFT
+77.5 ± 0.7
+26.6 ± 1.2
+78.9 ± 1.0
+32.7 ± 2.7
+78.6 ± 0.6
+31.1 ± 1.2
+76.9 ± 0.5
+26.4 ± 1.1
+mTAND
+79.0 ± 0.8
+28.8 ± 2.3
+79.4 ± 0.6
+29.8 ± 1.2
+78.0 ± 0.9
+26.5 ± 1.7
+78.9 ± 1.2
+29.2 ± 2.0
+RAINDROP w/o graph
+80.5 ± 1.1
+31.6 ± 2.1
+78.5 ± 0.9
+36.7 ± 2.7
+81.3 ± 1.5
+36.8 ± 1.7
+77.5 ± 1.9
+33.4 ± 2.6
+RAINDROP
+83.2 ± 1.6
+43.6 ± 4.7
+82.0 ± 4.4
+44.3 ± 3.6
+85.0 ± 1.4
+45.2 ± 2.9
+81.2 ± 3.8
+40.7 ± 2.9
+Table 7: Results of ablation study on the PAM dataset (Setting 1).
+RAINDROP Model
+Accuracy
+Precision
+Recall
+F1 score
+W/o weights vector Ru
+81.1 ± 2.6
+81.9 ± 2.4
+80.1 ± 1.6
+81.6 ± 2.1
+W/o inter-sensor dependency
+W/o ei,uv
+82.6 ± 1.2
+82.9± 1.6
+84.3± 1.4
+83.8 ± 1.7
+W/o rv
+86.5 ± 2.4
+83.3 ± 1.9
+82.6± 1.5
+82.9 ± 1.4
+W/o pt
+i
+79.8 ± 2.7
+80.1 ± 3.6
+80.6 ± 1.7
+80.2 ± 2.9
+W/o αt
+i,uv
+85.2 ± 2.5
+86.4 ± 2.7
+84.5 ± 2.9
+85.6 ± 2.9
+W/o temporal attention
+81.5 ± 1.9
+84.6± 1.7
+83.9 ± 2.5
+84.2 ± 2.2
+W/o sensor level concatenation
+84.4 ± 2.1
+86.7± 1.1
+85.2± 1.9
+85.8 ± 2.6
+W/o regularization term Lr
+87.3 ± 2.9
+88.6± 3.4
+87.1± 2.8
+87.6 ± 3.1
+Full RAINDROP
+88.5±1.5
+89.9±1.5
+89.9±0.6
+89.8±1.0
+A.13
+EVALUATION ON GROUP-WISE TIME SERIES CLASSIFICATION
+To understand whether RAINDROP can adaptively adjust its structure and generalize well to other
+groups of samples which were not observed while training the model. In this setting we split the data
+into two groups, based on a speciﬁc static attribute. The ﬁrst split attribute is age, where we classify
+people into young (< 65 years) and old (≥65 years) groups. We also split patients into male and
+female by gender attribute. Given the split attribute, we use one group as a train set and randomly
+split the other group into equally sized validation and test set.
+Taking P19 as an example, we present the classiﬁcation results when the training and testing samples
+are from different groups. As shown in Table 8, RAINDROP achieves the best results over all of
+the four given cross-group scenarios. For instance, RAINDROP claims large margins (with 4.8% in
+AUROC and 13.1% in AUPRC absolute improvement) over the second best model while training on
+males and testing on female patients.
+Although RAINDROP is not designed to address domain adaptation explicitly, the results show that
+RAINDROP performs better than baselines when transferring from one group of samples to another.
+One reason for our good performance is that the learned inter-sensor weights and dependency graphs
+are sample-speciﬁc and their learning is based on the sample’s observations. Thus, the proposed
+RAINDROP has the power, to some extent, to adaptively learn the inter-sensor dependencies based on
+the test sample’s measurements. RAINDROP is not generalizing to new groups, but generalizing to
+new samples, which leads to a good performance even though our model is not designed for domain
+adaptation. We validate the reason empirically. We remove the inter-sensor dependencies (set all
+sensors isolated in the dependency graph; set all αt
+i,uv and et
+i,uv as 0) in RAINDROP and evaluate the
+model in group-wise time series classiﬁcation. The experimental results show that the performance
+drops a lot when excluding dependency graphs and message passing in RAINDROP (Table 6). Without
+inter-sensor dependencies our model is on par with other baselines and does not outperform them by
+a large margin.
+19

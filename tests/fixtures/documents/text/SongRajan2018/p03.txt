@@ -1,0 +1,121 @@
+Multi-Head 
+Attention
+Input 
+Embedding
+Multivariate 
+Time Series
+Dense 
+Interpolation
+Feed 
+Forward
+Linear
+
+Positional 
+Encoding
+Softmax
+Output 
+Probabilities
+Attention Module
+ 	
+
+Figure 1: An overview of the proposed approach for clinical time-series analysis. In contrast to state-of-the-art approaches, this
+does not utilize any recurrence or convolutions for sequence modeling. Instead, it employs a simple self-attention mechanism
+coupled with a dense interpolation strategy to enable sequence modeling. The attention module is comprised of N identical
+layers, which in turn contain the attention mechanism and a feed-forward sub-layer, along with residue connections.
+xt ∈RR where R denotes the number of variables, our ob-
+jective is to generate a sequence-level prediction. The type
+of prediction depends on the speciﬁc task and can be de-
+noted as a discrete scalar y for multi-class classiﬁcation, a
+discrete vector y for multi-label classiﬁcation and a contin-
+uous value y for regression problems. The proposed archi-
+tecture is shown in Figure 1. In the rest of this section, we
+describe each of the components in detail.
+Input Embedding:
+Given the R measurements at every
+time step t, the ﬁrst step in our architecture is to generate
+an embedding that captures the dependencies across differ-
+ent variables without considering the temporal information.
+This is conceptually similar to the input embedding step in
+most NLP architectures, where the words in a sentence are
+mapped into a high-dimensional vector space to facilitate the
+actual sequence modeling (Kim 2014). To this end, we em-
+ploy a 1D convolutional layer to obtain the d-dimensional
+(d > R) embeddings for each t. Denoting the convolution
+ﬁlter coefﬁcients as w ∈RT ×h, where h is the kernel size,
+we obtain the input embedding: w · xi:i+h−1 for the mea-
+surement position i.
+Positional Encoding:
+Since our architecture contains no
+recurrence, in order to incorporate information about the or-
+der of the sequence, we include information about the rela-
+tive or absolute position of the time-steps in the sequence. In
+particular, we add positional encodings to the input embed-
+dings of the sequence. The encoding is performed by map-
+ping time step t to the same randomized lookup table during
+both training and prediction. The d-dimensional positional
+embedding is then added to the input embedding with the
+same dimension. Note that, there are alternative approaches
+to positional encoding, including the sinusoidal functions
+in (Vaswani et al. 2017). However, the proposed strategy is
+highly effective in all our tasks.
+Attention Module:
+Unlike transduction tasks in NLP, our
+inferencing tasks often require classiﬁcation or regression
+architectures. Consequently, SAnD relies almost entirely on
+self-attention mechanisms. Self-attention, also referred as
+intra-attention, is designed to capture dependencies of a sin-
+gle sequence. Self-attention has been used successfully in a
+variety of NLP tasks including reading comprehension (Cui
+et al. 2016) and abstractive summarization (Paulus, Xiong,
+and Socher 2017). As we will describe later, we utilize a
+restricted self-attention that imposes causality, i.e., consid-
+ers information only from positions earlier than the current
+position being analyzed. In addition, depending on the task
+we also determine the range of dependency to consider. For
+example, we will show in our experiments that phenotyping
+tasks require a longer range dependency compared to mor-
+tality prediction.
+In general, an attention function can be deﬁned as map-
+ping a query q and a set of key-value pairs {k, v} to an
+output o. For each position t, we compute the attention
+weighting as the inner product between qt and keys at ev-
+ery other position in the sequence (within the restricted set)
+{kt′}t−1
+t′=t−r, where r is the mask size. Using these atten-
+tion weights, we compute o as weighted combination of the
+value vectors {vt′}t−1
+t′=t−r and pass o through a feed-forward
+network to obtain the vector representation for t. Mathemati-
+cally, the attention computation can be expressed as follows:
+Attention(Q, K, V) = softmax
+QKT
+√
+d
+
+V,
+(1)
+where Q, K, V are the matrices formed by query, key
+and value vectors respectively, and d is the dimension of
+the key vectors. This mechanism is often referred to as
+the scalar dot-product attention. Since we use only self-
+attention, Q, K, V all correspond to input embeddings of
+the sequence (with position encoding). Additionally, we
+mask the sequence to specify how far the attention mod-
+els can look into the past for obtaining the representation
+for each position. Hence, to be precise, we refer to this as
+masked self-attention.
+Implicitly, self-attention creates a graph structure for the
+sequence, where edges indicate the temporal dependencies.
+Instead of computing a single attention graph, we can ac-
+tually create multiple attention graphs each of which is de-
+ﬁned by different parameters. Each of these attention graphs
+can be interpreted to encode different types of edges and
+hence can provide complementary information about differ-
+ent types of dependencies. Hence, we use “multi-head atten-
+tion” similar to (Vaswani et al. 2017), where 8 heads are
+used to create multiple attention graphs and the resulting
+weighted representations are concatenated and linearly pro-
+jected to obtain the ﬁnal representation. The second compo-
+nent in the attention module is 1D convolutional sub-layers
+with kernel size 1, similar to the input embedding. Internally,
+4093

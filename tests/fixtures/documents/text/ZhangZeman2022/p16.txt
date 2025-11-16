@@ -1,0 +1,77 @@
+Published as a conference paper at ICLR 2022
+Table 3: Dataset statistics. The ‘#-timestamps’ refers to the number of all sampling timestamps measured in this
+dataset. The ‘#-classes’ means the number of categories in dataset labels. The ’Static info’ indicates if sample’s
+static attributes (e.g., height and weight) are available. The ‘missing ratio’ denotes the ratio between the number
+of missing observations and the number of all possible observations if the dataset is fully-observed.
+Datasets
+#-samples
+#-sensors
+#-timestamps
+#-classes
+Static info
+Missing ratio (%)
+P19
+38,803
+34
+60
+2
+True
+94.9
+P12
+11,988
+36
+215
+2
+True
+88.4
+PAM
+5,333
+17
+600
+8
+False
+60.0
+Our results on Setting 1 are consistent with those on Settings 2-4. Results on harder Settings 2-4 show
+that Raindrop can perform comparably better than baselines. Results across these diverse settings
+increase our conﬁdence that Raindrop is quite ﬂexible and widely applicable.
+A.5
+FURTHER DETAILS ON DATASETS
+P19: PhysioNet Sepsis Early Prediction Challenge 2019. P19 dataset (Reyna et al., 2020) contains
+38,803 patients and each patient is monitored by 34 irregularly sampled sensors including 8 vital
+signs and 26 laboratory values. The original dataset has 40,336 patients, we remove the samples with
+too short or too long time series, remaining 38,803 patients (the longest time series of the patient
+has more than one and less than 60 observations). Each patient is associated with a static vector
+indicating attributes: age, gender, time between hospital admission and ICU admission, ICU type,
+and ICU length of stay (days). Each patient has a binary label representing occurrence of sepsis
+within the next 6 hours. The dataset is highly imbalanced with only ∼4% positive samples.
+P12: PhysioNet Mortality Prediction Challenge 2012. P12 dataset (Goldberger et al., 2000)
+includes 11,988 patients (samples), after removing 12 inappropriate samples following (Horn et al.,
+2020). Each patient contains multivariate time series with 36 sensors (excluding weight), which are
+collected in the ﬁrst 48-hour stay in ICU. Each sample has a static vector with 9 elements including
+age, gender, etc. Each patient is associated with a binary label indicating length of stay in ICU, where
+negative label means hospitalization is not longer than 3 days and positive label marks hospitalization
+is longer than 3 days. P12 is imbalanced with ∼93% positive samples.
+PAM: PAMAP2 Physical Activity Monitoring. PAM dataset (Reiss & Stricker, 2012) measures
+daily living activities of 9 subjects with 3 inertial measurement units. We modify it to suit our
+scenario of irregular time series classiﬁcation. We excluded the ninth subject due to short length
+of sensor readouts. We segment the continuous signals into samples with the time window of 600
+and the overlapping rate of 50%. PAM originally has 18 activities of daily life. We exclude the
+ones associated with less than 500 samples, remaining 8 activities. After modiﬁcation, PAM dataset
+contains 5,333 segments (samples) of sensory signals. Each sample is measured by 17 sensors
+and contains 600 continuous observations with the sampling frequency 100 Hz. To make time
+series irregular, we randomly remove 60% of observations. To keep fair comparison, the removed
+observations are randomly selected but kept the same for all experimental settings and approaches.
+PAM is labelled by 8 classes where each class represents an activity of daily living. PAM does not
+include static attributes and the samples are approximately balanced across all 8 categories.
+To feed given data into neural networks, we set the input as zero if no value was measured. In highly
+imbalanced datasets (P19 and P12) we perform batch minority class upsampling, which means that
+every processed batch has the same number of positive and negative class samples. The dataset
+statistics including sparse ratio are provided in Table 3.
+A.6
+FURTHER DETAILS ON MODEL HYPERPARAMETERS
+Baseline hyperparameters. The implementation of baselines follows the corresponding papers
+including SeFT (Horn et al., 2020), GRU-D (Che et al., 2018), and mTAND (Shukla & Marlin,
+2021). We follow the settings of Transformer baseline in (Horn et al., 2020) while implementing
+Transformer in our work. For average imputation in Trans-mean, we replace the missing values by
+the global mean value of observations in the sensor (Shukla & Marlin, 2020). We use batch size of
+16

@@ -1,0 +1,145 @@
+Table 2: Performance Comparison for the MIMIC-III benchmark tasks, using both single-task and multi-task strategies.
+Method
+Metrics
+LR
+LSTM
+SAnD
+LSTM-Multi
+SAnD-Multi
+Task 1: Phenotyping
+Micro AUC
+0.801
+0.821
+0.816
+0.817
+0.819
+Macro AUC
+0.741
+0.77
+0.766
+0.766
+0.771
+Weighted AUC
+0.732
+0.757
+0.754
+0.753
+0.759
+Task 2: In Hospital Mortality
+AUROC
+0.845
+0.854
+0.857
+0.863
+0.859
+AUPRC
+0.472
+0.516
+0.518
+0.517
+0.519
+min(Se, P+)
+0.469
+0.491
+0.5
+0.499
+0.504
+Task 3: Decompensation
+AUROC
+0.87
+0.895
+0.895
+0.900
+0.908
+AUPRC
+0.2132
+0.298
+0.316
+0.319
+0.327
+min(Se, P+)
+0.269
+0.344
+0.354
+0.348
+0.358
+Task 4: Length of Stay
+Kappa
+0.402
+0.427
+0.429
+0.426
+0.429
+MSE
+63385
+42165
+40373
+42131
+39918
+MAPE
+573.5
+235.9
+167.3
+188.5
+157.8
+ments from the last 24 hours, we did not apply any additional
+masking in the attention module, except for ensuring causal-
+ity. From Figure 3(d), we observe that the best performance
+was obtained at N = 4 and M = 12. In addition, even for
+the optimal N the performance drops with further increase
+in M, indicating signs of overﬁtting. From Table 2, it is ap-
+parent that SAnD outperforms both the baseline methods.
+Decompensation:
+Evaluation metrics for this task are the
+same as the previous case of binary classiﬁcation. Though
+we are interested in making predictions at every time step
+of the sequence, we obtained highly effective models with
+r = 24 and as a result our architecture is signiﬁcantly more
+efﬁcient for training on this large-scale data when compared
+to an LSTM model. Our best results were obtained from
+training merely on about 25 chunks (batch size = 128, learn-
+ing rate = 0.001) , when N = 1 and M = 10 (see Figure
+3(e)), indicating that increasing the capacity of the model
+easily leads to overﬁtting. This can be attributed to the heavy
+bias in the training set towards the negative class. Results for
+this task (Table 2) are signiﬁcantly better than the state-of-
+the-art, thus evidencing the effectiveness of SAnD.
+Length of Stay:
+Since this problem is solved as a multi-
+class classiﬁcation task, we measure the inter-agreement be-
+tween true and predicted labels using the Cohen’s linear
+weighted kappa metric. Further, we assign the mean length
+of stay from each bin to the samples assigned to that class,
+and use conventional metrics such as mean squared error
+(MSE) and mean absolute percentage error (MAPE). The
+grid search on the parameters revealed that the best results
+were obtained at N = 3 and M = 12, with no further
+improvements with larger N (Figure 3(f)). Similar to the
+decompensation case, superior results were obtained using
+r = 24 when compared with the LSTM performance, in
+terms of all the evaluation metrics.
+Multi-Task Case
+We ﬁnally evaluate the performance of SAnD-Multi by
+jointly inferring the model parameters with the multi-task
+loss function in Eq (2). We used the weights λp = 0.8, λi =
+0.5, λd = 1.1, λl = 0.8. Interestingly, in the multi-task case,
+the best results for phenotyping were obtained with a much
+lower mask size (72), thereby making the training more ef-
+ﬁcient. The set of hyperparameters were set at batch size =
+128, learning rate = 0.0001, N = 2, M = 36 for phenotyp-
+ing and M = 12 for the other three cases. As shown in Table
+2, this approach produces the best performance in almost all
+cases, with respect to all the evaluation metrics.
+Conclusions
+In this paper, we proposed a novel approach to model clin-
+ical time-series data, which is solely based on masked self-
+attention, thus dispensing recurrence completely. Our self-
+attention module captures dependencies restricted within a
+neighborhood in the sequence and is designed using multi-
+head attention. Further, temporal order is incorporated into
+the sequence representation using both positional encoding
+and dense interpolation embedding techniques. The train-
+ing process is efﬁcient and the representations are highly
+effective for a wide-range of clinical diagnosis tasks. This
+is evidenced by the superior performance on the challenging
+4097

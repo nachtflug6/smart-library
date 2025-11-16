@@ -1,0 +1,18 @@
+Published as a conference paper at ICLR 2022
+Seongjun Yun, Minbyul Jeong, Raehyun Kim, Jaewoo Kang, and Hyunwoo J Kim. Graph transformer
+networks. In NeurIPS, volume 32, pp. 11983–11993, 2019.
+George Zerveas, Srideepika Jayaraman, Dhaval Patel, Anuradha Bhamidipaty, and Carsten Eickhoff.
+A transformer-based framework for multivariate time series representation learning. In KDD, pp.
+2114–2124, 2021.
+Daochen Zha, Kwei-Herng Lai, Kaixiong Zhou, and Xia Hu. Towards similarity-aware time-series
+classiﬁcation. SDM, 2022.
+Chuxu Zhang, Dongjin Song, Yuncong Chen, Xinyang Feng, Cristian Lumezanu, Wei Cheng,
+Jingchao Ni, Bo Zong, Haifeng Chen, and Nitesh V Chawla. A deep neural network for unsuper-
+vised anomaly detection and diagnosis in multivariate time series data. In AAAI, volume 33, pp.
+1409–1416, 2019.
+Li Zhang, Dan Xu, Anurag Arnab, and Philip HS Torr. Dynamic graph message passing networks. In
+CVPR, pp. 3726–3735, 2020.
+Jie Zhou, Ganqu Cui, Shengding Hu, Zhengyan Zhang, Cheng Yang, Zhiyuan Liu, Lifeng Wang,
+Changcheng Li, and Maosong Sun. Graph neural networks: A review of methods and applications.
+AI Open, 1:57–81, 2020.
+14

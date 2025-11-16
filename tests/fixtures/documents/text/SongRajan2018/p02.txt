@@ -1,0 +1,113 @@
+thors proposed public benchmarks for four different clinical
+tasks: mortality prediction, detection of physiologic decom-
+pensation, forecasting length of stay, and phenotyping. In-
+terestingly, these benchmarks are supported by the Medical
+Information Mart for Intensive Care (MIMIC-III) database
+(Johnson et al. 2016), the largest publicly available reposi-
+tory of rich clinical data currently available. These datasets
+exhibit characteristics that are typical of any large-scale
+clinical data, including varying-length sequences, skewed
+distributions and missing values. In (Lipton et al. 2015;
+Harutyunyan et al. 2017), the authors established that RNNs
+with LSTM cells outperformed all existing baselines includ-
+ing methods with engineered features.
+In this paper, we evaluate SAnD on all MIMIC-III bench-
+mark tasks and show that it is highly competitive, and in
+most cases outperforms the state-of-the-art LSTM based
+RNNs. Both superior performance and computational ef-
+ﬁciency clearly demonstrate the importance of attention
+mechanisms in clinical data.
+Contributions:
+Here is a summary of our contributions:
+• We develop the ﬁrst attention-model based architecture
+for processing multi-variate clinical time-series data.
+• Based on the multi-head attention mechanism in (Vaswani
+et al. 2017), we design a masked self-attention modeling
+unit for sequential data.
+• We propose to include temporal order into the sequence
+representation using both positional encoding and a dense
+interpolation technique.
+• We rigorously evaluate our approach on all MIMIC-III
+benchmark tasks and achieve state-of-the-art prediction
+performance.
+• Using a multi-task learning study, we demonstrate the ef-
+fectiveness of the SAnD architecture over RNNs in joint
+inferencing.
+Related Work
+Clinical data modeling is inherently challenging due to a
+number of factors : a) irregular sampling. b) missing values
+and measurement errors. c) heterogeneous measurements
+obtained at often misaligned time steps and presence of
+long-range dependencies. A large body of work currently
+exists designed to tackle these challenges – the most com-
+monly utilized ideas being Linear Dynamical System (LDS)
+and Gaussian Process (GP). As a classic tool in time-series
+analysis, LDS models the linear transition between consec-
+utive states (Liu and Hauskrecht 2013; 2016). LDS can be
+augmented by GP to provide more general non-linear mod-
+eling on local sequences, thereby dealing with the irregu-
+lar sampling issue (Liu and Hauskrecht 2013). In order to
+handle the multi-variate nature of measurements, (Ghassemi
+et al. 2015) proposed a multi-talk GP method which jointly
+transforms the measurements into a uniﬁed latent space.
+More recently, RNNs have become the sought-after so-
+lution for clinical sequence modeling. The earliest effort
+was by Lipton et. al. (Lipton et al. 2015), which propose to
+use LSTMs with additional training strategies for diagnosis
+tasks. In (Lipton, Kale, and Wetzel 2016), RNNs are demon-
+strated to automatically deal with missing values when they
+are simply marked by an indicator. In order to learn repre-
+sentations that preserve spatial, spectral and temporal pat-
+terns, recurrent convolutional networks have been used to
+model EEG data in (Bashivan et al. 2015). After the in-
+troduction of the MIMIC-III datasets, (Harutyunyan et al.
+2017) have rigorously benchmarked RNNs on all four clini-
+cal prediction tasks and further improved the RNN modeling
+through joint training on all tasks.
+Among many RNN realizations in NLP, attention mech-
+anism is an integral part, often placed between LSTM
+encoder and decoder (Bahdanau, Cho, and Bengio 2014;
+Xu et al. 2015; Vinyals et al. 2015; Hermann et al. 2015).
+Recent research in language sequence generation indicates
+that by stacking the blocks of solely attention computations,
+one can achieve similar performance as RNN (Vaswani et
+al. 2017). In this paper, we propose the ﬁrst attention based
+sequence modeling architecture for multivariate time-series
+data, and study their effectiveness in clinical diagnosis.
+Proposed Approach
+In this section, we describe SAnD, a fully attention mech-
+anism based approach for multivariate time-series model-
+ing. The effectiveness of LSTMs have been established in
+a wide-range of clinical prediction tasks. In this paper, we
+are interested in studying the efﬁcacy of attention models
+in similar problems, dispensing recurrence entirely. While
+core components from the Transformer model (Vaswani et
+al. 2017) can be adopted, key architectural modiﬁcations are
+needed to solve multivariate time-series inference problems.
+The motivation for using attention models in clinical mod-
+eling is three-fold: (i) Memory: While LSTMs are effective
+in sequence modeling, lengths of clinical sequences are of-
+ten very long and in many cases they rely solely on short-
+term memory to make predictions. Attention mechanisms
+will enable us to understand the amount of memory mod-
+eling needed in benchmark tasks for medical data; (ii) Op-
+timization: The mathematical simplicity of attention mod-
+els will enable the use of additional constraints, e.g. explicit
+modeling of correlations between different measurements in
+data, through inter-attention; (iii) Computation: Paralleliza-
+tion of sequence model training is challenging, while atten-
+tion models are fully parallelizable.
+Architecture
+Our architecture is inspired by the recent Transformer model
+for sequence transduction (Vaswani et al. 2017), where the
+encoder and decoder modules were comprised solely of an
+attention mechanism. The Transformer architecture achieves
+superior performance on machine translation benchmarks,
+while being signiﬁcantly faster in training when compared
+to LSTM-based recurrent networks (Sutskever, Vinyals, and
+Le 2014; Wu et al. 2016). Given a sequence of symbol repre-
+sentations (e.g. words) (x1, . . . , xT ), the encoder transforms
+them into a continuous representation z and then the decoder
+produces the output sequence (y1, . . . , yT ) of symbols.
+Given a sequence of clinical measurements (x1, . . . , xT ),
+4092

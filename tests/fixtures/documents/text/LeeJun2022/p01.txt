@@ -1,0 +1,115 @@
+4270
+IEEE JOURNAL OF BIOMEDICAL AND HEALTH INFORMATICS, VOL. 26, NO. 8, AUGUST 2022
+Multi-View Integrative Attention-Based Deep
+Representation Learning for Irregular Clinical
+Time-Series Data
+Yurim Lee
+, Eunji Jun
+, Jaehun Choi
+, and Heung-Il Suk
+, Senior Member, IEEE
+Abstract—Electronic health record (EHR) data are sparse
+and irregular as they are recorded at irregular time inter-
+vals, and different clinical variables are measured at each
+observation point. In this work, to handle irregular mul-
+tivariate time-series data, we consider the human knowl-
+edge of the aspects to be measured and time to measure
+them in different situations, known as multi-view features,
+which are indirectly represented in the data. We propose
+a scheme to realize multi-view features integration learn-
+ing via a self-attention mechanism. Speciﬁcally, we devise
+a novel multi-integration attention module (MIAM) to ex-
+tract complex information that is inherent in irregular time-
+series data. We explicitly learn the relationships among
+the observed values, missing indicators, and time interval
+between the consecutive observations in a simultaneous
+manner. In addition, we build an attention-based decoder
+as a missing value imputer that helps empower the rep-
+resentation learning of the interrelations among multi-view
+observations for the prediction task this decoder operates
+only in the training phase so that the ﬁnal model is im-
+plemented in an imputation-free manner. We validated the
+effectiveness of our method over the public MIMIC-III and
+PhysioNet challenge 2012 datasets by comparing with and
+outperforming the state-of-the-art methods in three down-
+stream tasks i.e., prediction of the in-hospital mortality, pre-
+diction of the length of stay, and phenotyping. Moreover, we
+conduct a layer-wise relevance propagation (LRP) analysis
+based on case studies to highlight the explainability of the
+trained model.
+Manuscript received 14 October 2021; revised 2 February 2022 and
+6 April 2022; accepted 26 April 2022. Date of publication 5 May 2022;
+date of current version 9 August 2022. This work was supported in part
+by the Institute of Information & Communications Technology Planning
+& Evaluation (IITP) funded by the Korea government (MSIT) under
+Grants 2021-0-00982 for the Development of the multi-center distributed
+intelligence reinforcement federation technology for cooperating optimal
+treatments, and 2019-0-00079 for the Department of Artiﬁcial Intelli-
+gence (Korea University). (Yurim Lee and Eunji Jun contributed equally
+to this work.) (Corresponding author: Heung-Il Suk.)
+Yurim Lee and Eunji Jun are with the Department of Brain and Cog-
+nitive Engineering, Korea University, Seoul 02841, Republic of Korea
+(e-mail: yurimalee@korea.ac.kr; ejjun92@gmail.com).
+Jaehun Choi is with the Medical Information Research Section, Intel-
+ligent Convergence Research Laboratory, Electronics and Telecommu-
+nications Research Institute (ETRI), Daejeon 34129, Republic of Korea
+(e-mail: jhchoi@etri.re.kr).
+Heung-Il Suk is with the Department of Artiﬁcial Intelligence and the
+Department of Brain and Cognitive Engineering, Korea University, Seoul
+02841, Republic of Korea (e-mail: hisuk@korea.ac.kr).
+This article has supplementary downloadable material available at
+https://doi.org/10.1109/JBHI.2022.3172549, provided by the authors.
+Digital Object Identiﬁer 10.1109/JBHI.2022.3172549
+Index Terms—Electronic health records, bioinformatics,
+irregular
+time
+series
+modeling,
+deep
+learning,
+self-
+attention.
+I. INTRODUCTION
+T
+HE electronic health record (EHR) represents a collection
+ofpatients’healthdatasuchascodeddiagnoses,vitalsigns,
+lab test records, procedures, and textual narratives. In the recent
+decade, signiﬁcant progress has been made in developing deep
+learning models using multivariate EHR time series owing to the
+abundance of health big datasets. However, learning the appro-
+priate EHR representations is challenging for many deep learn-
+ing models as the EHR is irregularly sampled; in particular, the
+observations are measured at different time points determined by
+the type of measurement, patient’s health status, and availability
+of clinical staff. Owing to the different number of observations
+and lack of temporal alignment across the data, machine learning
+models that assume a ﬁxed-dimensional feature space cannot be
+applied.
+The common deep learning approaches for handling the ir-
+regularly sampled time series, which are based on convolutional
+neural network (CNN), recurrent neural network (RNN), and
+recently attention-based methods, have demonstrated their su-
+periority in healthcare target tasks. Speciﬁcally, CNN is usually
+applied to capture the local temporal characteristics of clinical
+data by using the predeﬁned kernel sizes on a small chunk of
+EHR features to identify local motifs, i.e., co-occurrences of
+diseases [1] and patient similarity [2]. However, although these
+approaches can model the local temporal dependencies in the
+predeﬁned kernel size, the modeling of global dependencies is
+challenging.
+RNN-based methods have been the defacto methodology to
+address clinical time series data, as RNNs can manage various
+lengths of sequential data. However, conventional RNN methods
+are designed to handle data with a constant time interval between
+consecutive time series, leading to suboptimal performance in
+the case of an irregular time interval. To address this challenge,
+the widely used approach is to convert irregularly sampled time
+series data into regularly sampled time series, i.e., temporal
+discretization [3], [4] and feed this ﬁxed-dimensional vector to
+the RNNs. Nonetheless, this process involves ad-hoc choices
+regarding the window size and aggregation function that address
+values falling in the same window. Similar to discretization
+methods, interpolation methods [4], [5] require speciﬁcation of
+2168-2194 © 2022 IEEE. Personal use is permitted, but republication/redistribution requires IEEE permission.
+See https://www.ieee.org/publications/rights/index.html for more information.
+Authorized licensed use limited to: Chalmers University of Technology Sweden. Downloaded on August 14,2025 at 08:41:20 UTC from IEEE Xplore.  Restrictions apply. 

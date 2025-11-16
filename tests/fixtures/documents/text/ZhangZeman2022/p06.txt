@@ -1,0 +1,81 @@
+Published as a conference paper at ICLR 2022
+weight shared across all timestamps. The above message passing describes the processing of a single
+observation at a single timestamp. In case multiple sensors are active at time t and connected with v,
+we normalize αt
+i,uv (with softmax function) across active sensors and aggregate messages at v.
+Overall, RAINDROP produces observation embedding ht
+i,v for sensor v through its relational con-
+nection with u, even though there is no direct measurement of v at time t. These message passing
+operations are performed to adaptively and dynamically estimate missing observations in the embed-
+ding space based on recorded information and learned graph structure.
+Updating sensor dependency graphs. We describe the update of edge weights and prune of graph
+structures in the situation that stacks multiple RAINDROP layers (Figure 3). Here we explicitly show
+layer index l because multiple layers are involved in the computation. As no prior knowledge is
+assumed, we initialize the graph as all sensors connected with each other. However, the fully connected
+edges may bridge sensors that should be independent, which will introduce spurious correlations and
+prevent the model from paying attention to the truly important connections. Addressing this issue,
+RAINDROP automatically updates edge weights and prunes out less important edges. Based on the
+aggregated temporal inﬂuence driven by the inter-sensor attention weights α(l),t
+i,uv, we update edge
+weights e(l)
+i,uv in each layer l ∈{1, . . . , L} by:
+e(l)
+i,uv =
+e(l−1)
+i,uv
+|Ti,u|
+X
+t∈Ti,u
+α(l),t
+i,uv,
+(3)
+where Ti,u denotes the set of all timestamps where there is message passes from u to v. In particular,
+we set e(0)
+i,uv = 1 in the initialization of graph structures. We use L = 2 in all our experiments. In
+every layer, we order the estimated values e(l)
+i,uv for all edges in sample Si and prune bottom K%
+edges with smallest edge weights (Yang et al., 2021). Pruned edges are not re-added in later layers.
+3.4
+GENERATING SENSOR EMBEDDINGS
+Next we describe how to aggregate observation embeddings into sensor embeddings zi,v, taking
+sensor v as an example (Figure 3b). Previous step (Sec. 3.3) generates observation embeddings for
+every timestamp when either v or v’s neighbor is observed. The observation embeddings at different
+timestamps have unequal importance to the the sensor embedding (Zerveas et al., 2021). We use
+the temporal attention weight (scalar) βt
+i,v to represent the importance of observation embedding at
+t. We use Ti,v = {t1, t2, . . . , tT } to denote all the timestamps when a readout is observed in v (we
+can directly generate ht
+i,v) or in v’s neighbor (we can generate ht
+i,v through message passing). The
+βt
+i,v is the corresponding element of vector βi,v which include the temporal attention weights at all
+timestamps t ∈Ti,v.
+We use temporal self-attention to calculate βi,v, which is different from the standard self-attention (Hu
+et al., 2020; Yun et al., 2019). The standard dot-product self-attention generates an attention matrix
+with dimension of T × T (where T = |Ti,v| can vary across samples) that has an attention weight for
+each pair of observation embeddings. In our case, we only need a single attention vector where each
+element denotes the temporal attention weight of an observation embedding when generating the
+sensor embedding. Thus, we modify the typical self-attention model to ﬁt our case: using a trainable
+s ∈RT ×1 to map the self-attention matrix (RT ×T ) to T-dimensional vector βi,v (RT ×1) through
+matrix product (Appendix A.2).
+The following steps describe how to generate sensor embeddings. We ﬁrst concatenate observation
+embedding ht
+i,v with time representation pt
+i to include information of timestamp. Then, we stack
+the concatenated embeddings [ht
+i,v||pt
+i] for all t ∈Ti,v into a matrix Hi,v. The Hi,v contains all
+information of observations and timestamps for sensor v. We calculate βt
+i,v through:
+βi,v = softmax
+ 
+Qi,vKT
+i,v
+√dk
+s
+!
+,
+(4)
+where Qi,v and Ki,v are two intermediate matrices that are derived from the stacked observation
+embeddings. In practice, Qi,v = Hi,vWQ and Ki,v = Hi,vWK are linearly mapped from Hi,v
+6

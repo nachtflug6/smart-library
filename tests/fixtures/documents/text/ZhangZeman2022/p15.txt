@@ -1,0 +1,66 @@
+Published as a conference paper at ICLR 2022
+A
+APPENDIX
+A.1
+ENCODING TIMESTAMPS
+For a given time value t, we pass it to trigonometric functions with the frequency of 10,000 (Vaswani
+et al., 2017) and generate time representation pt ∈Rξ (omit sample index i for brevity) through (Horn
+et al., 2020):
+pt
+2k = sin(
+t
+100002k/ξ ),
+pt
+2k+1 = cos(
+t
+100002k/ξ ),
+(6)
+where ξ is the expected dimension. In this work, we set ξ = 16 in all experimental settings for all
+models. Please note, we encode the time value which is a continuous timestamp, instead of time
+position which is a discrete integer indicating the order of observation in time series.
+A.2
+ADDITIONAL INFORMATION ON THE CALCULATION OF TEMPORAL ATTENTION WEIGHT
+The Eq. 4 describes how we learn the temporal attention weights vector βi,v for sensor v, following
+the self-attention formalism. Different from the standard self-attention mechanism that generates an
+self-attention matrix, we generate a temporal attention weight vector. The reason is that we only need
+an attention weight vector (instead of a matrix) to aggregate the observation embeddings into a single
+sensor embedding through weighted sum.
+In the standard self-attention matrix, each element denotes the dependency of an observation em-
+bedding on another observation embedding. Similarly, each row describes the dependencies of an
+observation embedding on all other observation embeddings (all the observations belong to the same
+sensor). Our intuition is to aggregate a row in the self-attention matrix into a scalar that denotes the
+importance of the observation embedding to the whole sensor embedding.
+In practice, we apply the weighted aggregation, parameterized by s, to every row in the self-attention
+matrix and concatenate the generated scalars into an attention vector. Next, we give a concrete
+example to speciﬁcally describe the meaning of s. Each row, j, of the self-attention matrix captures
+relationships of observation embedding htj
+i,v to all observation embeddings {htk
+i,v : k = 1, ..., T}.
+Then, using the learnable weight vector s, these correlations between observations are aggregated
+across time to obtain temporal importance weight βtj
+i,v. The βtj
+i,v represents the importance of the
+corresponding observation to the whole sensor embedding.
+A.3
+ADDITIONAL INFORMATION ON SAMPLE EMBEDDING
+As we generate sample embedding by concatenating all sensor embeddings, the sample embedding
+could be relatively long when there is a large number of sensors. To alleviate this issue, on one
+hand, we can reduce the dimension of sample embeddings by adding a neural layer (such as a simple
+fully-connected layer) after the concatenation. On the other hand, when the number of sensors is super
+large, our model is ﬂexible and can effortlessly switch the concatenation to other readout functions
+(such as averaging aggregation): this will naturally solve the problem of long vectors. We empirically
+show that concatenation works better than averaging in our case. We see a boost in the AUROC score
+by 0.6% using concatenation instead of averaging for generating sample embeddings(P19; Setting 1).
+A.4
+ADDITIONAL INFORMATION ON SAMPLE SIMILARITIES
+In this work, we assume all samples share some common characteristics to some extent. When
+modeling the similarities across samples, we do not consider the situation where the samples are
+similar within latent groups and different across groups.
+Our study focuses on the question of irregularity rather than the question of distribution shifts in time
+series. To this end, in our experiments, we ﬁrst rigorously benchmark Raindrop using a standard
+evaluating setup (Setting 1, which is classiﬁcation of irregular time series). This is the only setup that
+most existing methods consider (e.g., Shukla & Marlin (2021); Che et al. (2018)) and we want to
+make sure our comparisons are fair. In order to provide a more rigorous assessment of Raindrop’s
+performance, we also consider more challenging setups in our experiments (i.e., Settings 2-4) when
+the dataset is evaluated in a non-standard manner and the split is informed by a select data attribute.
+15

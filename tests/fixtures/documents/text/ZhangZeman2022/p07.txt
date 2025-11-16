@@ -1,0 +1,69 @@
+Published as a conference paper at ICLR 2022
+parameterized by WQ and WK, respectively (Vaswani et al., 2017). The √dk is a scaling factor
+where dk is the dimension after linear mapping. Based on the learned temporal attention weights
+βt
+i,v, we calculate sensor embedding zi,v through:
+zi,v =
+X
+t∈Ti,v
+(βt
+i,v[ht
+i,v||pt
+i]W ),
+(5)
+where weight matrix W is a linear projector shared by all sensors and samples. It is worth to mention
+that all attention weights (such as αt
+i,uv and βi,v) can be multi-head. In this work, we describe the
+model in the context of single head for brevity.
+Using attentional aggregation, RAINDROP can learn a ﬁxed-length sensor embedding for arbitrary
+number of observations. Meanwhile, RAINDROP is capable of focusing on the most informative
+observation embeddings. We process all observation embeddings as a whole instead of sequentially,
+which allows parallel computation for faster training and also mitigates the performance drop caused
+by modeling long dependencies sequentially. In the case of sensors with very large number of
+observations, we can reduce the length of time series by subsampling or splitting a long series into
+multiple short series.
+3.5
+GENERATING SAMPLE EMBEDDINGS
+Finally, for sample Si, we aggregate sensor embeddings zi,v (Eq. 5) across all sensors to obtain an
+embedding zi ∈Rdz through a readout function g as follows: zi = g(zi,v | v = 1, 2, . . . , M) (such
+as concatenation). When a sample contains a large number of sensors, RAINDROP can seamlessly use
+a set-based readout function such as averaging aggregation (Appendix A.3). Given an input sample
+Si, RAINDROP’s strategy outlined in Sec. 3.2-3.5 produces a sample embedding zi that can be further
+optimized for downstream tasks.
+3.6
+IMPLEMENTATION AND PRACTICAL CONSIDERATIONS
+Loss function.
+RAINDROP’s loss function is formulated as: L = LCE + λLr, where Lr =
+1
+M 2
+P
+u,v∈V
+P
+i,j∈V ||ei,uv −ej,uv||2/(N −1)2, where LCE is cross entropy and Lr is a regu-
+larizer to encourage the model to learn similar sensor dependency graphs for similar samples. The Lr
+measures averaged Euclidean distance between edge weights across all samples pairs, in all sensor
+pairs (including self-connections). The λ is a user-deﬁned coefﬁcient. Practically, as N can be large,
+we calculate Lr only for samples in a batch.
+Downstream tasks. If a sample has auxiliary attributes (e.g., a patient’s demographics) that do not
+change over time, we can project the attribute vector to a da-dimensional vector ai with a fully-
+connected layer and concatenate it with the sample embedding, getting [zi||ai]. At last, we feed
+[zi||ai] (or only zi if ai is not available) into a neural classiﬁer ϕ : Rdz+da →{1, . . . , C}. In our
+experiments, ϕ is a 2-layer fully-connected network with C neurons at the output layer returning
+prediction ˆyi = ϕ([zi||ai]) for sample Si.
+Sensor dependencies. While modeling sensor dependencies, we involve observation embedding
+(ht
+i,u, Eq. 1) of each sample in the calculation of attention weights. Similarly, to model time-wise
+speciﬁcity in graph structures, we consider time information (pt
+i, Eq. 1) when measuring αt
+i,uv.
+RAINDROP can capture similar graph structures across samples from three aspects (Appendix A.4):
+(1) the initial graphs are the same in all samples; (2) the parameters in message passing (Ru; wu,
+wv, Eq. 2), inter-sensor attention weights calculation (D, Eq. 1), and temporal attention weights
+calculation (s, Eq. 4; W , Eq. 5) are shared by all samples; (3) we encourage the model to learn
+similar graph structures by adding a penalty to disparity of structures (Lr).
+Scalability. RAINDROP is efﬁcient because embeddings can be learned in parallel. In particular, pro-
+cessing of observation embeddings is independent across timestamps. Similarly, sensor embeddings
+can be processed independently across different sensors (Figure 3). While the complexity of temporal
+self-attention calculation grows quadratically with the number of observations, it can be practically
+implemented using highly-optimized matrix multiplication.
+7

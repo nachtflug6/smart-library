@@ -1,0 +1,119 @@
+LEE et al.: MULTI-VIEW INTEGRATIVE ATTENTION-BASED DEEP REPRESENTATION LEARNING
+4275
+for the marked values only by Mimp as:
+Limp = 1
+N
+N
+
+n=1
+
+X(n) ⊙M(n)
+imp −ˆX(n) ⊙M(n)
+imp
+2
+.
+(15)
+By introducing the imputation loss in the objective function, the
+imputer provides auxiliary information to achieve the optimal
+prediction result.
+E. Composite Loss
+The composite loss is deﬁned by accumulating the prediction
+and imputation losses as L = λpredLpred + λimpLimp where λprd
+and λimp are hyperparameters that control the ratio between two
+losses. We optimize all the parameters of our model in an end-
+to-end manner via the composite loss L. The overall training
+process the proposed method for the in-hospital mortality task
+is summarized as Algorithm 1. The auxiliary imputer operates
+only in the training phase.
+IV. EXPERIMENTAL SETTINGS
+In this section, we evaluated our proposed method for the
+downstream tasks illustrated in Section III-C. Each of the tasks
+is learned separately in a single-task manner.
+1) Dataset and Preprocessing: We conducted experiments
+on two datasets: MIMIC-III1 and PhysioNet 2012 challenge2
+datasets. MIMIC-III dataset consists of medical records of
+13,998 patients collected at Beth Israel Deaconess Medical
+Center. We used 99 time series measurements for each pa-
+tient. The number of irregular time points ranged from 1 to
+247 (m ± σ = 49.29 ± 35.90). The selected time series was
+scarcely observed leading to a missing rate of approximately
+90%. In terms of the in-hospital mortality label, the ratio of
+1,181 positive (dead in hospital) to 12,817 negative (alive in-
+hospital) was approximately 1:10.8, and the LOS ranged from
+0.0004 to 86.85 days (m ± σ = 3.81 ± 4.86). The phenotyping
+label included 25 disease conditions with 12, 8, 5 conditions
+being critical (such as respiratory/renal failure), chronic (such
+as diabetes or atherosclerosis), mixed conditions, respectively.
+The PhysioNet 2012 challenge dataset consists of 35 different
+time-series measurements and ﬁve general descriptors for 4,000
+critical care patients with at least 48 hours of hospital stay. We
+used 35 time-series variables without the general descriptor of
+3,997 patients with at least one observation time. The number of
+irregular time points ranged from 1 to 202 (m ± σ = 73.87 ±
+23.06).Themissingratewasapproximately80.5%,themortality
+labels were imbalanced at a ratio of approximately 1:6 between
+554 positive and 3,443 negative cases, and LOS label varied
+from 0 to 105 (m ± σ = 13.45 ± 12.24).
+In terms of data preprocessing, because each variable had a
+different range, all the inputs were ﬁrst winsorized to remove
+outliers and then z-normalized using the global mean and stan-
+dard deviation from the entire training set to achieve a zero mean
+and unit variance in a variable-wise manner.
+1Available at https://mimic.physionet.org/.
+2Available at https://physionet.org/content/challenge-2012/.
+2) Performance Evaluation: We reported the average results
+from 5-fold cross validation, in comparison with other SOTA
+methods in the literature. For the in-hospital mortality pre-
+diction, i.e., binary classiﬁcation, we used the area under the
+ROC curve (AUC) and area under the precision–recall curve
+(AUPRC) as the evaluation metrics. To forecast LOS, i.e., the
+regression task, we used the root mean squared error (RMSE)
+and mean absolute error (MAE) as the evaluation metrics. For
+phenotyping, i.e., multi-label classiﬁcation, we used the mean
+AUC (mAUC) and mean AUPRC (mAUPRC).
+In addition, we conducted exhaustive ablation studies to in-
+vestigate the inﬂuence of different experimental design options
+in terms of the multi-view integration module and auxiliary
+imputer in the proposed method for each task. We validated
+the effectiveness of multi-view integration by considering ﬁve
+scenarios, i.e., single view (X), double views (M + Δ, X + M,
+X + Δ), and triple views (X + M + Δ).
+3) Experimental Settings: We trained our models using the
+rectiﬁed Adam (RAdam) optimizer [25] with an initial learning
+rate of 0.005 and multiplicative decay of 0.2 for every 10 epochs
+for 60 epochs with early stopping of 20 patience by using mini-
+batches of 64 samples. We chose the ﬁnal optimal model based
+on the performance on the validation set.
+For the MIMIC-III dataset, the model achieved its best perfor-
+mance for binary and multi-label classiﬁcation at self-attention
+block with eight heads with dk = dv = 128, and dF F N = 128,
+where dk, dv, dFFN are the dimension of the key, value, and FFN,
+respectively, in all the self-attention blocks of the MIAM and
+imputer. For regression, the highest performance was achieved
+using a self-attention block with eight heads of dk = dv = 64,
+and dF F N = 128. For the PhysioNet 2012 challenge dataset,
+we observed the highest performance at with a self-attention
+block with eight heads of dk = dv = 64, and dFFN = 128 for
+binary and multi-label classiﬁcation. For regression, the model
+exhibited the highest performance with at self-attention block
+with four heads dk = dv = 64, and dF F N = 64. The β and γ in
+focal loss were chosen 7 and 0.15, respectively. The composite
+loss parameters λimp and λpred for the classiﬁcation task were 10
+and 1, respectively. In the regression task, λimp and λprd were
+both 1. For the activation function, we used LeakyReLU and
+Tanh for binary and multi-label classiﬁcation, respectively.
+We validated the efﬁcacy of the proposed method by com-
+paring it with SOTA methods categorized as recurrence-based,
+interpolation-based, and attention-based methods as shown in
+Table I and Table II.
+V. EXPERIMENTAL RESULTS AND ANALYSIS
+Experimental Results
+Table I and Table II compare the results of the proposed
+method with those of the competing methods for mortality
+prediction on the PhysioNet 2012 challenge and MIMIC-III
+datasets. The results of the ablation studies for ﬁve scenarios,
+i.e., single view (X), double views (M + Δ, X + M, X + Δ),
+and triple views (X + M + Δ), are presented in Table III and
+Table IV. The effect of the attention-based imputer was explored
+in Table V and Table VI. Lastly, we compared the proposed
+Authorized licensed use limited to: Chalmers University of Technology Sweden. Downloaded on August 14,2025 at 08:41:20 UTC from IEEE Xplore.  Restrictions apply. 

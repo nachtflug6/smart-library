@@ -1,0 +1,120 @@
+we use two of these 1D convolutional sub-layers with ReLU
+(rectiﬁed linear unit) activation in between. Note that, we
+include residue connections in both the sub-layers.
+Since we stack the attention module N times, we perform
+the actual prediction task using representations obtained at
+the ﬁnal attention module. Unlike transduction tasks, we do
+not make predictions at each time step in all cases. Hence,
+there is a need to create a concise representation for the en-
+tire sequence using the learned representations, for which
+we employ a dense interpolated embedding scheme, that en-
+codes partial temporal ordering.
+Dense Interpolation for Encoding Order:
+The simplest
+approach to obtain a uniﬁed representation for a sequence,
+while preserving order, is to simply concatenate embeddings
+at every time step. However, in our case, this can lead to
+a very high-dimensional, “cursed” representation which is
+not suitable for learning and inference. Consequently, we
+propose to utilize a dense interpolation algorithm from lan-
+guage modeling. Besides providing a concise representation,
+(Trask, Gilmore, and Russell 2015) demonstrated that the
+dense interpolated embeddings better encode word struc-
+tures which are useful in detecting syntactic features. In our
+architecture, dense interpolation embeddings, along with the
+positional encoding module, are highly effective in captur-
+ing enough temporal structure required for even challenging
+clinical prediction tasks.
+Dense Interpolation Embedding
+Input : Steps t of the time series and length of the
+sequence T, embeddings at step t as st,
+factor M.
+Output: Dense interpolated vector representation u.
+for t = 1 to T do
+s = M ∗t/T
+for m = 1 to M do
+w = pow(1 −abs(s −m)/M, 2)
+um = um + w ∗st
+end
+end
+Algorithm 1: Dense interpolation embedding with par-
+tial order for a given sequence.
+The pseudocode to perform dense interpolation for a
+given sequence is shown in Algorithm 1. Denoting the hid-
+den representation at time t, from the attention model, as
+st ∈Rd, the interpolated embedding vector will have di-
+mension d × M, where M is the dense interpolation fac-
+tor. Note that when M = T, it reduces to the concatenation
+case. The main idea of this scheme is to determine weights
+w, denoting the contribution of st to the position m of the
+ﬁnal vector representation u. As we iterate through the time-
+steps of a sequence, we obtain s, the relative position of time
+step t in the ﬁnal representation u and w is computed as
+w = (1−|s−m|
+M
+)2. We visualize the dense interpolation pro-
+cess in Figure 2 for the toy case of T = 5, M = 3. The
+larger weights in w are indicated by darker edges while the
+lighter edges indicates lesser inﬂuence. In practice, dense in-
+terpolation is implemented efﬁciently by caching w’s into a
+
+	
+
+
+
+
+	
+
+
+
+
+
+
+Figure 2: Visualizing the dense interpolation module, for the
+case when T = 5 and M = 3.
+matrix W ∈RT ×M and then performing the following ma-
+trix multiplication: U = S × W, where S = [s1, . . . , sT ].
+Finally we can obtain u by stacking columns of U.
+Linear and Softmax layers:
+After obtaining a single vec-
+tor representation from dense interpolation, we utilize a lin-
+ear layer to obtain the logits. The ﬁnal layer depends on the
+speciﬁc task. We can use a softmax layer for the binary clas-
+siﬁcation problems, a sigmoid layer for multi-label classi-
+ﬁcation since the classes are not mutually exclusive and a
+ReLU layer for regression problems. The corresponding loss
+functions are:
+• Binary classiﬁcation: −(y·log(ˆy))+(1−y)·log(1−ˆy),
+where y and ˆy are the true and predicted labels.
+• Multi-label classiﬁcation: 1
+K
+K
+k=1 −(yk·log(ˆyk)+(1−
+yk) · log(1 −ˆyk)), where K denotes the total number of
+labels in the dataset.
+• Regression: T
+t=1(lt −ˆlt)2, where lt and ˆlt denote the
+true and predicted response variables at time-step t.
+Regularization:
+In the proposed approach, we apply the
+following regularization strategies during training: (i) We
+apply dropout to the output of each sub-layer in the atten-
+tion module prior to residual connections and normalize the
+outputs. We include an additional dropout layer after adding
+the positional encoding to the input embeddings, (ii) We also
+perform attention dropout, similar to (Vaswani et al. 2017),
+after computing the self-attention weights.
+Complexity:
+Learning long-range dependencies is a key
+challenge in many sequence modeling tasks. Another no-
+tion of complexity is the amount of computation that can be
+parallelized, measured as the minimum number of sequen-
+tial operations required. Recurrent models require O(T) se-
+quential operations with a total O(T · d2) computations in
+each layer. In comparison, the proposed approach requires a
+constant O(1) sequential operations (entirely parallelizable)
+with a total O(T · r · d) computations per layer, where r
+denotes the size of the mask for self-attention. In all our im-
+plementations, d is ﬁxed at 256 and r ≪d, and as a result
+our approach is signiﬁcantly faster than RNN training.
+4094

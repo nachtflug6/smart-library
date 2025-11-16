@@ -1,0 +1,56 @@
+Published as a conference paper at ICLR 2022
+128 and learning rate of 0.0001. Note that we upsample the minority class in each batch to make the
+batch balance (64 positive samples and 64 negative samples in each batch).
+The chosen hyperparameters are the same across datasets (P19, P12, PAM), models (both baselines
+and RAINDROP), and experimental settings. Remarkably, we found that all the baselines make
+dummy predictions (classify all testing samples as the majority label) on PAM in Setting 2-3 while
+RAINDROP makes reasonable predictions. For the comparison to make sense (i.e., the baselines can
+make meaningful predictions), we use learning rate of 0.001 for baselines on PAM. GRU-D has 49
+layers while other models have 2 layers. We run all models for 20 epochs, store the parameters that
+obtain the highest AUROC in the validation set, and use it to make predictions for testing samples.
+We use the Adam algorithm for gradient-based optimization (Kingma & Ba, 2014).
+RAINDROP hyperparameters. Next, we report the setting of unique hyperparameters in our RAIN-
+DROP. In the generation of observation embedding, we set Ru as a 4-dimensional vector, thus the
+produced observation embedding has 4 dimensions. The dimensions of time representation pt and
+rv are both 16. The trainable weight matrix D has shape of 4 × 32. The dimensions of wu and wv
+are the same as the number of sensors: 34 in P19, 36 in P12, and 17 in PAM. We set the number of
+RAINDROP layers L as 2 while the ﬁrst layer prunes edges and the second layer does not. We set the
+proportion of edge pruning as 50% (K=50), which means we remove half of the existing edges that
+have the lowest weights. The dk is set to 20, while the shape of W is 20 × 20. All the activation
+functions, without speciﬁc clariﬁcation, are sigmoid functions. The da is set equal to the number
+of sensors. The ﬁrst layer of ϕ has 128 neurons while the second layer has C neurons (i.e., 2 for
+P19 and P12; 8 for PAM). We set λ = 0.02 to adjust Lr regularization scale. All the preprocessed
+datasets and implementation codes are made available online. Further details are available through
+RAINDROP’s code and dataset repository.
+Readout function. Here we discuss the selection of readout function g in section 3.5. Our preliminary
+experiments show that concatenation outperforms other popular aggregation functions such as
+averaging (Errica et al., 2021) and squeeze-excitation readout function (Kim et al., 2021; Hu et al.,
+2018). While any of those aggregation functions can be considered, we used concatenation throughout
+all experiments in this manuscript.
+A.7
+PERFORMANCE METRICS
+Since P19 and P12 datasets are imbalanced, we use the Area Under a ROC Curve (AUROC) and
+Area Under Precision-Recall Curve (AUPRC) to measure performance. As the PAM dataset is nearly
+balanced, we also report accuracy, precision, recall and F1 score. We report mean and standard
+deviation values over 5 independent runs. Model parameters that achieve the best AUROC value on
+the validation set are used for test set.
+A.8
+FURTHER DETAILS ON SETUP DETAILS FOR SETTING 2
+In Setting 2, the selected missing sensors are ﬁxed across different models and chosen in the following
+way. First, we calculate the importance score for each sensor and rank them in a descending order.
+The importance score is based on information gain, which we calculate with feeding the observations
+into a Random Forest classiﬁer with 20 decision trees. In particular, we treat each sample as only
+having one sensor, then feed the single sensor into random forest classiﬁer and record the AUROC.
+The higher AUROC indicates the sensor provides higher information gain. When we have sensors
+ranked by their AUROC values, we choose the ﬁrst n sensors (the ones with highest AUROC values)
+and replace all observations in these sensors by zeros in all samples in validation and test set. The
+number of missing sensors is deﬁned indirectly from the user with the sensors’ missing ratio which
+ranges from 0.1 to 0.5.
+A.9
+ADDITIONAL INFORMATION ON MISSING PATTERN
+This work propose RAINDROP which is a novel solution for irregularity in multivariate time series
+through inter-sensor dependencies. RAINDROP is not in conﬂict with other solutions (such as missing
+pattern and temporal decay) for irregularity. However, as the missing pattern is widely discussed
+in modelling incomplete time series (Che et al., 2018), we explore how to combine the advantages
+of relational structures and missing pattern. We adopt mask matrix as a proxy of missing pattern
+17

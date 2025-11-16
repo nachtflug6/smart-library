@@ -1,0 +1,114 @@
+4272
+IEEE JOURNAL OF BIOMEDICAL AND HEALTH INFORMATICS, VOL. 26, NO. 8, AUGUST 2022
+Fig. 2.
+Overall framework of the proposed multi-view integration learning method for irregularly-sampled clinical time series. The solid lines
+represent the classiﬁcation process, and dotted lines represent the auxiliary missing data imputation process. For the input embedding and
+multihead self-attention (MHA), each observation and missing indicators have individual learnable weights, and two integration MHAs have separate
+weights.
+Accordingly, the recent interest in irregularity-based methods
+is learning representations directly from multivariate sparse and
+irregularly sampled time series as the input without the need for
+imputation [6], [15], [22]. Speciﬁcally, ODE-LSTM [6] man-
+ages continuous time observations within the LSTM network,
+enabling cells to handle nonuniform time intervals and eliminate
+the need to aggregate observations into equally spaced intervals.
+2) Missing Pattern Modeling: Tomodelinformativemissing-
+ness, Che et al. [7] added a temporal decay derived from a time
+interval to the input variables and hidden states and directly
+incorporated both the observation and missing indicators in the
+GRU architecture. Furthermore, Lipton et al. [3] used hand-
+engineered features derived from the response indicator, such
+as the mean and standard deviation of the missing indicators,
+for each time series. Baytas et al. [8] proposed a time-aware
+LSTM (T-LSTM) to decompose the cell memory into short and
+long-term memories and decay the short-term memory through
+the weights transformed from time intervals, while retaining the
+long-term memories. Speciﬁcally, a monotonically nonincreas-
+ing function was heuristically selected as a decaying function.
+Similarly, ATTAIN [9] decayed the short-term memory using
+both time intervals and weights generated from the attention
+mechanism by considering several previous events, instead of
+only previous event. DATA-GRU [10] introduced a time-aware
+mechanism to a GRU for handling irregular time intervals, and
+further devised a dual attention mechanism to address missing
+values in both data-quality and medical-knowledge views.
+3) Attention Mechanism in Irregular Time Series Modeling:
+Several recent models leveraged attention mechanisms as the
+fundamental approach to deal with irregular sampling. For ex-
+ample, RETAIN [11] learned an interpretable representation
+of irregularly sampled time series through two-level RNNs,
+and generated visit-level and variable-level attentions. To learn
+the robust representations of EHR data, Choi et al. [12] intro-
+duced a graph-based attention method. Similarly, Ma et al. [13]
+proposed a knowledge-based attention mechanism to learn the
+embeddings for nodes in the knowledge graph. Based on the
+self-attention [16], Song et al. [14] proposed a SAnD model that
+adopted a masked self-attention to specify how far the attention
+model looks into the past and a dense interpolation to capture
+the temporal dependencies. In addition, Horn et al. [15] replaced
+the positional encoding with time encoding and concatenated
+encoding vectors and missing indicators.
+III. METHOD
+In this section, we present the proposed method for multi-view
+feature integration learning of irregular multivariate EHR time
+series for downstream tasks, i.e., in-hospital mortality predic-
+tion, LOS prediction, and phenotyping. First, we introduce the
+notations for multivariate time series data, and subsequently
+describe the proposed method that consists of (i) input and
+time embedding, (ii) multi-view integration learning, (iii) down-
+stream prediction tasks, and (iv) auxiliary imputation for masked
+missing data. The overall architecture is shown in Fig. 2.
+A. Data Representation
+For each subject n, given a set of D-dimensional multi-
+variate time series in t(n) = [t1, . . ., tj, . . ., tTn] time points of
+length Tn, we denote an observation time series as X(n) =
+[x(n)
+t1 , . . ., x(n)
+tj , . . ., x(n)
+tTn ]⊤∈RTn×D, where x(n)
+tj
+∈RD rep-
+resents the tj-th observation of all variables, and x(n)
+tj,d is
+the element of the d-th variable in x(n)
+tj . In this setting, be-
+cause the time series X(n) includes missing values, we in-
+troduce a missing indicator across the time series, M(n) =
+[m(n)
+t1 , . . ., m(n)
+tj , . . ., m(n)
+tTn ]⊤∈RTn×D, which has the same
+size as X(n) to mark the variables that are observed or missing.
+Speciﬁcally, m(n)
+tj,d = 1 is observed if x(n)
+tj,d is observed, other-
+wise, m(n)
+tj,d = 0. If the observation is missing, the input is set as
+zero for the corresponding elements in x(x)
+tj . For each variable d,
+we present a time interval Δ(n) = [δ(n)
+t1 , . . ., δ(n)
+tj , . . ., δ(n)
+tTn]⊤∈
+RTn×D, where δ(n)
+tj,d ∈R is deﬁned as:
+δ(n)
+tj,d =
+⎧
+⎪
+⎪
+⎨
+⎪
+⎪
+⎩
+tj −tj−1 + δ(n)
+tj−1,d,
+tj > 1, mt(n)
+j−1,d = 0
+tj −tj−1,
+tj > 1, mt(n)
+j−1,d = 1
+0,
+tj = 1.
+(1)
+Authorized licensed use limited to: Chalmers University of Technology Sweden. Downloaded on August 14,2025 at 08:41:20 UTC from IEEE Xplore.  Restrictions apply. 

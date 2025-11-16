@@ -1,0 +1,48 @@
+Published as a conference paper at ICLR 2022
+Siyuan Shan and Junier B Oliva. Nrtsi: Non-recurrent time series imputation for irregularly-sampled
+data. arXiv:2102.03340, 2021.
+Paul Shannon, Andrew Markiel, Owen Ozier, Nitin S Baliga, Jonathan T Wang, Daniel Ramage, Nada
+Amin, Benno Schwikowski, and Trey Ideker. Cytoscape: a software environment for integrated
+models of biomolecular interaction networks. Genome Research, 13(11):2498–2504, 2003.
+Satya Narayan Shukla and Benjamin Marlin. Interpolation-prediction networks for irregularly
+sampled time series. In ICLR, 2018.
+Satya Narayan Shukla and Benjamin Marlin. Multi-time attention networks for irregularly sampled
+time series. In ICLR, 2021.
+Satya Narayan Shukla and Benjamin M Marlin. A survey on principles, models and methods for
+learning from irregularly sampled time series. 2020.
+Rafael T Sousa, Lucas A Pereira, and Anderson S Soares. Improving irregularly sampled time series
+learning with dense descriptors of time. arXiv:2003.09291, 2020.
+Qingxiong Tan, Mang Ye, Baoyao Yang, Siqi Liu, Andy Jinhua Ma, Terry Cheuk-Fung Yip, Grace
+Lai-Hung Wong, and PongChi Yuen. DATA-GRU: Dual-attention time-aware gated recurrent unit
+for irregular multivariate time series. In AAAI, volume 34, pp. 930–937, 2020.
+Sindhu Tipirneni and Chandan K Reddy. Self-supervised transformer for multivariate clinical
+time-series with missing values. arXiv:2107.14293, 2021.
+Ashish Vaswani, Noam Shazeer, Niki Parmar, Jakob Uszkoreit, Llion Jones, Aidan N Gomez, Łukasz
+Kaiser, and Illia Polosukhin. Attention is all you need. In NIPS, pp. 5998–6008, 2017.
+Petar Veliˇckovi´c, Guillem Cucurull, Arantxa Casanova, Adriana Romero, Pietro Liò, and Yoshua
+Bengio. Graph attention networks. In ICLR, 2018.
+Xiaoyang Wang, Yao Ma, Yiqi Wang, Wei Jin, Xin Wang, Jiliang Tang, Caiyan Jia, and Jian Yu.
+Trafﬁc ﬂow prediction via spatial temporal graph neural network. In The Web Conference 2020,
+pp. 1082–1092, 2020.
+Zhen Wang, Yang Zhang, Ai Jiang, Ji Zhang, Zhao Li, Jun Gao, Ke Li, and Chenhao Lu. Dama-net:
+A novel predictive model for irregularly asynchronously and sparsely sampled multivariate time
+series. In ICML’W, 2011.
+B. J. Wells, K. M. Chagin, A. S. Nowacki, and M. W. Kattan. Strategies for handling missing data in
+electronic health record derived data. EGEMS, 1(3), 2013.
+Sifan Wu, Xi Xiao, Qianggang Ding, Peilin Zhao, Ying Wei, and Junzhou Huang. Adversarial sparse
+transformer for time series forecasting. In NeurIPS, volume 33, 2020a.
+Yinjun Wu, Jingchao Ni, Wei Cheng, Bo Zong, Dongjin Song, Zhengzhang Chen, Yanchi Liu, Xuchao
+Zhang, Haifeng Chen, and Susan Davidson. Dynamic gaussian mixture based deep generative
+model for robust forecasting on sparse multivariate time series. In AAAI, 2021.
+Zonghan Wu, Shirui Pan, Fengwen Chen, Guodong Long, Chengqi Zhang, and S Yu Philip. A
+comprehensive survey on graph neural networks. IEEE Transactions on Neural Networks and
+Learning Systems, 32(1):4–24, 2020b.
+Zonghan Wu, Shirui Pan, Guodong Long, Jing Jiang, Xiaojun Chang, and Chengqi Zhang. Connecting
+the dots: Multivariate time series forecasting with graph neural networks. In KDD, pp. 753–763,
+2020c.
+Jianing Yang, Yongxin Wang, Ruitao Yi, Yuying Zhu, Azaan Rehman, Amir Zadeh, Soujanya
+Poria, and Louis-Philippe Morency. Mtag: Modal-temporal attention graph for unaligned human
+multimodal language sequences. In Proceedings of the 2021 Conference of the North American
+Chapter of the Association for Computational Linguistics: Human Language Technologies, pp.
+1009–1021, 2021.
+13

@@ -1,0 +1,135 @@
+4274
+IEEE JOURNAL OF BIOMEDICAL AND HEALTH INFORMATICS, VOL. 26, NO. 8, AUGUST 2022
+This ﬁnal attention output is the jointly learned deep represen-
+tations that model the relation between the irregular observation
+data and missing pattern. Subsequently, the FFN module is
+applied to each time point identically to model the dependency
+among variables. The ﬁnal representation ˜H is leveraged for the
+downstream prediction and auxiliary imputation tasks.
+C. Downstream Prediction Tasks
+After obtaining the ﬁnal representation from the MIAM,
+we construct a classiﬁer and regressor to accomplish each of
+the three downstream tasks, i.e., (i) prediction of in-hospital
+mortality, (ii) prediction of LOS, and (iii) phenotyping. In-
+hospitalmortalitypertainstoabinaryclassiﬁcationthatindicates
+whether a patient dies during the period of hospital admission
+or lives to be discharged. The target label for the patients is
+y = (y1, . . . , yN|yn ∈{0, 1}). LOS prediction is a regression
+task in which the number of days between the patient’s ad-
+mission to the ICU and end of hospitalization is predicted.
+Phenotyping represents a multi-label classiﬁcation problem that
+shows patients’ diagnosis as a patient is diagnosed with multiple
+conditions.
+To predict the probability of downstream tasks, given the
+ﬁnal representation ˜H, we conduct an average pooling over the
+timestamps, which results in a ﬁnal pooled representation ˆh,
+followed by a multi-layer perceptron (MLP). The ﬁnal layer
+depends on the speciﬁc task, and we a sigmoid layer is used for
+for classiﬁcation and multilabel classiﬁcation.
+Furthermore, to address the poor classiﬁcation performance
+problem in highly imbalanced data found in healthcare datasets,
+we employ focal loss [21], [23] as the objective function to
+calculate the classiﬁcation loss between the target label y and
+predicted label ˆy of each patient. As γ and β of the focal loss
+smoothly adjust the weighting rate of easy or hard examples.
+Hence, for the three downstream tasks, the corresponding loss
+functions Lpred are deﬁned as follows:
+r Binary classiﬁcation:
+1
+N
+N
+
+n=1
+−β(1 −ˆy(n))γ log(ˆy(n))
+(11)
+r Regression:
+
+1
+N
+
+N
+n=1(ˆy(n) −y(n))2
+(12)
+r Multi-label classiﬁcation:
+1
+N
+N
+
+n=1
+
+1
+K
+K
+
+k=1
+−β
+
+1 −ˆy(n)
+k
+γ
+log
+
+ˆy(n)
+k
+	
+(13)
+where N is the total number of patients, K is the total number
+of labels in the dataset, γ is a focusing parameter for a minority
+class, and β is a weighting factor to balance the importance
+between classes.
+D. Auxiliary Missing Data Imputation
+On top of the MIAM module, we build an attention-based
+decoder as a missing data imputer that aims to enhance the
+representational power of the inter-relations among multi-view
+observations for the prediction task. To investigate the masked
+imputation loss, we randomly mask 10% of the non-missing val-
+ues and predict them. From a self-supervised learning perspec-
+tive, this task can be regarded as similar to a masked language
+modeling task accomplished using BERT [24], which randomly
+masksseveraltokensinatextsequenceandindependentlyrecov-
+ers the masked tokens to learn the language representations. By
+takingasimilarapproach, welearntheinterrelationsbetweenthe
+corrupted values and context, which further contributes to the
+learning of the interrelations among multi-view observations.
+Notably, the proposed method is basically an imputation-free
+method as the imputation is implemented only in the training
+phase and not the test phase. Therefore, the model complex-
+ity is reduced, while avoiding the existing imputation-related
+problems that lead to strong biases due to improper imputation
+estimates.
+In the attention-based decoder, we further apply an attention
+block between the ﬁnal representation of the MIAM ( ˜H) as a
+query and observation representation (HX) as the key and value,
+followed by the FFN. The output layer maps the output of FFN
+to the target time sequence by utilizing the learned embedding
+matrix (WX), and yields the imputed data ( ˆX), as shown in (14).
+ˆX = W⊤
+X × FFN
+⎛
+⎜
+⎝σ
+⎛
+⎜
+⎝
+
+WQ
+˜H ˜H
+ 
+WK
+ˆXHX⊤
+√dk
+⎞
+⎟
+⎠
+
+WV
+ˆXHX
+⎞
+⎟
+⎠
+(14)
+Given another masking vector Mimp introduced for the purpose
+of marking the masked values, the imputation loss Limp is
+calculated by masked mean squared error (MSE) between the
+original sample X as the ground truth and imputed sample ˆX
+Authorized licensed use limited to: Chalmers University of Technology Sweden. Downloaded on August 14,2025 at 08:41:20 UTC from IEEE Xplore.  Restrictions apply. 

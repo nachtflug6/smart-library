@@ -1,0 +1,66 @@
+4278
+IEEE JOURNAL OF BIOMEDICAL AND HEALTH INFORMATICS, VOL. 26, NO. 8, AUGUST 2022
+Fig. 3.
+Visualization of (top row) normalized raw data for observation (X), missing indicator (M), and time interval (Δ), (middle row) relevance
+score map for observation (RX), missing indicator (RM), and time interval (RΔ), and (bottom row) bar graph for changes of the highlighted
+relevance scores on their time points (GCS: Glasgow coma score, HR: heart rate, HCT: hematocrit, SysABP: systolic arterial blood pressure) of a
+patient with high mortality (ˆy = 0.7922). Here, we visualized only positive relevance scores for simplicity.
+results. Combination of these results and those of previous
+ablation study, indicate that the time interval (Δ) provides key
+information regarding the missingness, although its importance
+weakens when it is used to generate the missing pattern with the
+missing indicator (M).
+The results in Table V and Table VI showed that the proposed
+model built with the attention-based imputer achieved a higher
+performance than that without the imputer in both datasets. The
+auxiliary imputer helps enhance the representational power of
+the interrelations among multi-view observations for the predic-
+tion task.
+Furthermore, we compared our proposed approach to the
+case of using the imputed data by the BRITS imputer [17] as
+the SOTA imputation method and the auxiliary imputer for the
+PhysioNet and MIMIC-III dataset in the Table VII and Table
+VIII. The imputation (dotted line in Fig. 2) was also conducted
+in the test phase. The result obtained using the imputed data
+by the auxiliary imputer (Auxiliary Imp.) was superior to that
+of the proposed approach (No Imp.), and the (BRITS Imp.)
+achieved the highest performance. However, the imputation-
+based methods incurred signiﬁcantly higher computing costs
+compared to the proposed method. Speciﬁcally, our method
+demanded 4.1091 × 1010 FLOPs (ﬂoating point operations per
+second), whereas the (BRITS Imp.) required 7.2526 × 1011
+FLOPs due to their RNN-based imputation process. Considering
+the trade-off between the computing costs and performance,
+these results validated the effectiveness of the proposed method
+in downstream tasks.
+Notably, these experimental results validated the efﬁcacy of
+the proposed method that learns the multi-view representation
+of irregular time series data and their deep integration with
+the self-attention mechanism, and further builds an auxiliary
+missingdataimputer,consideringitssuperiorperformanceinthe
+downstreamtask.Furthermore,theablationresultsindicatedthat
+the use of explicit imputation data helped enhance the prediction
+task performance to some extent compared to that when the
+imputation was not used, although the computational cost of the
+proposed method was signiﬁcantly lower than that of the other
+approaches. Thus, the proposed approach in which the auxiliary
+imputer is used only in the training phase can adequately model
+irregular time series data.
+Regarding the ﬁnal representation, for which we used an
+average pooling, we compared with other strategies in Supple-
+mentary S2.
+C. Layer-Wise Relevance Propagation (LRP) Analysis
+In this study, to demonstrate the validity of our novel multi-
+view attention method in real-world risk prediction tasks, we
+applied the layer-wise relevance propagation (LRP) method [26]
+that has been widely employed to highlight the explainability of
+a learned model among attribution methods [27]. Speciﬁcally,
+weappliedLRP-αβ [26],[27],whichtreatspositiveandnegative
+contributions in an asymmetric manner instead of vanilla LRP,
+and obtained the relevance scores.
+We analyzed the in-hospital mortality prediction task over
+the PhysioNet 2012 challenge dataset. Speciﬁcally, we ﬁrst
+calculated the relevance scores for each patient via the LRP and
+normalized them to a range of (−1, 1). Next, we extracted the
+strongly highlighted variables and time points that showed high
+Authorized licensed use limited to: Chalmers University of Technology Sweden. Downloaded on August 14,2025 at 08:41:20 UTC from IEEE Xplore.  Restrictions apply. 

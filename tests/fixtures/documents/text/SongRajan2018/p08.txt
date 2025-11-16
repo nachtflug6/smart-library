@@ -1,0 +1,84 @@
+MIMIC-III benchmark datasets. To the best of our knowl-
+edge, this is the ﬁrst work that emphasizes the importance of
+attention in clinical modeling and can potentially create new
+avenues for pushing the boundaries of healthcare analytics.
+Acknowledgments
+This work was performed under the auspices of the U.S.
+Dept. of Energy by Lawrence Livermore National Labora-
+tory under Contract DE-AC52-07NA27344. LLNL-CONF-
+738533.
+References
+Bahdanau, D.; Cho, K.; and Bengio, Y. 2014. Neural ma-
+chine translation by jointly learning to align and translate.
+arXiv preprint arXiv:1409.0473.
+Bashivan, P.; Rish, I.; Yeasin, M.; and Codella, N.
+2015.
+Learning representations from eeg with deep
+recurrent-convolutional neural networks.
+arXiv preprint
+arXiv:1511.06448.
+Cui, Y.; Chen, Z.; Wei, S.; Wang, S.; Liu, T.; and Hu, G.
+2016. Attention-over-attention neural networks for reading
+comprehension. arXiv preprint arXiv:1607.04423.
+Ghassemi, M.; Pimentel, M. A.; Naumann, T.; Brennan, T.;
+Clifton, D. A.; Szolovits, P.; and Feng, M. 2015. A multi-
+variate timeseries modeling approach to severity of illness
+assessment and forecasting in icu with sparse, heteroge-
+neous clinical data. In AAAI, 446–453.
+Harutyunyan, H.; Khachatrian, H.; Kale, D. C.; and Gal-
+styan, A. 2017. Multitask learning and benchmarking with
+clinical time series data. arXiv preprint arXiv:1703.07771.
+Hermann, K. M.; Kocisky, T.; Grefenstette, E.; Espeholt, L.;
+Kay, W.; Suleyman, M.; and Blunsom, P. 2015. Teaching
+machines to read and comprehend. In Advances in Neural
+Information Processing Systems, 1693–1701.
+Hochreiter, S., and Schmidhuber, J. 1997. Long short-term
+memory. Neural computation 9(8):1735–1780.
+Johnson, A. E.; Pollard, T. J.; Shen, L.; Lehman, L.-w. H.;
+Feng, M.; Ghassemi, M.; Moody, B.; Szolovits, P.; Celi,
+L. A.; and Mark, R. G. 2016. MIMIC-III, a freely acces-
+sible critical care database. Scientiﬁc data 3.
+Kim, Y. 2014. Convolutional neural networks for sentence
+classiﬁcation. arXiv preprint arXiv:1408.5882.
+Kingma, D., and Ba, J. 2014. Adam: A method for stochastic
+optimization. arXiv preprint arXiv:1412.6980.
+Lipton, Z. C.; Kale, D. C.; Elkan, C.; and Wetzell, R. 2015.
+Learning to diagnose with lstm recurrent neural networks.
+arXiv preprint arXiv:1511.03677.
+Lipton, Z. C.; Kale, D. C.; and Wetzel, R. 2016. Modeling
+missing data in clinical time series with rnns. arXiv preprint
+arXiv:1606.04130.
+Liu, Z., and Hauskrecht, M. 2013. Clinical time series pre-
+diction with a hierarchical dynamical system. In Conference
+on Artiﬁcial Intelligence in Medicine in Europe, 227–237.
+Springer.
+Liu, Z., and Hauskrecht, M. 2016. Learning adaptive fore-
+casting models from irregularly sampled multivariate clini-
+cal data. In AAAI, 1273–1279.
+Paulus, R.; Xiong, C.; and Socher, R. 2017. A deep rein-
+forced model for abstractive summarization. arXiv preprint
+arXiv:1705.04304.
+Sutskever, I.; Vinyals, O.; and Le, Q. V. 2014. Sequence
+to sequence learning with neural networks. In Advances in
+neural information processing systems, 3104–3112.
+Trask, A.; Gilmore, D.; and Russell, M. 2015. Modeling
+order in neural word embeddings at scale. arXiv preprint
+arXiv:1506.02338.
+Vaswani, A.; Shazeer, N.; Parmar, N.; Uszkoreit, J.; Jones,
+L.; Gomez, A. N.; Kaiser, L.; and Polosukhin, I. 2017. At-
+tention is all you need. arXiv preprint arXiv:1706.03762.
+Vinyals, O.; Kaiser, Ł.; Koo, T.; Petrov, S.; Sutskever, I.;
+and Hinton, G. 2015. Grammar as a foreign language. In
+Advances in Neural Information Processing Systems, 2773–
+2781.
+Wu, Y.; Schuster, M.; Chen, Z.; Le, Q. V.; Norouzi, M.;
+Macherey, W.; Krikun, M.; Cao, Y.; Gao, Q.; Macherey, K.;
+et al. 2016. Google’s neural machine translation system:
+Bridging the gap between human and machine translation.
+arXiv preprint arXiv:1609.08144.
+Xu, K.; Ba, J.; Kiros, R.; Cho, K.; Courville, A.; Salakhudi-
+nov, R.; Zemel, R.; and Bengio, Y. 2015. Show, attend and
+tell: Neural image caption generation with visual attention.
+In International Conference on Machine Learning, 2048–
+2057.
+4098

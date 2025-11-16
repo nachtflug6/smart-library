@@ -1,0 +1,59 @@
+Published as a conference paper at ICLR 2022
+Reddy, 2021; Chen et al., 2020). In a multivariate case, irregularity means that observations can
+be misaligned across different sensors, which can further complicate the analysis. Further, because
+of a multitude of sampling frequencies and varying time intervals, the number of observations can
+also vary considerably across samples (Fang & Wang, 2020; Kidger et al., 2020). Predominant
+downstream tasks for time series are classiﬁcation (i.e., predicting a label for a given sample, e.g.,
+Tan et al. (2020); Ma et al. (2020)) and forecasting (i.e., anticipating future observations based
+on historical observations, e.g., Wu et al. (2020a)). The above mentioned characteristics create
+considerable challenges for models that expect well-aligned and ﬁxed-size inputs (Shukla & Marlin,
+2020). An intuitive way to deal with irregular time series is to impute missing values and process
+them as regular time series (Mikalsen et al., 2021; Li & Marlin, 2020; Shan & Oliva, 2021). However,
+imputation methods can distort the underlying distribution and lead to unwanted distribution shifts.
+To this end, recent methods directly learn from irregularly sampled time series (Chen et al., 2018).
+For example, Che et al. (2018) develop a decay mechanism based on gated recurrent units (GRU-D)
+and binary masking to capture long-range temporal dependencies. SeFT (Horn et al., 2020) takes a
+set-based approach and transforms irregularly sampled time series datasets into sets of observations
+modeled by set functions insensitive to misalignment. mTAND (Shukla & Marlin, 2021) leverages a
+multi-time attention mechanism to learn temporal similarity from non-uniformly collected measure-
+ments and produce continuous-time embeddings. IP-Net (Shukla & Marlin, 2018) and DGM2 (Wu
+et al., 2021) adopt imputation to interpolate irregular time series against a set of reference points
+using a kernel-based approach. The learned inter-sensor relations are static ignoring sample-speciﬁc
+and time-speciﬁc characteristics. In contrast with the above methods, RAINDROP leverages dynamic
+graphs to address the characteristics of irregular time series and produce high-quality representations.
+Learning with graphs and neural message passing. There has been a surge of interest in applying
+neural networks to graphs, leading to the development of graph embeddings (Zhou et al., 2020; Li
+et al., 2021), graph neural networks (Wu et al., 2020b), and message passing neural networks (Gilmer
+et al., 2017). To address the challenges of irregular time series, RAINDROP speciﬁes a message
+passing strategy to exchange neural message along edges of sensor graphs and deal with misaligned
+sensor readouts (Riba et al., 2018; Nikolentzos et al., 2020; Galkin et al., 2020; Fey et al., 2020;
+Lin et al., 2018; Zhang et al., 2020). In particular, RAINDROP considers message passing on latent
+sensor graphs, each graph describing a different sample (e.g., patient, Figure 1), and it speciﬁes a
+message-passing network with learnable adjacency matrices. The key difference with the predominant
+use of message passing is that RAINDROP uses it to estimate edges (dependencies) between sensors
+rather than applying it on a ﬁxed, apriori-given graph. To the best of our knowledge, prior work did
+not utilize sensor dependencies for irregularly sampled time series. While prior work used message
+passing for regular time series (Wang et al., 2020; Wu et al., 2020c; Kalinicheva et al., 2020; Zha
+et al., 2022), its utility for irregularly sampled time series has not yet been studied.
+3
+RAINDROP
+Let D = {(Si, yi) | i = 1, . . . , N} denote an irregular time series dataset with N labeled samples
+(Figure 2). Every sample Si is an irregular multivariate time series with a corresponding label
+yi ∈{1, . . . , C}, indicating which of the C classes Si is associated with. Each sample contains M
+non-uniformly measured sensors that are denoted as u, v, etc. RAINDROP can also work on samples
+with only a subset of active sensors (see Sec. 4.1). Each sensor is given by a sequence of observations
+ordered by time. For sensor u in sample Si, we denote a single observation as a tuple (t, xt
+i,u),
+meaning that sensor u was recorded with value xt
+i,u ∈R at timestamp t ∈R+. We omit sample index
+i and sensor index u in timestamp t. Sensor observations are irregularly recorded, meaning that time
+intervals between successive observations can vary across sensors. For sensor u in sample Si, we use
+Ti,u to denote the set of timestamps that u, or at least one of u’s L-hop neighbors (L is the number of
+layers in RAINDROP’s message passing) is recorded. We use || and T to denote concatenation and
+transpose, respectively. We omit layer index l ∈{1, . . . , L} for simplicity when clear from the text.
+Problem (Representation learning for irregularly sampled multivariate time series). A dataset
+D of irregularly sampled multivariate time series is given, where each sample Si has multiple sensors
+and each sensor has a variable number of observations. RAINDROP learns a function f : Si →zi
+that maps Si to a ﬁxed-length representation zi suitable for downstream task of interest, such as
+classiﬁcation. Using learned zi, RAINDROP can predict label ˆyi ∈{1, . . . , C} for Si.
+3
