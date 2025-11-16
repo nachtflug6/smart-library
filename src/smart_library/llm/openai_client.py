@@ -1,11 +1,11 @@
 """
-OpenAI API client implementation.
+OpenAI API client implementation (clean, GPT-4-only).
 """
 from __future__ import annotations
-import os
 import logging
 import time
-from typing import Any, Dict, List, Optional
+import json
+from typing import Any, Dict, List
 
 import openai
 from openai import OpenAI
@@ -15,8 +15,15 @@ from smart_library.llm.client import LLMClient
 logger = logging.getLogger(__name__)
 
 
+def _mask_api_key(key: str) -> str:
+    """Mask API key for safe logging."""
+    if not key or len(key) < 12:
+        return "***invalid***"
+    return f"{key[:7]}...{key[-4:]}"
+
+
 class OpenAIClient(LLMClient):
-    """OpenAI API client."""
+    """OpenAI API client supporting GPT-4o / GPT-4.1 only."""
 
     def __init__(
         self,
@@ -26,20 +33,6 @@ class OpenAIClient(LLMClient):
         retry_delay: float = 1.0,
         validate_key: bool = True,
     ):
-        """
-        Initialize OpenAI client.
-
-        Args:
-            api_key: OpenAI API key
-            default_model: Default model to use
-            max_retries: Maximum number of retries on failure
-            retry_delay: Base delay between retries (exponential backoff)
-            validate_key: If True, validate API key on initialization
-
-        Raises:
-            openai.AuthenticationError: If validate_key=True and key is invalid
-            openai.APIConnectionError: If validate_key=True and connection fails
-        """
         super().__init__(api_key=api_key, default_model=default_model)
         self.max_retries = max_retries
         self.retry_delay = retry_delay
@@ -48,132 +41,97 @@ class OpenAIClient(LLMClient):
         if validate_key:
             self._validate_api_key()
 
+    # ---------------------------------------------------------------------
+    #   API Key Validation
+    # ---------------------------------------------------------------------
     def _validate_api_key(self):
-        """
-        Validate API key by making a minimal request to OpenAI.
-
-        Raises:
-            openai.AuthenticationError: If API key is invalid
-            openai.APIConnectionError: If connection fails
-        """
         logger.info("Validating OpenAI API key...")
         try:
-            # Make a minimal request to validate the key
-            response = self.client.chat.completions.create(
+            self.client.chat.completions.create(
                 model=self.default_model,
                 messages=[{"role": "user", "content": "test"}],
                 max_tokens=1,
             )
             logger.info("OpenAI API key validated successfully (model=%s)", self.default_model)
-        except openai.AuthenticationError as e:
-            logger.error("Invalid OpenAI API key: %s", e)
-            raise
-        except openai.APIConnectionError as e:
-            logger.error("Failed to connect to OpenAI API: %s", e)
-            raise
         except Exception as e:
-            logger.warning("Unexpected error during API key validation: %s", e)
+            logger.error("OpenAI key validation failed: %s", e)
             raise
 
+    # ---------------------------------------------------------------------
+    #   API Call
+    # ---------------------------------------------------------------------
     def _call_api(
         self,
         model: str,
         messages: List[Dict[str, str]],
-        temperature: float,
-        max_output_tokens: int,
+        temperature: float | None,
+        max_output_tokens: int | None,
         **kwargs,
     ) -> str:
-        """Call OpenAI API with retry logic."""
-        kwargs_api = {
+
+        # Standard GPT-4o/4.1 parameters
+        kwargs_api: Dict[str, Any] = {
             "model": model,
             "messages": messages,
-            "temperature": temperature,
-            "max_tokens": max_output_tokens,
         }
 
-        # Pass through additional kwargs (e.g., response_format)
+        # Temperature always allowed
+        if temperature is not None:
+            kwargs_api["temperature"] = temperature
+
+        # Token limits (GPT-4 models use max_tokens)
+        if max_output_tokens is not None:
+            kwargs_api["max_tokens"] = max_output_tokens
+
+        # Pass-through parameters
         for key in ("response_format", "top_p", "frequency_penalty", "presence_penalty", "stop"):
-            if key in kwargs:
+            if key in kwargs and kwargs[key] is not None:
                 kwargs_api[key] = kwargs[key]
 
-        def _attempt(k: dict) -> Any:
-            return self.client.chat.completions.create(**k)
-
+        # Retry loop ------------------------------------------------------
         for attempt in range(self.max_retries):
             try:
-                resp = _attempt(kwargs_api)
-                content = resp.choices[0].message.content or ""
+                resp = self.client.chat.completions.create(**kwargs_api)
+                msg = resp.choices[0].message
+
+                # Primary content
+                content = (msg.content or "").strip()
+
+                # Some GPT-4 models expose parsed JSON when response_format=json_object
+                if not content:
+                    parsed = getattr(msg, "parsed", None)
+                    if parsed is not None:
+                        try:
+                            return json.dumps(parsed, ensure_ascii=False)
+                        except Exception:
+                            return str(parsed)
+
                 return content
-            except openai.RateLimitError as e:
+
+            except openai.RateLimitError:
                 if attempt < self.max_retries - 1:
                     delay = self.retry_delay * (2 ** attempt)
-                    logger.warning("Rate limit hit, retrying in %.1fs... (attempt %d/%d)", delay, attempt + 1, self.max_retries)
+                    logger.warning(
+                        "Rate limit hit, retrying in %.1fs... (attempt %d/%d)",
+                        delay, attempt + 1, self.max_retries,
+                    )
                     time.sleep(delay)
-                else:
-                    logger.error("Rate limit exceeded after %d retries", self.max_retries)
-                    raise
+                    continue
+                raise
+
             except openai.APIError as e:
                 if attempt < self.max_retries - 1:
                     delay = self.retry_delay * (2 ** attempt)
-                    logger.warning("API error: %s, retrying in %.1fs... (attempt %d/%d)", e, delay, attempt + 1, self.max_retries)
+                    logger.warning(
+                        "API error: %s, retrying in %.1fs... (attempt %d/%d)",
+                        e, delay, attempt + 1, self.max_retries,
+                    )
                     time.sleep(delay)
-                else:
-                    logger.error("API error after %d retries: %s", self.max_retries, e)
-                    raise
+                    continue
+                raise
+
             except Exception as e:
                 logger.error("Unexpected error calling OpenAI API: %s", e)
                 raise
 
         raise RuntimeError("Should not reach here")
-
-
-if __name__ == "__main__":
-    api_key = os.getenv("OPENAI_API_KEY")
-    if not api_key:
-        print("OPENAI_API_KEY not set. Skipping smoke test.")
-        raise SystemExit(0)
-
-    client = OpenAIClient(api_key=api_key, default_model="gpt-5-mini")
-
-    model = "gpt-5-mini"
-    tests = [
-        {
-            "label": "T1 simple word",
-            "messages": [{"role": "user", "content": "Say Hello"}],
-            "max_output_tokens": 64,
-        },
-        {
-            "label": "T2 tiny JSON",
-            "messages": [
-                {"role": "system", "content": "Return only valid JSON. No extra text."},
-                {"role": "user", "content": 'Give me {"ok": true} exactly.'},
-            ],
-            "max_output_tokens": 256,
-        },
-        {
-            "label": "T3 metadata subset",
-            "messages": [
-                {"role": "system", "content": "Return JSON only."},
-                {"role": "user", "content": "Title: Example Research\nAuthors: Alice Smith, Bob Lee\nReturn JSON with title, authors."},
-            ],
-            "max_output_tokens": 800,
-        },
-    ]
-
-    for t in tests:
-        print(f"\n=== {t['label']} ===")
-        out = client.chat(
-            model=model,
-            messages=t["messages"],
-            max_output_tokens=t["max_output_tokens"],  # sent as max_completion_tokens for gpt-5
-            temperature=None,  # omit for gpt-5
-            response_format=None,
-        )
-        print("Raw:", out)
-        # Try JSON parse if looks like JSON
-        if out.strip().startswith("{"):
-            try:
-                import json
-                print("JSON OK keys:", list(json.loads(out).keys()))
-            except Exception as e:
-                print("JSON parse error:", e)
