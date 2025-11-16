@@ -6,7 +6,7 @@ import re
 
 from smart_library.llm.client import LLMClient
 from smart_library.extract.author_utils import clean_author
-from smart_library.extract.base import extract_with_llm
+from smart_library.extract.extractor import BaseExtractor
 
 EXPECTED_FIELDS = {
     "title",
@@ -21,60 +21,21 @@ EXPECTED_FIELDS = {
 }
 
 
-def _normalize_metadata(raw: Dict[str, Any]) -> Dict[str, Any]:
-    """Normalize raw metadata dict into expected schema."""
-    out: Dict[str, Any] = {}
-    for k in EXPECTED_FIELDS:
-        v = raw.get(k, None)
-        if k == "authors":
-            if v is None:
-                out[k] = None
-            elif isinstance(v, list):
-                cleaned = [c for a in v if (c := clean_author(str(a)))]
-                out[k] = cleaned or None
-            elif isinstance(v, str):
-                import re as _re
-                parts = [p.strip() for p in _re.split(r"[;,]", v) if p.strip()]
-                cleaned = [c for a in parts if (c := clean_author(a))]
-                out[k] = cleaned or None
-            else:
-                out[k] = None
-        elif k == "keywords":
-            if v is None:
-                out[k] = None
-            elif isinstance(v, list):
-                kw = [str(x).strip().lower() for x in v if str(x).strip()]
-                out[k] = kw or None
-            elif isinstance(v, str):
-                import re as _re
-                parts = [p.strip().lower() for p in _re.split(r"[;,]", v) if p.strip()]
-                out[k] = parts or None
-            else:
-                out[k] = None
-        elif k == "year":
-            if isinstance(v, int) and 1500 <= v <= 2100:
-                out[k] = v
-            elif isinstance(v, str) and v.isdigit():
-                y = int(v)
-                out[k] = y if 1500 <= y <= 2100 else None
-            else:
-                out[k] = None
-        else:
-            out[k] = v if (v is None or isinstance(v, (str, int))) else None
-    return out
+class MetadataExtractor(BaseExtractor[Dict[str, Any]]):
+    """Extracts bibliographic metadata from document text using LLM."""
 
+    def system_prompt(self) -> str:
+        """Return deterministic extraction system prompt."""
+        return (
+            "You are a deterministic metadata extractor.\n"
+            "- Do not hallucinate.\n"
+            "- Use null for uncertain or missing fields.\n"
+            "- When JSON is requested, return only valid JSON with no extra text.\n"
+        )
 
-def deterministic_extraction_prompt() -> str:
-    return (
-        "You are a deterministic metadata extractor.\n"
-        "- Do not hallucinate.\n"
-        "- Use null for uncertain or missing fields.\n"
-        "- When JSON is requested, return only valid JSON with no extra text.\n"
-    )
-
-
-def metadata_extraction_prompt(text: str, expected_format: str | None = None) -> str:
-    fmt = expected_format or """
+    def user_prompt(self, text: str) -> str:
+        """Return metadata extraction user prompt."""
+        fmt = """
 {
   "title": string | null,
   "authors": string[] | null,
@@ -87,7 +48,7 @@ def metadata_extraction_prompt(text: str, expected_format: str | None = None) ->
   "url": string | null
 }
 """.strip()
-    return f"""Extract bibliographic metadata from the paper TEXT.
+        return f"""Extract bibliographic metadata from the paper TEXT.
 
 Return STRICT JSON matching exactly this shape (no extra keys, no markdown):
 {fmt}
@@ -110,38 +71,49 @@ TEXT:
 {text}
 """
 
-
-class MetadataExtractor:
-    """Extracts bibliographic metadata from document text using LLM."""
-
-    def __init__(
-        self,
-        client: LLMClient,
-        *,
-        model: str = "gpt-4o-mini",
-        temperature: float = 1.0,
-        enforce_json: bool = True,
-        debug: bool = False,
-    ):
-        """
-        Initialize metadata extractor.
-
-        Args:
-            client: LLM client instance
-            model: Model to use for extraction
-            temperature: Sampling temperature
-            enforce_json: Whether to enforce JSON response format
-            debug: Enable debug logging
-        """
-        self.client = client
-        self.model = model
-        self.temperature = temperature
-        self.enforce_json = enforce_json
-        self.debug = debug
+    def normalize(self, raw: Dict[str, Any]) -> Dict[str, Any]:
+        """Normalize raw LLM output into metadata schema."""
+        out: Dict[str, Any] = {}
+        for k in EXPECTED_FIELDS:
+            v = raw.get(k, None)
+            if k == "authors":
+                if v is None:
+                    out[k] = None
+                elif isinstance(v, list):
+                    cleaned = [c for a in v if (c := clean_author(str(a)))]
+                    out[k] = cleaned or None
+                elif isinstance(v, str):
+                    parts = [p.strip() for p in re.split(r"[;,]", v) if p.strip()]
+                    cleaned = [c for a in parts if (c := clean_author(a))]
+                    out[k] = cleaned or None
+                else:
+                    out[k] = None
+            elif k == "keywords":
+                if v is None:
+                    out[k] = None
+                elif isinstance(v, list):
+                    kw = [str(x).strip().lower() for x in v if str(x).strip()]
+                    out[k] = kw or None
+                elif isinstance(v, str):
+                    parts = [p.strip().lower() for p in re.split(r"[;,]", v) if p.strip()]
+                    out[k] = parts or None
+                else:
+                    out[k] = None
+            elif k == "year":
+                if isinstance(v, int) and 1500 <= v <= 2100:
+                    out[k] = v
+                elif isinstance(v, str) and v.isdigit():
+                    y = int(v)
+                    out[k] = y if 1500 <= y <= 2100 else None
+                else:
+                    out[k] = None
+            else:
+                out[k] = v if (v is None or isinstance(v, (str, int))) else None
+        return out
 
     def extract(self, texts: List[str]) -> Dict[str, Any]:
         """
-        Extract metadata from text using LLM (single API call).
+        Extract metadata from text pages using LLM (single API call).
 
         Args:
             texts: List of text strings (typically pages from a document)
@@ -153,20 +125,7 @@ class MetadataExtractor:
             return {"error": "no_texts"}
 
         combined = "\n\n".join(t for t in texts if t)
-        data, reason = extract_with_llm(
-            combined,
-            self.client,
-            deterministic_extraction_prompt(),
-            metadata_extraction_prompt,
-            model=self.model,
-            temperature=self.temperature,
-            enforce_json=self.enforce_json,
-            debug=self.debug,
-        )
-
-        if not isinstance(data, dict):
-            return {"error": "invalid_json", "why": reason}
-        return _normalize_metadata(data)
+        return super().extract(combined)
 
     def extract_bulk(
         self,
@@ -184,10 +143,18 @@ class MetadataExtractor:
         Returns:
             List of metadata dicts with 'document_id' field added
         """
-        results: List[Dict[str, Any]] = []
+        # Prepare combined texts per document
+        combined_texts = {}
         for doc_id, pages in doc_texts.items():
             sample = pages[:max_pages_per_doc] if max_pages_per_doc else pages
-            out = self.extract(sample)
-            out["document_id"] = doc_id
-            results.append(out)
+            combined_texts[doc_id] = "\n\n".join(p for p in sample if p)
+
+        # Use parent's bulk extraction
+        results = super().extract_bulk(combined_texts)
+        
+        # Rename item_id to document_id
+        for result in results:
+            if "item_id" in result:
+                result["document_id"] = result.pop("item_id")
+        
         return results
