@@ -8,7 +8,7 @@ from smart_library.llm.client import BaseLLMClient
 from smart_library.prompts.system_prompts import deterministic_extraction_prompt
 from smart_library.prompts.user_prompts import term_extraction_prompt
 from smart_library.utils.parsing import parse_structured_obj
-from smart_library.extract.base import extract_with_llm, extract_bulk_with_llm
+from smart_library.extract.extractor import extract_with_llm, extract_bulk_with_llm
 
 
 def _normalize_term(raw: str) -> str | None:

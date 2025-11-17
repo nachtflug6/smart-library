@@ -1,3 +1,5 @@
+
+{"id":"ZhangZeman2022", "type": "document""pdf_path":"data/pdf/curated/ZhangZeman2022.pdf","page_count":21}
 {"id": "doc-001", "type": "document", "data": {"page_count": 3, "title": "Neural Networks and Deep Learning", "author": "Jane Smith"}}
 {"id": "doc-001_p0001", "type": "page", "data": {"page_number": 1, "page_text": "Introduction to Neural Networks\n\nNeural networks are computational models inspired by biological neural systems. They consist of interconnected nodes organized in layers."}}
 {"id": "doc-001_p0002", "type": "page", "data": {"page_number": 2, "page_text": "Deep Learning Architectures\n\nConvolutional Neural Networks (CNNs) and Recurrent Neural Networks (RNNs) are two fundamental architectures. CNNs excel at image processing while RNNs handle sequential data."}}
