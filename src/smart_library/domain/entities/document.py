@@ -29,7 +29,6 @@ class Document(Entity):
     # -----------------------------
     # Structure
     # -----------------------------
-    page_ids: List[str] = field(default_factory=list)
     page_count: Optional[int] = None
 
     # -----------------------------

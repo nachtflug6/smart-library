@@ -1,17 +1,18 @@
 from dataclasses import dataclass, field
-from typing import Dict, Optional, List
+from typing import Optional, List
 
 from smart_library.domain.entities.entity import Entity
 
 @dataclass
 class Page(Entity):
     page_number: int
+    document_id: Optional[str] = None  # Needed to satisfy schema.page.document_id
 
     # Optional extracted content
     full_text: Optional[str] = None
     token_count: Optional[int] = None
 
-    # Optional structural hints (lightweight)
+    # Optional structural hints (not persisted in current schema)
     paragraphs: List[str] = field(default_factory=list)
     sections: List[str] = field(default_factory=list)
 
