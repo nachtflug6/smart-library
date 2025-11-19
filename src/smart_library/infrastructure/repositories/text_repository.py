@@ -9,7 +9,7 @@ class TextRepository(BaseRepository[Text]):
         # Parent is page if available; else document
         if not txt.parent_id:
             txt.parent_id = txt.page_id or txt.document_id
-        else:
+        if not txt.parent_id:
             raise ValueError("Text.parent_id should reference Page or Document id")
         self._insert_entity(txt)
         sql = "INSERT INTO text_entity (id, type, index, content) VALUES (?,?,?,?)"
@@ -34,7 +34,7 @@ class TextRepository(BaseRepository[Text]):
             parent_id=es.get("parent_id"),
             metadata=_from_json(es.get("metadata"), {}),
             content=r["content"],
-            type=r.get("type"),
+            text_type=r.get("type"),  # <-- FIXED: use text_type instead of type
             index=r.get("index"),
         )
 

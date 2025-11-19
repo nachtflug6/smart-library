@@ -5,19 +5,9 @@ from smart_library.domain.entities.entity import Entity
 
 @dataclass
 class Term(Entity):
-    # Surface form (the literal string)
-    canonical_name: str                  # e.g., "Kalman"
-
-    # Disambiguation category (sense)
-    sense: Optional[str] = None          # e.g., "person", "algorithm", "theorem", "company"
-
+    canonical_name: str = ""
+    sense: Optional[str] = None
     definition: Optional[str] = None
-
-    # Aliases / Variants / Synonyms
     aliases: List[str] = field(default_factory=list)
-
-    # Domain (optional)
-    domain: Optional[str] = None         # e.g., "CS", "control", "stats"
-
-    # Relations to other terms
+    domain: Optional[str] = None
     related_terms: List[str] = field(default_factory=list)

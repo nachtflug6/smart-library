@@ -6,7 +6,7 @@ from smart_library.domain.constants.text_types import TextType
 
 @dataclass
 class Text(Entity):
-    content: str
+    content: str = ""
     # Rename to avoid clashing with Entity.type property; maps to DB column "type"
     text_type: str = TextType.CHUNK      # "chunk", "summary", "caption", etc.
     index: Optional[int] = None          # for ordering inside a page or document

@@ -5,6 +5,8 @@ from pathlib import Path
 
 DATA_DIR = Path(os.getenv("SMARTLIB_DATA_DIR", "data_dev")).resolve()
 
+DB_PATH     = DATA_DIR / "db/smart_library.db"
+
 DOC_ROOT      = DATA_DIR / "documents"
 DOC_PDF_DIR   = DOC_ROOT / "pdf"
 DOC_TEXT_DIR  = DOC_ROOT / "text"

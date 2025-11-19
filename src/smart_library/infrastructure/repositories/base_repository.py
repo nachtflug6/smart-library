@@ -1,6 +1,6 @@
 from typing import Any, Dict, Optional, TypeVar, Generic
 import json
-from smart_library.infrastructure.db import get_connection
+from smart_library.infrastructure.db.db import get_connection
 from smart_library.domain.entities.entity import Entity
 
 E = TypeVar("E", bound=Entity)

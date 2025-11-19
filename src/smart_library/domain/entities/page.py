@@ -5,7 +5,7 @@ from smart_library.domain.entities.entity import Entity
 
 @dataclass
 class Page(Entity):
-    page_number: int
+    page_number: int = 0
     document_id: Optional[str] = None  # Needed to satisfy schema.page.document_id
 
     # Optional extracted content
