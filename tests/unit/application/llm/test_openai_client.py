@@ -52,7 +52,7 @@ def _setup_fake_openai_and_reload(monkeypatch):
 
     monkeypatch.setitem(sys.modules, "openai", fake_openai)
 
-    import smart_library.llm.openai_client as openai_client
+    import smart_library.application.llm.openai_client as openai_client
 
     # Ensure the module sees our fake 'openai' and 'OpenAI'
     openai_client = importlib.reload(openai_client)

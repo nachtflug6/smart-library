@@ -1,6 +1,6 @@
 # Python
 def test_chat_uses_default_model_and_returns_response():
-    from smart_library.llm.client import LLMClient
+    from smart_library.application.llm.client import LLMClient
 
     class FakeLLMClient(LLMClient):
         def __init__(self, api_key: str, default_model: str, response: str):
@@ -40,7 +40,7 @@ def test_chat_uses_default_model_and_returns_response():
 
 
 def test_chat_overrides_model_and_forwards_parameters():
-    from smart_library.llm.client import LLMClient
+    from smart_library.application.llm.client import LLMClient
 
     class FakeLLMClient(LLMClient):
         def __init__(self, api_key: str, default_model: str, response: str):
@@ -80,7 +80,7 @@ def test_chat_overrides_model_and_forwards_parameters():
 
 
 def test_chat_forwards_arbitrary_kwargs():
-    from smart_library.llm.client import LLMClient
+    from smart_library.application.llm.client import LLMClient
 
     class FakeLLMClient(LLMClient):
         def __init__(self, api_key: str, default_model: str, response: str):

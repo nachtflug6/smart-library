@@ -10,7 +10,7 @@ from typing import Any, Dict, List
 import openai
 from openai import OpenAI
 
-from smart_library.llm.client import LLMClient
+from smart_library.application.llm.client import LLMClient
 
 logger = logging.getLogger(__name__)
 

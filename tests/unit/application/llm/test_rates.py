@@ -1,8 +1,6 @@
-"""Unit tests for smart_library.llm.rates module."""
-
 import pytest
 
-from smart_library.llm.rates import (
+from smart_library.application.llm.rates import (
     estimate_message_tokens,
     get_model_limits,
     MinuteRateLimiter,
@@ -189,8 +187,8 @@ def test_minute_rate_limiter_resets_without_sleep(monkeypatch):
     def fake_sleep(_secs):
         t["now"] += 0.0
 
-    monkeypatch.setattr("smart_library.llm.rates.time.time", fake_time)
-    monkeypatch.setattr("smart_library.llm.rates.time.sleep", fake_sleep)
+    monkeypatch.setattr("smart_library.application.llm.rates.time.time", fake_time)
+    monkeypatch.setattr("smart_library.application.llm.rates.time.sleep", fake_sleep)
 
     tpm_limit = 10
     rpm_limit = 2
@@ -221,7 +219,7 @@ def test_minute_rate_limiter_add_output_tokens(monkeypatch):
     def fake_time():
         return t["now"]
     
-    monkeypatch.setattr("smart_library.llm.rates.time.time", fake_time)
+    monkeypatch.setattr("smart_library.application.llm.rates.time.time", fake_time)
     
     limiter = MinuteRateLimiter(tpm_limit=100, rpm_limit=10)
     
