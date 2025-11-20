@@ -1,25 +1,17 @@
-FROM python:3.11-slim
+FROM mcr.microsoft.com/devcontainers/python:3.11
 
-# System packages needed for PDF + table extraction
+# System packages needed for PDF tooling
+USER root
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    build-essential \
     poppler-utils \
     ghostscript \
     default-jre \
+    sqlite3 \
     libglib2.0-0 \
     libgl1 \
-    sqlite3 \
     && rm -rf /var/lib/apt/lists/*
 
-# Work inside /app
-WORKDIR /app
+# Use vscode user after system install
+USER vscode
 
-# Install Python dependencies first (better caching)
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
-
-# Copy everything else
-COPY . .
-
-# No forcing the smartlib CLI – you drop into a shell
-ENTRYPOINT ["bash"]
+WORKDIR /workspaces/smart-library
