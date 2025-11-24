@@ -10,8 +10,6 @@ from typing import Any, Dict, List
 import openai
 from openai import OpenAI
 
-from smart_library.application.llm.client import LLMClient
-
 logger = logging.getLogger(__name__)
 
 
@@ -22,7 +20,7 @@ def _mask_api_key(key: str) -> str:
     return f"{key[:7]}...{key[-4:]}"
 
 
-class OpenAIClient(LLMClient):
+class OpenAIClient:
     """OpenAI API client supporting GPT-4o / GPT-4.1 only."""
 
     def __init__(
@@ -33,7 +31,8 @@ class OpenAIClient(LLMClient):
         retry_delay: float = 1.0,
         validate_key: bool = True,
     ):
-        super().__init__(api_key=api_key, default_model=default_model)
+        self.api_key = api_key
+        self.default_model = default_model
         self.max_retries = max_retries
         self.retry_delay = retry_delay
         self.client = OpenAI(api_key=api_key)
@@ -135,3 +134,34 @@ class OpenAIClient(LLMClient):
                 raise
 
         raise RuntimeError("Should not reach here")
+
+    def chat(
+        self,
+        messages: List[Dict[str, str]],
+        *,
+        model: str | None = None,
+        temperature: float = 0.7,
+        max_output_tokens: int = 1024,
+        **kwargs,
+    ) -> str:
+        """
+        Send a chat completion request.
+
+        Args:
+            messages: List of message dicts with 'role' and 'content'
+            model: Model to use (defaults to self.default_model)
+            temperature: Sampling temperature (0.0-2.0)
+            max_output_tokens: Maximum tokens in response
+            **kwargs: Additional provider-specific parameters
+
+        Returns:
+            Response text
+        """
+        model = model or self.default_model
+        return self._call_api(
+            model=model,
+            messages=messages,
+            temperature=temperature,
+            max_output_tokens=max_output_tokens,
+            **kwargs,
+        )

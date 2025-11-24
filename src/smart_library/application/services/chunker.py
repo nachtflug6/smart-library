@@ -1,5 +1,5 @@
-from typing import List
 import re
+from typing import List
 
 
 class TextChunker:
@@ -17,50 +17,35 @@ class TextChunker:
         if not text:
             return []
 
-        # Normalize newlines
         text = text.strip().replace("\r\n", "\n")
-
-        # Split on sentence boundaries if possible
         sentences = self._split_into_sentences(text)
 
         chunks = []
         current = ""
 
         for sentence in sentences:
-            # If adding the next sentence fits -> append
             if len(current) + len(sentence) <= self.max_chars:
                 current += sentence
             else:
-                # Finalize this chunk
                 if current:
-                    chunks.append(current.strip())
-
-                # Start new chunk
-                # If sentence alone is massive → hard cut
+                    chunks.append(current)
+                # If sentence is too long, hard split it
                 if len(sentence) > self.max_chars:
                     chunks.extend(self._hard_split(sentence))
                     current = ""
                 else:
                     current = sentence
-
-        # Add last chunk
         if current:
-            chunks.append(current.strip())
+            chunks.append(current)
 
-        # Add overlap if needed
         return self._apply_overlap(chunks)
 
-    # -------------------------
-    # Helpers
-    # -------------------------
-
     def _split_into_sentences(self, text: str) -> List[str]:
-        """Basic sentence splitter using regex."""
-        sentences = re.split(r'(?<=[.!?])\s+', text)
-        return [s + " " for s in sentences if s.strip()]
+        # Split on punctuation followed by whitespace, preserving punctuation
+        sentences = re.findall(r'[^.!?]*[.!?]', text)
+        return [s.strip() for s in sentences if s.strip()]
 
     def _hard_split(self, long_text: str) -> List[str]:
-        """Hard split for extremely long sentences or tables."""
         return [
             long_text[i : i + self.max_chars]
             for i in range(0, len(long_text), self.max_chars)
@@ -70,15 +55,10 @@ class TextChunker:
         if self.overlap == 0 or len(chunks) <= 1:
             return chunks
 
-        overlapped = []
-        for i, chunk in enumerate(chunks):
-            if i == 0:
-                overlapped.append(chunk)
-                continue
-
-            prev = chunks[i - 1]
-            tail = prev[-self.overlap:]
-            combined = tail + " " + chunk
-            overlapped.append(combined)
-
+        overlapped = [chunks[0]]
+        for i in range(1, len(chunks)):
+            prev = overlapped[-1]
+            overlap_text = prev[-self.overlap:] if len(prev) >= self.overlap else prev
+            # Prepend overlap to current chunk
+            overlapped.append(overlap_text + chunks[i])
         return overlapped

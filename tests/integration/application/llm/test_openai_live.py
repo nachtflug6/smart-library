@@ -3,7 +3,7 @@ import json
 import logging
 import pytest
 
-from smart_library.llm.openai_client import OpenAIClient, _mask_api_key
+from smart_library.application.llm.openai_client import OpenAIClient, _mask_api_key
 import openai
 
 RUN_LIVE = os.getenv("RUN_OPENAI_LIVE") == "1"

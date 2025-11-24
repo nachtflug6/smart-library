@@ -83,3 +83,37 @@ CREATE TABLE term (
     domain TEXT,
     related_terms TEXT      -- JSON list
 );
+
+-- =========================================================
+-- EMBEDDING table
+-- =========================================================
+DROP TABLE IF EXISTS embedding;
+CREATE TABLE embedding (
+    id TEXT PRIMARY KEY REFERENCES entity(id) ON DELETE CASCADE,
+    vector BLOB NOT NULL,
+    model TEXT NOT NULL,
+    dim INTEGER NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+-- =========================================================
+-- RELATIONSHIP table
+-- =========================================================
+DROP TABLE IF EXISTS relationship;
+CREATE TABLE relationship (
+    id TEXT PRIMARY KEY,
+    source_id TEXT NOT NULL REFERENCES entity(id) ON DELETE CASCADE,
+    target_id TEXT NOT NULL REFERENCES entity(id) ON DELETE CASCADE,
+    type TEXT NOT NULL,
+    metadata TEXT,     -- JSON: {score, confidence, keyword, etc}
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Indexes for relationship performance
+CREATE INDEX IF NOT EXISTS idx_relationship_source ON relationship(source_id);
+CREATE INDEX IF NOT EXISTS idx_relationship_target ON relationship(target_id);
+CREATE INDEX IF NOT EXISTS idx_relationship_type   ON relationship(type);
+CREATE INDEX IF NOT EXISTS idx_relationship_source_type ON relationship(source_id, type);
+CREATE INDEX IF NOT EXISTS idx_relationship_target_type ON relationship(target_id, type);
+CREATE INDEX IF NOT EXISTS idx_entity_parent ON entity(parent_id);
+CREATE INDEX IF NOT EXISTS idx_document_year ON document(year);

@@ -23,7 +23,7 @@
 	// "forwardPorts": [],
 
 	// Run after the container is created to confirm git is installed.
-	"postCreateCommand": "git --version || true",
+	"postCreateCommand": "python3 -m venv .venv && .venv/bin/pip install -r requirements.txt || true",
 
 	// Configure tool-specific properties.
 	"customizations": {
@@ -37,7 +37,10 @@
 				"ms-azuretools.vscode-docker",
 				"eamodio.gitlens",
 				"esbenp.prettier-vscode"
-			]
+			],
+			"settings": {
+				"python.defaultInterpreterPath": "${workspaceFolder}/.venv/bin/python"
+			}
 		}
 	}
 

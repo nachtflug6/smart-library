@@ -1,5 +1,5 @@
 from typing import List
-import PyPDF2
+import pypdf
 
 
 class PDFReader:
@@ -18,7 +18,7 @@ class PDFReader:
         try:
             pages = []
             with open(file_path, "rb") as f:
-                reader = PyPDF2.PdfReader(f)
+                reader = pypdf.PdfReader(f)
                 for page in reader.pages:
                     text = page.extract_text() or ""
                     pages.append(text)

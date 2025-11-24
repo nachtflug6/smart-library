@@ -14,3 +14,15 @@ DOC_TEXT_DIR  = DOC_ROOT / "text"
 JSONL_ROOT    = DATA_DIR / "jsonl"
 ENTITIES_JSONL  = JSONL_ROOT / "entities.jsonl"
 RELATIONS_JSONL = JSONL_ROOT / "relations.jsonl"
+
+class OllamaConfig:
+    BASE_URL = "http://host.docker.internal"
+    GENERATE_PORT = 11434
+    EMBEDDING_PORT = 11436
+    
+    GENERATE_URL = f"{BASE_URL}:{GENERATE_PORT}/api/generate"
+    EMBEDDING_URL = f"{BASE_URL}:{EMBEDDING_PORT}/api/embeddings"
+
+    GENERATION_MODEL = "llama3"
+    EMBEDDING_MODEL = "nomic-embed-text"
+
