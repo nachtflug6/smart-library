@@ -101,9 +101,14 @@ class PageRepository(BaseRepository[Page]):
         List pages, optionally filtered by parent document ID, with a limit.
         """
         if doc_id:
-            sql = "SELECT * FROM page WHERE parent_id = ? LIMIT ?"
+            sql = """
+                SELECT page.id FROM page
+                JOIN entity ON page.id = entity.id
+                WHERE entity.parent_id = ?
+                LIMIT ?
+            """
             rows = self.conn.execute(sql, (doc_id, limit)).fetchall()
         else:
-            sql = "SELECT * FROM page LIMIT ?"
+            sql = "SELECT id FROM page LIMIT ?"
             rows = self.conn.execute(sql, (limit,)).fetchall()
         return [self.get(row["id"]) for row in rows]

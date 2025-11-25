@@ -22,7 +22,7 @@ class ListingService:
     def list_pages(self, doc_id=None, limit=100):
         return self.repo_page.list(doc_id=doc_id, limit=limit)
 
-    def list_chunks(self, doc_id=None, page_id=None, limit=100):
+    def list_texts(self, doc_id=None, page_id=None, limit=100):
         return self.repo_text.list(doc_id=doc_id, page_id=page_id, limit=limit)
 
     def list_terms(self, limit=50):

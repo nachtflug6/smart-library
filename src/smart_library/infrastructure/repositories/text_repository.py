@@ -37,7 +37,7 @@ class TextRepository(BaseRepository[Text]):
             metadata=_from_json(es.get("metadata"), {}),
             content=r["content"],
             text_type=r.get("type"),  # <-- FIXED: use text_type instead of type
-            chunk_index=r.get("chunk_index"),
+            index=r.get("chunk_index"),
         )
 
     def update(self, txt: Text):
@@ -55,19 +55,29 @@ class TextRepository(BaseRepository[Text]):
         List text chunks, optionally filtered by document or page, with a limit.
         """
         if page_id:
-            sql = "SELECT * FROM text_entity WHERE parent_id = ? LIMIT ?"
+            sql = """
+                SELECT text_entity.id FROM text_entity
+                JOIN entity ON text_entity.id = entity.id
+                WHERE entity.parent_id = ?
+                LIMIT ?
+            """
             rows = self.conn.execute(sql, (page_id, limit)).fetchall()
         elif doc_id:
             # Find all pages for the document, then all texts for those pages
-            page_sql = "SELECT id FROM page WHERE parent_id = ?"
+            page_sql = "SELECT page.id FROM page JOIN entity ON page.id = entity.id WHERE entity.parent_id = ?"
             page_rows = self.conn.execute(page_sql, (doc_id,)).fetchall()
             page_ids = [row["id"] for row in page_rows]
             if not page_ids:
                 return []
             placeholders = ",".join("?" for _ in page_ids)
-            sql = f"SELECT * FROM text_entity WHERE parent_id IN ({placeholders}) LIMIT ?"
+            sql = f"""
+                SELECT text_entity.id FROM text_entity
+                JOIN entity ON text_entity.id = entity.id
+                WHERE entity.parent_id IN ({placeholders})
+                LIMIT ?
+            """
             rows = self.conn.execute(sql, (*page_ids, limit)).fetchall()
         else:
-            sql = "SELECT * FROM text_entity LIMIT ?"
+            sql = "SELECT id FROM text_entity LIMIT ?"
             rows = self.conn.execute(sql, (limit,)).fetchall()
         return [self.get(row["id"]) for row in rows]
