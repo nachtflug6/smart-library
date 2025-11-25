@@ -37,3 +37,8 @@ class EmbeddingRepository(BaseRepository):
         sql = "DELETE FROM embedding WHERE id = ?"
         self.conn.execute(sql, [embedding_id])
         self.conn.commit()
+
+    def list(self):
+        sql = f"SELECT * FROM {self.table}"
+        rows = self.conn.execute(sql).fetchall()
+        return [self.get(row["id"]) for row in rows]

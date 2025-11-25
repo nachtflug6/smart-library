@@ -95,3 +95,15 @@ class PageRepository(BaseRepository[Page]):
     def delete(self, page_id: str):
         self._delete_entity(page_id)
         self.conn.commit()
+
+    def list(self, doc_id: str = None, limit: int = 100):
+        """
+        List pages, optionally filtered by parent document ID, with a limit.
+        """
+        if doc_id:
+            sql = "SELECT * FROM page WHERE parent_id = ? LIMIT ?"
+            rows = self.conn.execute(sql, (doc_id, limit)).fetchall()
+        else:
+            sql = "SELECT * FROM page LIMIT ?"
+            rows = self.conn.execute(sql, (limit,)).fetchall()
+        return [self.get(row["id"]) for row in rows]

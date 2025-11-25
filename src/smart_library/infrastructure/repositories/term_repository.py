@@ -109,3 +109,8 @@ class TermRepository(BaseRepository[Term]):
     def delete(self, term_id: str):
         self._delete_entity(term_id)
         self.conn.commit()
+
+    def list(self, limit: int = 50):
+        sql = "SELECT * FROM term LIMIT ?"
+        rows = self.conn.execute(sql, (limit,)).fetchall()
+        return [self.get(row["id"]) for row in rows]

@@ -129,3 +129,8 @@ class BaseRepository(Generic[E]):
         # Deleting from entity cascades to child due to FK
         self._delete_entity_row(entity_id)
         self.conn.commit()
+
+    def list(self):
+        sql = f"SELECT * FROM {self.table}"
+        rows = self.conn.execute(sql).fetchall()
+        return [self._row_to_dict(row) for row in rows]

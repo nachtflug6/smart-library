@@ -26,3 +26,15 @@ class EntityRepository(BaseRepository[Entity]):
 
     def exists(self, entity_id: str) -> bool:
         return self.get(entity_id) is not None
+
+    def list(self, type: str = None, limit: int = 50):
+        """
+        List entities, optionally filtered by entity_kind, with a limit.
+        """
+        if type:
+            sql = "SELECT * FROM entity WHERE entity_kind = ? LIMIT ?"
+            rows = self.conn.execute(sql, (type, limit)).fetchall()
+        else:
+            sql = "SELECT * FROM entity LIMIT ?"
+            rows = self.conn.execute(sql, (limit,)).fetchall()
+        return [dict(row) for row in rows]

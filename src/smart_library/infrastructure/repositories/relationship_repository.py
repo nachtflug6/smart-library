@@ -36,3 +36,15 @@ class RelationshipRepository(BaseRepository):
         sql = f"DELETE FROM {self.table} WHERE id = ?"
         self.conn.execute(sql, [relationship_id])
         self.conn.commit()
+
+    def list(self, type: str = None, limit: int = 50):
+        """
+        List relationships, optionally filtered by type, with a limit.
+        """
+        if type:
+            sql = f"SELECT * FROM {self.table} WHERE type = ? LIMIT ?"
+            rows = self.conn.execute(sql, (type, limit)).fetchall()
+        else:
+            sql = f"SELECT * FROM {self.table} LIMIT ?"
+            rows = self.conn.execute(sql, (limit,)).fetchall()
+        return [dict(row) for row in rows]

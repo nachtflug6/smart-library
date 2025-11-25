@@ -49,3 +49,25 @@ class TextRepository(BaseRepository[Text]):
     def delete(self, text_id: str):
         self._delete_entity(text_id)
         self.conn.commit()
+
+    def list(self, doc_id: str = None, page_id: str = None, limit: int = 100):
+        """
+        List text chunks, optionally filtered by document or page, with a limit.
+        """
+        if page_id:
+            sql = "SELECT * FROM text_entity WHERE parent_id = ? LIMIT ?"
+            rows = self.conn.execute(sql, (page_id, limit)).fetchall()
+        elif doc_id:
+            # Find all pages for the document, then all texts for those pages
+            page_sql = "SELECT id FROM page WHERE parent_id = ?"
+            page_rows = self.conn.execute(page_sql, (doc_id,)).fetchall()
+            page_ids = [row["id"] for row in page_rows]
+            if not page_ids:
+                return []
+            placeholders = ",".join("?" for _ in page_ids)
+            sql = f"SELECT * FROM text_entity WHERE parent_id IN ({placeholders}) LIMIT ?"
+            rows = self.conn.execute(sql, (*page_ids, limit)).fetchall()
+        else:
+            sql = "SELECT * FROM text_entity LIMIT ?"
+            rows = self.conn.execute(sql, (limit,)).fetchall()
+        return [self.get(row["id"]) for row in rows]

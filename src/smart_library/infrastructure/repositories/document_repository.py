@@ -57,7 +57,7 @@ class DocumentRepository(BaseRepository[Document]):
             **({
                 "metadata": json.loads(data["metadata"])
             } if data.get("metadata") else {}),
-            doc_type=data.get("type"),
+            type=data.get("type"),
             source_path=data.get("source_path"),
             source_url=data.get("source_uri"),
             source_format=data.get("source_format"),
@@ -186,3 +186,11 @@ class DocumentRepository(BaseRepository[Document]):
     def delete(self, doc_id: str):
         self._delete_entity(doc_id)
         self.conn.commit()
+
+    def list(self, limit: int = 50):
+        """
+        List documents, limited to `limit` results.
+        """
+        sql = "SELECT * FROM document LIMIT ?"
+        rows = self.conn.execute(sql, (limit,)).fetchall()
+        return [self.row_to_entity(row) for row in rows]
