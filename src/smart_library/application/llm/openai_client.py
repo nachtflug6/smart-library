@@ -12,14 +12,6 @@ from openai import OpenAI
 
 logger = logging.getLogger(__name__)
 
-
-def _mask_api_key(key: str) -> str:
-    """Mask API key for safe logging."""
-    if not key or len(key) < 12:
-        return "***invalid***"
-    return f"{key[:7]}...{key[-4:]}"
-
-
 class OpenAIClient:
     """OpenAI API client supporting GPT-4o / GPT-4.1 only."""
 

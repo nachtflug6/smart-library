@@ -6,9 +6,11 @@ class RelationshipRepository(BaseRepository):
     Repository for the 'relationship' table.
     """
 
+    table = "relationship"
+
     def add(self, relationship_id: str, source_id: str, target_id: str, type: str, metadata: Optional[Dict[str, Any]] = None):
-        sql = """
-        INSERT INTO relationship (id, source_id, target_id, type, metadata)
+        sql = f"""
+        INSERT INTO {self.table} (id, source_id, target_id, type, metadata)
         VALUES (?, ?, ?, ?, ?)
         """
         self.conn.execute(sql, [
@@ -22,7 +24,7 @@ class RelationshipRepository(BaseRepository):
         return relationship_id
 
     def get(self, relationship_id: str) -> Optional[Dict[str, Any]]:
-        sql = "SELECT * FROM relationship WHERE id = ?"
+        sql = f"SELECT * FROM {self.table} WHERE id = ?"
         row = self.conn.execute(sql, [relationship_id]).fetchone()
         if not row:
             return None
@@ -31,6 +33,6 @@ class RelationshipRepository(BaseRepository):
         return data
 
     def delete(self, relationship_id: str):
-        sql = "DELETE FROM relationship WHERE id = ?"
+        sql = f"DELETE FROM {self.table} WHERE id = ?"
         self.conn.execute(sql, [relationship_id])
         self.conn.commit()

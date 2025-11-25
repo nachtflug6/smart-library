@@ -1,50 +1,29 @@
-from typer import Typer, Option, echo
+from typer import Typer, echo, Argument
+from smart_library.application.services.ingestion_service import IngestionService
 
 app = Typer(no_args_is_help=True)
 
-@app.command("db-init")
-def db_init():
-    """Initialize Database."""
-    from smart_library.infrastructure.db.init_db import init_db
-    init_db()
 
-@app.command("import-documents")
-def import_documents_cmd():
-    """Import Documents."""
-    from smart_library.infrastructure.db.import_entities import import_documents
-    import_documents()
+@app.command()
+def ingest_path(
+    path: str = Argument(..., help="Path to the PDF file to ingest")
+):
+    """Ingest a PDF file and create a Document, Pages, and Text chunks."""
+    try:
+        doc_id = IngestionService.ingest(path)
+        echo(f"Document ingested successfully. Document ID: {doc_id}")
+    except Exception as e:
+        echo(f"Error during ingestion: {e}")
 
-@app.command("import-pages")
-def import_pages_cmd():
-    """Import Pages."""
-    from smart_library.infrastructure.db.import_entities import import_pages
-    import_pages()
-
-@app.command("import-entities")
-def import_entities_cmd():
-    """Import all Entities (Documents + Pages)."""
-    from smart_library.infrastructure.db.import_entities import import_entities
-    import_entities()
-
-
-@app.command("db-check")
-def db_check():
-    """Check DB consistency and file links."""
-    from smart_library.infrastructure.db.check_db import check_db
-    print(check_db())
-
-@app.command("view")
-def view_cmd(document_id: str, page: int):
-    """View the text of a specific page."""
-    from smart_library.infrastructure.db.view import view_page
-    view_page(document_id, page)
-
-@app.command("search")
-def search_cmd(query: str):
-    """Search for text inside all pages."""
-    from smart_library.infrastructure.db.search import search
-    search(query)
-
+@app.command()
+def init_db():
+    """Initialize the database schema."""
+    from smart_library.infrastructure.db.db import init_db
+    try:
+        init_db()
+        echo("Database initialized successfully.")
+    except Exception as e:
+        echo(f"Error initializing database: {e}")
 
 if __name__ == "__main__":
     app()

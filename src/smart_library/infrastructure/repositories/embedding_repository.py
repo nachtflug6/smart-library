@@ -6,6 +6,8 @@ class EmbeddingRepository(BaseRepository):
     Repository for the 'embedding' table.
     """
 
+    table = "embedding"
+
     def add(self, embedding_id: str, vector: List[float], entity_id: str, model: str, metadata: Optional[Dict[str, Any]] = None):
         sql = """
         INSERT INTO embedding (id, vector, entity_id, model, metadata)

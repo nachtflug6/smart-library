@@ -4,6 +4,8 @@ from smart_library.infrastructure.repositories.base_repository import BaseReposi
 
 
 class PageRepository(BaseRepository[Page]):
+    table = "page"
+
     def add(self, page: Page):
         if not page.parent_id:
             raise ValueError("Page.parent_id must reference a Document.id")

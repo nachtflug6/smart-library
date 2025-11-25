@@ -36,7 +36,7 @@ CREATE TABLE document (
     publisher TEXT,
     venue TEXT,
     year INTEGER,
-    references TEXT,                    -- JSON list
+    reference_list TEXT,                -- JSON list
     citations TEXT                      -- JSON list
 );
 
@@ -66,7 +66,7 @@ DROP TABLE IF EXISTS text_entity;
 CREATE TABLE text_entity (
     id TEXT PRIMARY KEY REFERENCES entity(id) ON DELETE CASCADE,
     type TEXT,              -- classification (chunk, summary, etc.)
-    index INTEGER,
+    chunk_index INTEGER,
     content TEXT NOT NULL
 );
 

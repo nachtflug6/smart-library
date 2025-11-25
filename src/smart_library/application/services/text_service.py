@@ -3,6 +3,8 @@
 from typing import Optional, List
 from smart_library.domain.entities.text import Text
 from smart_library.application.services.base_service import BaseService
+from smart_library.infrastructure.repositories.text_repository import TextRepository
+from smart_library.infrastructure.repositories.entity_repository import EntityRepository
 
 
 class TextService(BaseService):
@@ -20,6 +22,12 @@ class TextService(BaseService):
         self.text_repo = text_repo
         self.entity_repo = entity_repo
         self.embedding_service = embedding_service
+
+    @classmethod
+    def default_instance(cls):
+        text_repo = TextRepository()
+        entity_repo = EntityRepository()
+        return cls(text_repo, entity_repo)
 
     # -------------------------------
     # CREATE

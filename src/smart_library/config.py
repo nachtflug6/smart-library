@@ -15,6 +15,12 @@ JSONL_ROOT    = DATA_DIR / "jsonl"
 ENTITIES_JSONL  = JSONL_ROOT / "entities.jsonl"
 RELATIONS_JSONL = JSONL_ROOT / "relations.jsonl"
 
+CHUNKER_CONFIG = {
+    "max_tokens": 200,
+    "overlap": 30,
+    "mode": "tokens",  # "tokens", "sentences", "paragraphs"
+}
+
 class OllamaConfig:
     BASE_URL = "http://host.docker.internal"
     GENERATE_PORT = 11434

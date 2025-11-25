@@ -85,7 +85,7 @@ class DocumentRepository(BaseRepository[Document]):
         sql = """
         INSERT INTO document (id, type, source_path, source_url, source_format, file_hash,
                               version, page_count, title, authors, keywords, doi,
-                              publication_date, publisher, venue, year, references, citations)
+                              publication_date, publisher, venue, year, reference_list, citations)
         VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
         """
         self.conn.execute(
@@ -107,7 +107,7 @@ class DocumentRepository(BaseRepository[Document]):
                 doc.publisher,
                 doc.venue,
                 doc.year,
-                _to_json(doc.references),
+                _to_json(doc.reference_list),
                 _to_json(doc.citations),
             ],
         )
@@ -145,7 +145,7 @@ class DocumentRepository(BaseRepository[Document]):
             publisher=r.get("publisher"),
             venue=r.get("venue"),
             year=r.get("year"),
-            references=_from_json(r.get("references"), []),
+            reference_list=_from_json(r.get("reference_list"), []),
             citations=_from_json(r.get("citations"), []),
         )
 
@@ -155,7 +155,7 @@ class DocumentRepository(BaseRepository[Document]):
         UPDATE document SET
             type=?, source_path=?, source_url=?, source_format=?, file_hash=?,
             version=?, page_count=?, title=?, authors=?, keywords=?, doi=?,
-            publication_date=?, publisher=?, venue=?, year=?, references=?, citations=?
+            publication_date=?, publisher=?, venue=?, year=?, reference_list=?, citations=?
         WHERE id=?
         """
         self.conn.execute(
@@ -176,7 +176,7 @@ class DocumentRepository(BaseRepository[Document]):
                 doc.publisher,
                 doc.venue,
                 doc.year,
-                _to_json(doc.references),
+                _to_json(doc.reference_list),
                 _to_json(doc.citations),
                 doc.id,
             ],

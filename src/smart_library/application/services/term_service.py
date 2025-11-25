@@ -1,11 +1,17 @@
 from typing import Optional, List
 from smart_library.domain.entities.term import Term
 from smart_library.application.services.base_service import BaseService
+from smart_library.infrastructure.repositories.term_repository import TermRepository
 
 class TermService(BaseService):
     def __init__(self, term_repo):
         super().__init__(term_repo)
         self.term_repo = term_repo
+
+    @classmethod
+    def default_instance(cls):
+        repo = TermRepository()
+        return cls(repo)
 
     # CREATE
     def add_term(self, term: Term) -> str:

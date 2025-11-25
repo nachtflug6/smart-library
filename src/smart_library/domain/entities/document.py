@@ -46,5 +46,5 @@ class Document(Entity):
     # -----------------------------
     # Citation metadata (optional)
     # -----------------------------
-    references: List[str] = field(default_factory=list)
+    reference_list: List[str] = field(default_factory=list)
     citations: List[str] = field(default_factory=list)

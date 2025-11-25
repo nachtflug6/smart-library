@@ -1,12 +1,20 @@
 from typing import Optional, List
 from smart_library.domain.entities.page import Page
 from smart_library.application.services.base_service import BaseService
+from smart_library.infrastructure.repositories.page_repository import PageRepository
+from smart_library.infrastructure.repositories.entity_repository import EntityRepository
 
 class PageService(BaseService):
     def __init__(self, page_repo, entity_repo=None):
         super().__init__(page_repo)
         self.page_repo = page_repo
         self.entity_repo = entity_repo
+
+    @classmethod
+    def default_instance(cls):
+        page_repo = PageRepository()
+        entity_repo = EntityRepository()
+        return cls(page_repo, entity_repo)
 
     # CREATE
     def add_page(self, page: Page) -> str:
