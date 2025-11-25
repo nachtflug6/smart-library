@@ -1,4 +1,4 @@
-from typer import Typer, echo, Argument
+from typer import Typer, echo, Argument, Option
 from smart_library.application.services.ingestion_service import IngestionService
 from smart_library.application.services.list_service import ListingService
 
@@ -7,11 +7,12 @@ app = Typer(no_args_is_help=True)
 
 @app.command()
 def ingest_path(
-    path: str = Argument(..., help="Path to the PDF file to ingest")
+    path: str = Argument(..., help="Path to the PDF file to ingest"),
+    metadata: bool = Option(False, "--metadata", help="Extract metadata during ingestion"),
 ):
     """Ingest a PDF file and create a Document, Pages, and Text chunks."""
     try:
-        doc_id = IngestionService.ingest(path)
+        doc_id = IngestionService.ingest(path, extract_metadata=metadata)
         echo(f"Document ingested successfully. Document ID: {doc_id}")
     except Exception as e:
         echo(f"Error during ingestion: {e}")

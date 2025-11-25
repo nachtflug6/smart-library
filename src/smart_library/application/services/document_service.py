@@ -4,6 +4,7 @@ from typing import Optional, List
 from smart_library.domain.entities.document import Document
 from smart_library.application.services.base_service import BaseService
 from smart_library.infrastructure.repositories.document_repository import DocumentRepository
+from smart_library.infrastructure.repositories.page_repository import PageRepository
 
 
 class DocumentService(BaseService):
@@ -34,6 +35,13 @@ class DocumentService(BaseService):
 
     def find_by_doi(self, doi: str) -> Optional[Document]:
         return self.document_repo.find_by_doi(doi)
+
+    def get_pages(self, doc_id: str):
+        """
+        Return all pages for the given document ID.
+        """
+        page_repo = PageRepository()
+        return page_repo.list(doc_id=doc_id)
 
     # -------------------------------
     # UPDATE
