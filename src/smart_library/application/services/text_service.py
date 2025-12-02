@@ -63,6 +63,26 @@ class TextService(BaseService):
     def list_by_type(self, parent_id: str, text_type: str) -> List[Text]:
         return self.text_repo.list_by_type(parent_id, text_type)
 
+    def get_all_for_document(self, doc_id: str) -> List[Text]:
+        """
+        Return all Texts (chunks) that belong to all pages of a document.
+        """
+        # Assuming you have a PageRepository or can access pages for a document
+        from smart_library.infrastructure.repositories.page_repository import PageRepository
+        page_repo = PageRepository()
+        pages = page_repo.list(doc_id=doc_id)
+        all_texts = []
+        for page in pages:
+            texts = self.text_repo.list_for_parent(page.id)
+            all_texts.extend(texts)
+        return all_texts
+
+    def get_all_for_page(self, page_id: str) -> List[Text]:
+        """
+        Return all Texts (chunks) for a given page.
+        """
+        return self.text_repo.list_for_parent(page_id)
+
     # -------------------------------
     # UPDATE
     # -------------------------------

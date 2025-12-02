@@ -1,35 +1,29 @@
 from typing import List, Optional
+from smart_library.prompts.base_extraction_prompt import BaseExtractionPrompt
 
 
-class BaseExtractionPrompt:
+class MetadataExtractionPrompt(BaseExtractionPrompt):
     """
-    Generic prompt builder for extraction tasks.
+    Prompt builder for metadata extraction tasks.
     """
 
-    @staticmethod
-    def build(
-        text: str,
-        task: str,
-        fields: List[str],
-        instructions: Optional[str] = None
-    ) -> str:
-        """
-        Build a prompt for an extraction task.
+    DEFAULT_TASK = "metadata extraction"
+    DEFAULT_INSTRUCTIONS = (
+        "Extract bibliographic metadata from the provided document text. "
+        "Return only the fields requested. If a field is missing, use null."
+    )
 
-        :param text: The text to be queried.
-        :param task: The extraction task (e.g., "metadata extraction", "reference extraction").
-        :param fields: List of field names to extract.
-        :param instructions: Optional extra instructions to prepend.
-        :return: The constructed prompt string.
-        """
-        fields_str = "\n".join(f"- {field}" for field in fields)
-        base_prompt = (
-            f"Task: {task}\n"
-            f"Extract the following fields:\n"
-            f"{fields_str}\n"
-            "Return the result as a JSON object.\n\n"
-            f"Text to analyze:\n{text}"
+    def __init__(self, instructions: Optional[str] = None):
+        super().__init__(
+            task=self.DEFAULT_TASK,
+            instructions=instructions or self.DEFAULT_INSTRUCTIONS
         )
-        if instructions:
-            return f"{instructions.strip()}\n\n{base_prompt}"
-        return base_prompt
+
+# Smoketest
+if __name__ == "__main__":
+    fields = ["title", "authors", "abstract"]
+    text = "Deep Learning for AI\nby Jane Doe and John Smith\nAbstract: This paper explores..."
+    prompt_builder = MetadataExtractionPrompt()
+    prompt = prompt_builder.get_prompt(text, fields)
+    print("Generated Metadata Extraction Prompt:\n")
+    print(prompt)

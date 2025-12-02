@@ -22,6 +22,9 @@ data/pdf/**
 # Raw extracted text (not versioned, re-generable)
 data/text/**
 
+# Jupyter notebooks (if any)
+notebooks/**
+
 # Page images, OCR dumps, temp artifacts
 data/cache/**
 data/**/cache/**

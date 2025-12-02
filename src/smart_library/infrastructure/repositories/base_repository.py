@@ -27,8 +27,10 @@ class BaseRepository(Generic[E]):
     json_columns: set[str] = set()  # db columns to JSON-encode
     join_entity: bool = True
 
-    def __init__(self):
-        self.conn = get_connection()
+    def __init__(self, conn=None):
+        if conn is None:
+            conn = get_connection()
+        self.conn = conn
 
     # ---------- Base entity ----------
     def _insert_entity(self, e: Entity):

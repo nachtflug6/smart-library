@@ -1,6 +1,6 @@
 from smart_library.domain.entities.document import Document
 from smart_library.application.llm.ollama_client import OllamaClient
-from smart_library.prompts.metadata_extraction_prompt import get_metadata_extraction_prompt
+from smart_library.prompts.metadata_extraction_prompt import MetadataExtractionPrompt
 from smart_library.application.services.document_service import DocumentService
 import json
 
@@ -9,22 +9,29 @@ class SimpleMetadataExtractor:
     Extracts metadata from a Document's pages using an LLM and updates the Document.
     """
 
-    def __init__(self, ollama_url, ollama_model, document_service=None):
+    def __init__(self, ollama_url, ollama_model, document_service=None, prompt_instructions=None):
         self.llm = OllamaClient(ollama_url, ollama_model)
         self.document_service = document_service or DocumentService.default_instance()
+        self.prompt_builder = MetadataExtractionPrompt(instructions=prompt_instructions)
 
-    def extract(self, document: Document, prompt_text: str = None) -> Document:
+    def extract(self, document: Document, fields: list[str] = None, text: str = None) -> Document:
         """
         Extract metadata from the document's pages using an LLM and update the document's fields.
+        :param document: The Document object to update.
+        :param fields: List of fields to extract (defaults to all Document fields except id, created_at, modified_at, metadata).
+        :param text: Optional text to use for extraction (defaults to all pages' text).
         """
-        # Get all pages for the document and concatenate their text
-        pages = self.document_service.get_pages(document.id)
-        content = "\n".join([p.full_text or "" for p in pages])
+        # Determine which fields to extract
+        if fields is None:
+            fields = [f for f in Document.__dataclass_fields__ if f not in ("id", "created_at", "modified_at", "metadata")]
 
-        # Prepare the prompt
-        doc_fields = [f for f in Document.__dataclass_fields__ if f not in ("id", "created_at", "modified_at", "metadata")]
-        structure = "The required fields are: " + ", ".join(doc_fields) + "."
-        prompt = (prompt_text or get_metadata_extraction_prompt()) + "\n" + structure + "\n\nDocument Content:\n" + content
+        # Get the text to analyze
+        if text is None:
+            pages = self.document_service.get_pages(document.id)
+            text = "\n".join([p.full_text or "" for p in pages])
+
+        # Build the prompt
+        prompt = self.prompt_builder.get_prompt(text, fields)
 
         # Call the LLM
         response = self.llm.generate(prompt)
