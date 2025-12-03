@@ -1,0 +1,121 @@
+Non-stationary Time-aware Kernelized Attention for Temporal Event Prediction
+KDD ’22, August 14–18, 2022, Washington DC, USA
+(GSM) kernel proposed in [22]:
+𝑘𝐺𝑆𝑀(𝑥,𝑥′) =
+∑︁
+𝑖
+𝛼𝑖(𝑥)𝛼𝑖(𝑥′)𝑘𝐺𝑖𝑏𝑏𝑠,𝑖(𝑥,𝑥′)𝑐𝑜𝑠(2𝜋(𝜇𝑖(𝑥)𝑥−𝜇𝑖(𝑥′)𝑥′)),
+(10)
+where
+𝑘𝐺𝑖𝑏𝑏𝑠,𝑖(𝑥,𝑥′) =
+√︄
+2𝑙𝑖(𝑥)𝑙𝑖(𝑥′)
+𝑙𝑖(𝑥)2 + 𝑙𝑖(𝑥′)2 𝑒𝑥𝑝(−
+(𝑥−𝑥′)2
+𝑙𝑖(𝑥)2 + 𝑙𝑖(𝑥′)2 ).
+(11)
+Mean 𝜇𝑖(𝑥), lengthscale 𝑙𝑖(𝑥) and weight 𝛼𝑖(𝑥) of each component
+are input-dependent learnable functions. The kernel is essentially
+a product of three kernels, and its PSD is guaranteed since all of
+the product kernels are PSD.
+Eq.10 is derived from Eq.7, which originally aims to overcome the
+limit that the non-stationary kernel in Eq.7 vanishes rapidly outside
+the origin (𝑥,𝑥′) = (0, 0). When encoding temporal correlation in
+our problem, this kernel has the following advantages:
+• the cosine term can represent the periodic correlation.
+• the Gibbs’ kernel (Eq.11), which is a non-stationary general-
+ization of the Gaussian kernel [10] , can encode both global
+and local correlations, namely the short- and long- range
+temporal dependency.
+• the value of weight 𝛼𝑖(𝑥) also changes over time, which
+dynamically adjusts the importance of each component.
+Since all the three terms in Eq.10 is input-dependent, it can represent
+non-stationary temporal correlation well. On the basis of this kernel,
+we next introduce the implementation of a new attention structure.
+MatMul
+Scale
+Mask (opt.)
+SoftMax
+MatMul
+MatMul
+Scale
+Mask (opt.)
+     GSMKernel,
+Scale
+Mask (opt.)
+See Eq. 12 for details
+MatMul
+(a)
+(b)
+Figure 2: Implementation of NsTKA. (a) The original scale-
+dot-product attention; (b) Our proposed NsTKA
+4.3
+Implementation of the NsTKA
+Following the above sections, the framework of NsTKA method is
+illustrated as Figure 2. In the NsTKA, we replace the 𝑘𝑒𝑥𝑝(qi, kj) in
+Eq.2 with a new kernel 𝑘𝑚:
+𝑘𝑚(qi, kj) = 𝑘𝑡(𝑡𝑞𝑖,𝑡𝑘𝑗) · 𝑘𝑒(e𝑞𝑖, e𝑘𝑗),
+(12)
+where 𝑘𝑡(𝑡𝑞𝑖,𝑡𝑘𝑗) denotes the temporal kernel which takes the
+continuous time scalar value of the query and key as input and
+follows the GSM kernel (i.e., Eq.10) expression. And 𝑘𝑒(e𝑞𝑖, e𝑘𝑗)
+denotes the event kernel which takes the event embedding of the
+query and key as input and remains the same expression as 𝑘𝑒𝑥𝑝(·)
+in Eq.2.
+For the temporal GSM kernel part 𝑘𝑡(·), since 𝜇𝑖(𝑥),𝑙𝑖(𝑥), 𝛼𝑖(𝑥)
+in Eq.10 are all input-dependent learnable parameters, we use a
+two-layer fully-connected neural network to jointly optimize them
+along the training process. Since all the learnable parameters have
+clear physical meanings, the ReLU activation functions are used to
+make them non-negative. In addition, a small constant 𝜖= 1𝑒−6 is
+added to the length scale 𝑙𝑖(𝑥) layer to ensure it is positive.
+Differences between our method and related work. Com-
+pared with the conventional attention structure shown in Figure
+2(a), the first difference is that we use the GSM kernel to calculate
+the temporal attention weights. The second one is that only the
+non-temporal input are used as values, i.e., 𝑉𝑒. Although viewed in
+a kernel way, the implementation of the attention mechanism in
+[5] is still through the mapping to temporal and event embedding
+spaces. In [26], a similar method is proposed, which uses the di-
+rect product of two separate kernels to represent the temporal and
+non-temporal correlations. The authors experimented with a few
+standard kernels such as linear, polynomial and Gaussian kernels
+without further discussing their properties. In [30], the authors
+discussed the characteristics of temporal correlation starting in a
+kernel view but transferred that into a series of basis functions to
+express stationary temporal embedding. Although the aforemen-
+tioned work has discussed the kernel view of expressing attention
+weights in a temporal and non-temporal correlation way, there
+is limited discussion in diving into the design choice of kernels.
+In the next section, by comparison, we present the competitive
+performance of our method.
+5
+EXPERIMENTS
+In this section, we evaluate the proposed method on both a syn-
+thetic dataset and 3 real-world datasets. A quantitative comparison
+with baseline models is first presented, followed by a comprehen-
+sive ablation experiment that shows the theoretical insights of the
+proposed method. Our experiments are intended to answer the
+following questions:
+• Q1: Does the proposed method outperform the state-of-the-
+art temporal event prediction methods?
+• Q2: By adjusting the mean, length-scale, and weight func-
+tions of the GSM kernel, how do variants of NsTKA perform?
+• Q3: How does NsTKA perform under different levels of non-
+stationarity?
+5.1
+Datasets
+5.1.1
+Synthetic Dataset. A synthetic dataset (SynD) with a mixture
+of multiple non-stationary signals is introduced to study how the
+proposed method captures the non-stationary pattern. The dataset
+is generated by :
+𝑥(𝑡) =
+𝑁
+∑︁
+𝑖=1
+𝐴𝑖(𝑡)𝑐𝑜𝑠(𝜔𝑖(𝑡)𝑡) + 𝜙𝑖) + 𝜖𝑖,
+(13)
+where 𝐴𝑖(𝑡),𝜔𝑖(𝑡) are the amplitude and frequency of each com-
+posed sinusoidal signal, respectively, 𝜙𝑖is a random phase between
+1228

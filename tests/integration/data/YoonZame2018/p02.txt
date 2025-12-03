@@ -1,0 +1,78 @@
+1478
+IEEE TRANSACTIONS ON BIOMEDICAL ENGINEERING, VOL. 66, NO. 5, MAY 2019
+Fig. 1.
+Block diagram of missing data estimation process: X = missing measurements; red lines = connections between observed values and
+missing values in each layer; blue lines = connections between interpolated values; and dashed lines = dropout.
+Fig. 2.
+M-RNN architecture. (a) Architecture in the time domain sec-
+tion. (b) Architecture in the feature domain section (Dropout is used for
+multiple imputations). Note that both ˜x (the output of interpolation block)
+and x are inputs to the imputation block to construct ˆx (the output of
+imputation block).
+within each data stream – in the intra-stream directions. An
+M-RNN also operates across different data streams – in the
+inter-stream directions. Unlike a Bi-RNN, the timing of inputs
+into the hidden layers of our M-RNN is lagged in the forward
+direction and advanced in the backward direction. As illustrated
+in Fig. 2, our M-RNN architecture exploits the 3-dimensional
+nature of the dataset.
+An important aspect of medical data is that there is often
+enormous uncertainty in the measured data. As is well-known,
+although single imputation (SI) methods may yield the most
+plausible/most likely estimate for each missing data point [13],
+they do not capture the uncertainty in the imputed data [3].
+Multiple imputation (MI) methods capture this uncertainty by
+sampling imputed values several times in order to form multi-
+ple complete imputed datasets, analyzing each imputed dataset
+separately and combining the results via Rubin’s rule [3], [14],
+[15]. Capturing the uncertainty in the dataset is especially im-
+portant in the medical setting, in which diagnostic, prognostic
+and treatment decisions must be made on the basis of the im-
+puted values [16], [17]. In our setting, we use dropout [18] to
+produce multiple imputations; see Section IV-D.
+To demonstrate the power of our method, we apply it to ﬁve
+different public real-world medical datasets: the MIMIC-III [19]
+dataset, the clinical deterioration dataset used in [20], the UNOS
+dataset for heart transplantation, the UNOS dataset for lung
+transplantation (both available at https://www.unos.org/data/),
+and the UK Biobank dataset [21]. We show that our method
+yields large and statistically signiﬁcant improvements in esti-
+mation accuracy over previous methods, including interpolation
+methods such as [1], [2], imputation methods such as [3]–[6],
+RNN-based imputation methods such as [22]–[24] and matrix
+completion methods such as [7]. For the MIMIC-III and clini-
+cal deterioration datasets the patient measurements were made
+frequently (hourly basis), and our method provides Root Mean
+Squared Error (RMSE) improvement of more than 50% over all
+11 benchmarks. For the UNOS heart and lung transplantation
+datasets and the Biobank dataset, the patient measurements were
+made much less frequently (yearly basis), but our method still
+provides RMSE improvement of more than 40% in most cases,
+and signiﬁcant improvements in the other cases. We also show
+that this improvement in estimation yields (smaller) improve-
+ments in the predictions of outcomes (patients’ future states). A
+number of experiments based on these same datasets show that
+the extent to which our method improves on outcomes depends
+on the method used for prediction, on the way in which our
+model is optimized in training, on the amount of data available
+(both in terms of the number of patients for whom we have data
+and on the amount of data available for each patient), and on
+the nature and extent of missing data. These results illustrate
+the important point that, as mentioned earlier, there are many
+reasons for imputing missing data [15], [25] – for the estima-
+tion of parameters (e.g., means or regression coefﬁcients), for
+determination of conﬁdence intervals and signiﬁcance, as well
+as for prediction – and that no single method for imputing data
+can be expected to be superior on all datasets or for all reasons.
+As [26] has emphasized, an extremely desirable aspect of
+any imputation method is that it be congenial; i.e., that it
+should produce imputed values in a manner that preserves
+the original relationships between features and labels. As we
+demonstrate using the complete Biobank dataset, our method is
+also more congenial than the best competing benchmarks; see
+Section VI-G.
+II. RELATED WORK
+As we have noted, there are three standard and very widely-
+used methods for dealing with missing data: interpolation, im-
+putation and matrix completion. Interpolation methods [1], [2]
+Authorized licensed use limited to: Chalmers University of Technology Sweden. Downloaded on October 28,2024 at 18:11:05 UTC from IEEE Xplore.  Restrictions apply. 

@@ -1,17 +1,17 @@
 from smart_library.domain.entities.document import Document
 from smart_library.domain.entities.page import Page
 from smart_library.domain.entities.text import Text
-from smart_library.application.pdf.pdf_reader import PDFReader
-from smart_library.application.services.document_service import DocumentService
-from smart_library.application.services.page_service import PageService
-from smart_library.application.services.text_service import TextService
-from smart_library.application.services.chunker import TextChunker
+from smart_library.utils.pdf_reader import PDFReader
+from smart_library.domain.services.document_service import DocumentService
+from smart_library.domain.services.page_service import PageService
+from smart_library.domain.services.text_service import TextService
+from smart_library.utils.chunker import TextChunker
 from smart_library.application.pipelines.metadata_extraction import SimpleMetadataExtractor
 from collections import defaultdict
 from typing import Dict, List, Tuple
 from smart_library.config import OllamaConfig
-from smart_library.application.llm.ollama_client import OllamaClient, OllamaEmbeddingModel
-from smart_library.application.services.embedding_service import EmbeddingService
+from smart_library.infrastructure.llm.clients.ollama_client import OllamaClient, OllamaEmbeddingModel
+from smart_library.domain.services.embedding_service import EmbeddingService
 
 class DocumentIngestionService:
     def __init__(self, 

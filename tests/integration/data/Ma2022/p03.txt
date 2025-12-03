@@ -1,0 +1,148 @@
+Non-stationary Time-aware Kernelized Attention for Temporal Event Prediction
+KDD ’22, August 14–18, 2022, Washington DC, USA
+3
+PRELIMINARIES
+We focus on solving the non-stationary time encoding problem
+in the attention manner. In this section, we first present the main
+notations used in this problem. Then, the basic attention module,
+positional and temporal encoding, and kernel functions will be
+introduced briefly.
+3.1
+Notations
+Let S = {(𝑡1,𝑒1), ..., (𝑡𝑛,𝑒𝑛)} denotes the sequence that contains a
+series of event 𝑒𝑖happened at time 𝑡𝑖, and 𝜙𝑡(𝑡),𝜙𝑒(𝑒) represents
+learnable mapping functions that encode 𝑡,𝑒into R𝑑. Accordingly,
+we use matrices 𝑉𝑒,𝑉𝑡∈R𝑛×𝑑to denote the encoded events and
+temporal embeddings of the sequence S.
+In practice, the temporal embedding 𝑉𝑡is usually added or con-
+catenated with the event embedding 𝑉𝑒. Without loss of generality,
+we use 𝑉to denote the combination of 𝑉𝑡and 𝑉𝑒. On the other
+hand, regarding the input to attention module, we use 𝐾, 𝑄, 𝑉to
+denote the key, query, and value matrices, respectively. Note that,
+in our self-attention setting, the key and query matrices equal to
+the value matrix, i.e., 𝐾= 𝑄= 𝑉.
+3.2
+Attention Module
+The attention mechanism in the original Transformer [27] is formed
+in the scaled dot-product manner:
+𝐴𝑡𝑡𝑒𝑛𝑡𝑖𝑜𝑛(𝑄, 𝐾,𝑉) = 𝑠𝑜𝑓𝑡𝑚𝑎𝑥( (𝑄𝑊𝑄)(𝐾𝑊𝐾)𝑇
+√︁
+𝑑𝑘
+)(𝑉𝑊𝑉),
+(1)
+where 𝑑𝑘is the dimension of the hidden representation of the key.
+𝑊𝐾,𝑊𝑄,𝑊𝑉are the projection matrices for any specific head of Q,
+K, V, respectively. To simplify notations in 𝑘-head attention module
+that has 𝑘sets of projection matrices, in the following sections, we
+omit them in equations.
+To be more specific, let qi, ki, vi represent the 𝑖−th component
+of Q, K, V, which are vectors representing the input embedding at
+𝑖−th position of the query, key, value sequences. z = (z1, ..., zi, ...zn)
+denotes the output of attention module. Then, the attention formula
+can be rewritten as:
+zi =
+𝑛
+∑︁
+𝑗=1
+𝑘𝑒𝑥𝑝(qi, kj)
+Í𝑘𝑒𝑥𝑝(qm, kl) vj,
+𝑘𝑒𝑥𝑝(qi, kj) = 𝑒𝑥𝑝(
+qikT
+j
+√︁
+𝑑𝑘
+).
+(2)
+As we can see from Eq.2, the relative contribution of each key-
+value pair to each query is determined by the attention weight
+𝑘𝑒𝑥𝑝(qi,kj)
+Í𝑘𝑒𝑥𝑝(qm,kl) times the value vector vj.
+3.3
+Positional and Temporal Embedding
+To count for the order information of a sequence, [27] added a
+non-learnable positional embedding, i.e., 𝑉𝑡, as the input into the
+attention module. Each entry in 𝑉𝑡is calculated by the following
+sin and cos functions, respectively:
+𝑃𝐸(𝑝𝑜𝑠, 2𝑖) = 𝑠𝑖𝑛(
+𝑝𝑜𝑠
+100002𝑖/𝑑𝑚𝑜𝑑𝑒𝑙),
+𝑃𝐸(𝑝𝑜𝑠, 2𝑖+ 1) = 𝑐𝑜𝑠(
+𝑝𝑜𝑠
+100002𝑖/𝑑𝑚𝑜𝑑𝑒𝑙),
+(3)
+where 𝑝𝑜𝑠is the position of the token/event in the sequence, 𝑖
+corresponds to 2 consecutive position embedding dimensions, and
+𝑑𝑚𝑜𝑑𝑒𝑙is the dimension of the token/event embedding. In practice,
+the dimension of the positional encoding is usually the same as
+𝑑𝑚𝑜𝑑𝑒𝑙that the positional embedding and event embedding can be
+summed as the attention inputs.
+Recently, in [30], the authors further proposed a functional time
+encoding method which maps the continuous-time values 𝑡to high
+dimensional space by Mercer’s feature map:
+𝑡↦→Φ = [Φ𝜔1 (𝑡), ..., Φ𝜔𝑑(𝑡)]𝑇,
+(4)
+where
+Φ𝜔𝑖(𝑡) =
+𝑁
+∑︁
+𝑗=1
+√︃
+𝑐2𝑗(𝜔𝑖)𝑐𝑜𝑠𝑗𝜋𝑡
+𝜔𝑖
++
+√︃
+𝑐2𝑗+1(𝜔𝑖)𝑠𝑖𝑛𝑗𝜋𝑡
+𝜔𝑖
+.
+(5)
+[
+√︁
+𝑐1(𝜔), ...,
+√︁
+𝑐2𝑗(𝜔)𝑐𝑜𝑠𝑗𝜋𝑡
+𝜔,
+√︁
+𝑐2𝑗+1(𝜔)𝑠𝑖𝑛𝑗𝜋𝑡
+𝜔, ...] is the truncated
+Fourier basis under certain frequencies of a class of continuous,
+positive semi-definite (PSD) and translation-invariant periodical
+kernels. The advantage of this Mercer’s time encoding is that it can
+take the continuous time-span information instead of the discrete
+position index. And the frequencies 𝜔𝑘and corresponding coeffi-
+cients √𝑐𝑘𝑗are learnable parameters that can be jointly optimized
+to cover a broad range of bandwidths in order to capture various
+temporal patterns of the signal.
+Limitation discussion. These related methods cannot encode
+a non-stationary signal well. Specifically, by seeing Eq.3, the ampli-
+tude (i.e., 1) and frequencies (i.e.,
+1
+100002𝑖/𝑑𝑚𝑜𝑑𝑒𝑙) are predefined and
+then kept constant during the learning process, which limits its
+representation capability. Furthermore, since it takes the discrete
+positional index as input, it cannot encode irregular continuous
+time-interval information into the representation. In Eq.5, although
+the amplitude (i.e.,
+√︁
+𝑐∗(𝜔∗)) and frequencies (i.e., 𝑗𝜋
+𝜔∗) are learnable,
+they are independent with the absolute time 𝑡. As mentioned above,
+the Mercer’s time embedding is essentially a dual representation
+of a temporal translation-invariant kernel. Taking the Mercer’s
+embedding into the context of expressing temporal correlations
+between events < Φ𝑀
+𝑑(𝑡𝑖), Φ𝑀
+𝑑(𝑡𝑗) >, the correlation would natu-
+rally be temporal translation-invariant thus limiting its capability
+of encoding non-stationary signals.
+3.4
+Kernel Functions
+A real kernel function [28] 𝑘: X × X ↦→R is a symmetric, PSD
+function in its arguments for which the following property holds
+𝑘(𝑥,𝑥′) = 𝜙(𝑥) · 𝜙(𝑥′) for some feature map 𝜙. Kernel functions
+usually serve as a similarity measure between two inputs in the
+machine learning filed [14].
+A stationary kernel is a function of 𝜏= 𝑥−𝑥′, i.e., it is invariant
+to translation of the inputs. Standard kernels such as Gaussian
+kernel and Matérn kernels are both stationary. In [29], the authors
+proposed a Spectral Mixture (SM) kernel which supports a broad
+1226

@@ -1,0 +1,148 @@
+KDD ’22, August 14–18, 2022, Washington DC, USA
+Yu Ma et al.
+class of stationary covariances:
+𝑘(𝜏) =
+∑︁
+𝑖
+𝛼𝑖𝑒𝑥𝑝(−2𝜋2𝜎2
+𝑖𝜏)𝑐𝑜𝑠(2𝜋𝜇𝑖𝜏),
+(6)
+where 𝛼𝑖are the weights, 𝜎𝑖, and 𝜇𝑖are the variance and mean of
+mixture Gaussian components.
+A non-stationary kernel, on the other hand, can infer the rela-
+tions in a input-dependent manner, i.e., it is a function of 𝑥, 𝑥′, and
+𝜏= (𝑥−𝑥′)𝑇. A classic extension of the stationary SM kernel (i.e.,
+Eq.6) to a non-stationary Spectral Mixture kernel is in the format
+of:
+𝑘(𝑥,𝑥′,𝜏) =
+∑︁
+𝑖
+𝛼2
+𝑖𝑒𝑥𝑝(−2𝜋2𝜏𝑇Σ𝑖𝜏)Ψ𝜇𝑖,𝜇′
+𝑖(𝑥)𝑇Ψ𝜇𝑖,𝜇′
+𝑖(𝑥′),
+where
+Ψ𝜇𝑖𝜇′
+𝑖(𝑥) =
+𝑐𝑜𝑠(2𝜋𝜇𝑖𝑥) + 𝑐𝑜𝑠(2𝜋𝜇′
+𝑖𝑥)
+𝑠𝑖𝑛(2𝜋𝜇𝑖𝑥) + 𝑠𝑖𝑛(2𝜋𝜇′
+𝑖𝑥)
+
+,
+Σ𝑖=
+
+𝜎2
+𝑖
+𝜌𝑖𝜎𝑖𝜎′
+𝑖
+𝜌𝑖𝜎𝑖𝜎′
+𝑖
+𝜎′2
+𝑖
+
+.
+(7)
+𝛼𝑖is the mixture weight for each component. 𝜌𝑖, (𝜇𝑖, 𝜇′
+𝑖) , (𝜎𝑖, 𝜎′
+𝑖)
+are the correlation, means and variances of the bivariate Gaussian
+components, respectively.
+By using a mixture of bi-variate Gaussian components, Eq.7
+intrinsically is a closed-form solution to the generalized Fourier
+inverse transform:
+𝑘(𝑥,𝑥′) =
+∫
+𝑅
+∫
+𝑅
+𝑒2𝜋𝑖(𝑥𝜔−𝑥′𝜔′)𝜇𝜔(𝑑𝜔,𝑑𝜔′),
+(8)
+where 𝜇𝜔is a positive bounded symmetric measure [9] associated
+to some PSD spectral density function 𝑆(𝜔,𝜔′), which is denoted
+as the spectral surface. When the spectral measure mass is concen-
+trated only on the diagonal (i.e., 𝜔= 𝜔′), its closed-form solution
+would reduce to a stationary one, e.g., Eq.6. For the detailed descrip-
+tion, please refer to [23].
+Our proposed method is on the basis of the non-stationary Spec-
+tral Mixture kernel. In the next section, we first present the mathe-
+matical rationale of introducing such a non-stationary kernel into
+the attention mechanism. Then, in the context of machine learn-
+ing, by decomposing the kernel function, we explain why it can
+count for the time-dependent periodical and long-range depen-
+dency. Finally, a new attention neural structure is devised. In its
+implementation, several constraints would be added for robustness.
+4
+METHODOLOGY
+4.1
+Attention with Temporal Embedding in
+Kernel Perspective
+Given a sequence S = {(𝑡1,𝑒1), ..., (𝑡𝑛,𝑒𝑛)} and its mapping func-
+tions 𝜙𝑡(𝑡) and 𝜙𝑒(𝑒) that encodes 𝑡,𝑒into R𝑑, conventional atten-
+tion related methods usually add or concatenate the event embed-
+ding 𝜙𝑒(𝑒) and the temporal embedding 𝜙𝑡(𝑡). We use the additive
+form (i.e., x𝑖= 𝜙𝑡,𝑖+𝜙𝑒,𝑖) as the case to illustrate the attention with
+temporal embedding in a kernel view 1. To simplify notations, we
+omit the variable 𝑡𝑖,𝑒𝑖in the 𝜙𝑡(·) and 𝜙𝑒(·).
+1Note that, since the concatenating form does not introduce the cross-terms
+𝑘𝑒𝑥𝑝(𝜙𝑡,𝑖,𝜙𝑒,𝑗), 𝑘𝑒𝑥𝑝(𝜙𝑡,𝑗,𝜙𝑒,𝑖), obviously it is consistent with our conclusion that
+the event and temporal correlations can be calculated separately. We omit its derivation
+in this paper.
+As stated in Eq.2, the output of the attention module can be
+viewed as a superposition of relative contributions from each key-
+value pair to each query. To be more specific, we would consider the
+attention weights which depend on the similarity measure between
+the query and key, and the value vector separately. The following
+mathematical illustration applies to general attention mechanisms,
+but out of simplicity, we use the self-attention case to demonstrate
+the derivation where the query, key and value are all the same as
+X = {x1, ..., x𝑛}.
+Following Eq.2 and omitting the constant normalizing factor
+√︁
+𝑑𝑘for notation simplicity, the attention weights, with explicitly
+expressing the temporal and event embedding, can be reformatted
+as :
+𝑘𝑒𝑥𝑝(x𝑖, x𝑗) = 𝑘𝑒𝑥𝑝(𝜙𝑡,𝑖+ 𝜙𝑒,𝑖,𝜙𝑡,𝑗+ 𝜙𝑒,𝑗)
+= 𝑒𝑥𝑝((𝜙𝑡,𝑖+ 𝜙𝑒,𝑖)(𝜙𝑡,𝑗+ 𝜙𝑒,𝑗)𝑇)
+= 𝑒𝑥𝑝(𝜙𝑡,𝑖𝜙𝑇
+𝑡,𝑗+ 𝜙𝑒,𝑖𝜙𝑇
+𝑒,𝑗+ 𝜙𝑡,𝑖𝜙𝑇
+𝑒,𝑗+ 𝜙𝑒,𝑖𝜙𝑇
+𝑡,𝑗)
+= 𝑘𝑒𝑥𝑝(𝜙𝑡,𝑖,𝜙𝑡,𝑗) · 𝑘𝑒𝑥𝑝(𝜙𝑒,𝑖,𝜙𝑒,𝑗)
+· 𝑘𝑒𝑥𝑝(𝜙𝑡,𝑖,𝜙𝑒,𝑗) · 𝑘𝑒𝑥𝑝(𝜙𝑡,𝑗,𝜙𝑒,𝑖),
+(9)
+where the first two terms,𝑘𝑒𝑥𝑝(𝜙𝑡,𝑖,𝜙𝑡,𝑗) and𝑘𝑒𝑥𝑝(𝜙𝑒,𝑖,𝜙𝑒,𝑗) clearly
+represent the temporal and event correlation between (𝑡𝑖,𝑒𝑖) and
+(𝑡𝑗,𝑒𝑗). With regard to the two cross terms 𝑘𝑒𝑥𝑝(𝜙𝑡,𝑖,𝜙𝑒,𝑗) and
+𝑘𝑒𝑥𝑝(𝜙𝑡,𝑗,𝜙𝑒,𝑖), they represent the correlation between time 𝑖and
+event 𝑗and vice versa.
+The first two terms indicate that the event and temporal
+correlation are calculated separately. From Eq.9, since the expo-
+nential of a dot-product operation (i.e., 𝑘𝑒𝑥𝑝) is noted as an instance
+of kernel operation [14, 28], the attention weights with temporal
+embedding can be further considered as the product of temporal
+kernel and event kernel separately.
+The two cross terms are a byproduct of summing up the
+temporal and event embedding. Since the time and event are
+projected into two separate vector spaces, intuitively the two cross
+terms have no valid physical meaning. Even worse, they introduce
+a kind of noise in the attention weights. Several recent related work
+[5, 26] also discussed this issue. They claimed that using the product
+of separate temporal and non-temporal kernels is better than using
+the direct sum of temporal and non-temporal embeddings.
+Since we focus on improving the representation learning ability
+of the non-stationary temporal correlation, in accordance with
+Eq.9, in the next subsection, we introduce a non-stationary kernel
+function to replace the exponential term 𝑘𝑒𝑥𝑝(𝜙𝑡,𝑖,𝜙𝑡,𝑗).
+4.2
+Encode Temporal Correlation with
+Non-stationarity
+In this section, we introduce a kernel function to encode tem-
+poral correlation with non-stationarity. Note that, the original
+𝑘𝑒𝑥𝑝(𝜙𝑡,𝑖,𝜙𝑡,𝑗) function can be regarded as exponential of a lin-
+ear kernel. As has been discussed in section 3.3, it suffers from
+encoding the non-stationary temporal correlation. In order to infer
+non-stationary long-range and periodic correlations in an input-
+dependent manner, we utilize the Generalized Spectral Mixture
+1227

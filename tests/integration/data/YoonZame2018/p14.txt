@@ -1,0 +1,152 @@
+1490
+IEEE TRANSACTIONS ON BIOMEDICAL ENGINEERING, VOL. 66, NO. 5, MAY 2019
+log(1 −ˆyn)], rather than the mean squared error. (We continue
+to evaluate performance in terms of AUROC.) As can be seen
+from Table XI, doing this does improve the predictions of M-
+RNN, but the improvement is marginal and not statistically
+signiﬁcant. (However, doing this does have the advantage that it
+creates an end-to-end prediction algorithm that does not require
+any preprocessing or imputation steps.)
+APPENDIX D
+CATEGORICAL VALUE IMPUTATION
+As an additional performance metric for comparing the impu-
+tation quality of categorical features, we compute the proportion
+of falsely classiﬁed entries (PFC). If Scat is the set of categorical
+variables, then PFC is deﬁned as
+PFC =
+T
+t=1
+N
+n=1
+
+j∈Sc a t (1 −mt
+j(n))I(ˆxt
+j(n) ̸= xt
+j(n))
+T
+t=1
+N
+n=1
+
+j∈Sc a t (1 −mt
+j(n))
+,
+Keep in mind that smaller PFC means better imputation. As can
+be seen in Table XII, M-RNN outperforms all the benchmarks
+in all the datasets in terms of the PFC metric as well.
+APPENDIX E
+IMPLEMENTATIONS AND HYPER-PARAMETER OPTIMIZATION
+In all of our experiments, we set the depth of the networks for
+M-RNN and for other neural network benchmarks (including
+RNN-based benchmarks and auto-encoder) to 4. (In the case of
+M-RNN, the interpolation block uses 2 layers and the imputation
+block uses 2 layers.) For M-RNN, there are 4 hidden nodes in
+each layer in the interpolation block and D hidden nodes in each
+layer in the imputation block. For the benchmarks, in order to
+make a fair comparison, we adjusted the number of hidden
+nodes in each layer to match the model capacity (the number of
+parameters for all models) of M-RNN. The number of batches
+is 64 for both M-RNN and benchmarks.
+For some of these algorithms, we are able to use off-the-shelf
+implementations. For Spline and Cubic Interpolation, we use
+the interp1 package in MATLAB; for MICE we use the mice
+package in R; for MissForest we use the MissForest package
+in R; for EM we use the Amelia package in R; for matrix
+completion we use the softImpute package in R.
+ACKNOWLEDGMENT
+The authors would like thank K. Poppe (University of
+Auckland) and A. Wood (University of Cambridge).
+REFERENCES
+[1] D. M. Kreindler and C. J. Lumsden, “The effects of the irregular sample
+and missing data in time series analysis,” Nonlinear Dynamical Syst. Anal.
+Behavioral Sci., vol. 10, pp. 187–214, 2006.
+[2] D. Mondal and D. B. Percival, “Wavelet variance analysis for gappy time
+series,” Ann. Inst. Statistical Math., vol. 62, no. 5, pp. 943–966, 2010.
+[3] D. B. Rubin, Multiple Imputation for Nonresponse in Surveys, vol. 81.
+Hoboken, NJ, USA: Wiley, 2004.
+[4] P. J. Garc´ıa-Laencina et al., “Pattern classiﬁcation with missing data: A
+review,” Neural Comput. Appl., vol. 19, no. 2, pp. 263–282, 2010.
+[5] I. R. White et al., “Multiple imputation using chained equations: Issues
+and guidance for practice,” Statist. Med., vol. 30, no. 4, pp. 377–399, 2011.
+[6] D. J. Stekhoven and P. B¨uhlmann, “Missforest—non-parametric missing
+value imputation for mixed-type data,” Bioinformatics, vol. 28, no. 1,
+pp. 112–118, 2011.
+[7] R. Mazumder et al., “Spectral regularization algorithms for learning large
+incomplete matrices,” J. Mach. Learn. Res., vol. 11, pp. 2287–2322, 2010.
+[8] H.-F. Yu
+et al., “Temporal regularized matrix factorization for high-
+dimensional time series prediction,” in Proc Adv. Neural Inf. Process.
+Syst., 2016, pp. 847–855.
+[9] T. Schnabel et al., “Recommendations as treatments: Debiasing learn-
+ing and evolution,” in Proc 33rd Int. Conf. Mach. Learn., 2016,
+pp. 1670–1679.
+[10] R. Mazumder et al., “Spectral regularization algorithms for learning large
+incomplete matrices,” J. Mach. Learn. Res., vol. 11, pp. 2287–2322, 2010.
+[11] A. M. Alaa et al., “Learning from clinical judgments: Semi-Markov-
+modulated marked Hawkes processes for risk prognosis,” in Proc. 34th
+Int. Conf. Mach. Learn, 2017, pp. 60–69.
+[12] A. Graves and J. Schmidhuber, “Framewise phoneme classiﬁcation with
+bidirectional LSTM and other neural network architectures,” Neural Netw.,
+vol. 18, no. 5, pp. 602–610, 2005.
+[13] A. R. T. Donders et al., “A gentle introduction to imputation of missing
+values,” J. Clin. Epidemiology, vol. 59, no. 10, pp. 1087–1091, 2006.
+[14] P. A. Patrician, “Multiple imputation for missing data,” Res. Nursing
+Health, vol. 25, no. 1, pp. 76–84, 2002.
+[15] S. Burgess et al., “Combining multiple imputation and meta-analysis with
+individual participant data,” Statist. Med., vol. 32, no. 26, pp. 4499–4514,
+2013.
+[16] A. Mackinnon, “The use and reporting of multiple imputation in medi-
+cal research–A review,” J. Internal Med., vol. 268, no. 6, pp. 586–593,
+2010.
+[17] J. A. Sterne et al., “Multiple imputation for missing data in epidemiolog-
+ical and clinical research: Potential and pitfalls,” BMJ 2009;338:b2393.
+[18] N. Srivastava et al., “Dropout: A simple way to prevent neural networks
+from overﬁtting.” J. Mach. Learn. Res., vol. 15, no. 1, pp. 1929–1958,
+2014.
+[19] A. E. Johnson
+et al., “MIMIC-III, a freely accessible critical care
+database,” Sci. Data, vol. 3, 2016, Art. no. 160035.
+[20] A. M. Alaa et al., “Personalized risk scoring for critical care prognosis
+using mixtures of gaussian processes,” IEEE Trans. Biomed. Eng., vol. 65,
+no. 1, pp. 207–218, Jan. 2018.
+[21] L. J. Palmer, “UK biobank: Bank on it,” Lancet, vol. 369, no. 9578,
+pp. 1980–1982, 2007.
+[22] E. Choi et al., “Doctor AI: Predicting clinical events via recurrent neural
+networks,” Mach. Learning Healthcare Conf., pp. 301–318, 2016.
+[23] Z. C. Lipton et al., “Directly modeling missing data in sequences with
+RNNs: Improved classiﬁcation of clinical time series,” Mach. Learning
+Healthcare conf., pp. 253–270, 2016.
+[24] Z. Che et al., “Recurrent neural networks for multivariate time series with
+missing values,” Scientiﬁc reports, vol. 8, no. 1, 2018, Art. no. 6085.
+[25] Y. Deng
+et al., “Multiple imputation for general missing data pat-
+terns in the presence of high-dimensional data,” Sci. Rep., vol. 6, 2016,
+Art. no. 21689.
+[26] X.-L. Meng, “Multiple-imputation inferences with uncongenial sources
+of input,” Statistical Sci., vol. 9, pp. 538–558, 1994.
+[27] F. Gingras and Y. Bengio, “Recurrent neural networks for missing or
+asynchronous data,” in Proc 8th Int. Conf. Neural Inf. Process. Syst.,
+1996, vol. 8, pp. 395–401.
+[28] V. Tresp and T. Briegel, “A solution for missing data in recurrent neural
+networks with an application to blood glucose prediction,” in Proc. Adv.
+Neural Inf. Process. Syst., 1998, pp. 971–977.
+[29] S. Parveen and P. Green, “Speech recognition with missing data using
+recurrent neural nets,” in Proc. Adv. Neural Inf. Process. Syst., 2002,
+pp. 1189–1195.
+[30] H.-G. Kim et al., “Recurrent neural networks with missing information
+imputation for medical examination data prediction,” in Proc. IEEE Conf.
+Big Data Smart Comput., 2017, pp. 317–323.
+[31] Y. Gal and Z. Ghahramani, “Dropout as a Bayesian approximation: Rep-
+resenting model uncertainty in deep learning,” in Proc. Int. Conf. Mach.
+Learn., 2016, pp. 1050–1059.
+[32] L. Gondara and K. Wang, “Multiple imputation using deep denoising
+autoencoders,” 2017, arXiv:1705.02737.
+[33] D. Schunk, “A Markov chain monte carlo algorithm for multiple im-
+putation in large surveys,” AStA Adv. Statistical Anal., vol. 92, no. 1,
+pp. 101–114, 2008.
+[34] T. Chen and C. Guestrin, “Xgboost: A scalable tree boosting system,”
+in Proc. 22nd ACM SIGKDD Int. Conf. Knowl. Discovery Data Mining,
+2016, pp. 785–794.
+[35] L. Breiman, “Random forests,” Mach. Learn., vol. 45, no. 1, pp. 5–32,
+2001.
+Authorized licensed use limited to: Chalmers University of Technology Sweden. Downloaded on October 28,2024 at 18:11:05 UTC from IEEE Xplore.  Restrictions apply. 

@@ -1,0 +1,144 @@
+Time (days)
+(a1) Unreliability-aware attention weights
+Time (days)
+(b1) Symptom-aware attention weights
+(a2) Unreliability-aware weights at different timestamps
+(b2) Symptom-aware weights at different timestamps
+Figure 3: Visualization of attention weights. (a1) the weight matrix learned by unreliability-aware attention of DATA-GRU,
+which shows score assigned to each variable at each visit; (a2) the average weight of different variables at each visit; (b1) and
+(b2) provide weight matrix and average weight learned by symptom-aware attention of DATA-GRU.
+mented data are easier to capture. In addition, T-GRU+u and
+T-GRU-raw+s outperform T-GRU and T-GRU-raw respec-
+tively, which demonstrate the effeteness of each attention
+mechanism. Furthermore, DATA-GRU consistently outper-
+forms T-GRU+u and T-GRU-raw+s, which proves that the
+proposed dual-attention can effectively capture information
+from different views and improve ﬁnal results.
+Case Study
+To demonstrate the beneﬁt of applying DATA-GRU to real-
+world risk prediction tasks, we analyze attention weights
+learned by unreliability-aware and symptom-aware compo-
+nents of DATA-GRU. Fig. 3 shows a case study for predict-
+ing the in-hospital clinical outcome of a pneumonia patient
+in MIMIC-III based on the EHR data within 5 days after ad-
+mission. The patient information is provided in Table 3. In
+Fig. 3, X-axis denotes time steps and Y-axis represents the
+learned attention score. Fig. 3(a1) shows the attention weight
+matrix learned by the unreliability-aware attention mecha-
+nism, which demonstrates that different attention scores are
+assigned to different elements in different time series. The
+average attention score of different variables at each visit
+is given in Fig. 3(a2), which shows that the unreliability-
+aware mechanism assigns larger weights on the ﬁrst sev-
+eral records. This is because many physiological variables
+of the patient are actually examined in these visits. Further-
+more, the unreliability-aware attention mechanism can ef-
+fectively identify important variables. Fig. 4 shows atten-
+tion weights contributed by all the 50 input variables. We
+can see that attention scores assigned to these variables are
+different. The item IDs of the 5 variables with the largest
+weights for the pneumonia patient are 87 (Braden Score),
+787 (Carbon Dioxide), 742 (calprevﬂg), 646 (SpO2), and
+51277 (RDW), most of which have been proved to be closely
+related to pneumonia (Sin, Man, and Marrie 2005). This
+proves that the unreliability-aware attention can effectively
+identify important variables and assign larger weights to re-
+liable records to help them play important roles.
+Fig. 3(b1) shows the attention matrix learned by the
+symptom-aware attention mechanism, which can be seen is
+different from Fig. 3(a1). This is because the unreliability-
+Table 3: Patient information in the case study. All the times-
+tamps use admission time of the patient as the benchmark.
+Diagnosis 
+In-hospital clinical 
+outcome 
+Death time 
+Risk predicted 
+by DATA-GRU 
+Pneumonia 
+Death 
+17.99 days 
+0.906 
+ 
+ITEM ID of physiological variables
+Attention weight
+0
+0.2
+0.4
+0.6
+0.8
+1
+87
+787
+742
+646
+51277
+51265
+50983
+198
+50882
+51250
+811
+51249
+51221
+51006
+1127
+51301
+677
+781
+50868
+50931
+211
+50971
+618
+456
+786
+788
+861
+51279
+50960
+821
+220602
+50902
+455
+829
+50970
+828
+678
+813
+50893
+837
+8441
+814
+833
+791
+51222
+51248
+827
+220615
+225624
+50912
+Figure 4: Attention weights assigned to different variables.
+aware attention considers the quality of data, while the
+symptom-aware attention focuses on learning medical
+knowledge from original clinical records. The average at-
+tention score contributed by each visit is provided in Fig.
+3(b2), which clearly shows that the symptom-aware atten-
+tion focuses on visits in the middle. This is probably be-
+cause the time intervals in the middle are small, due to which
+the symptoms of the patient change frequently within a cer-
+tain period. All these results prove that the proposed dual-
+attention mechanism can analyze EHR data from different
+views and capture different aspects of information, thus ef-
+fectively improving risk prediction results.
+Conclusion
+This paper proposes a novel DATA-GRU to predict the mor-
+tality risk of patients by using IMTS data. A time-aware
+mechanism is introduced to directly handle the irregular
+time intervals and preserve the contained useful information.
+Furthermore, a novel dual-attention mechanism is designed
+to tackle missing values in IMTS from both the data-quality
+view and the medical-knowledge view. Extensive experi-
+mental results and case study demonstrate that DATA-GRU
+outperforms existing methods signiﬁcantly and provides in-
+936

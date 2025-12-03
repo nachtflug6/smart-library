@@ -1,0 +1,163 @@
+YOON et al.: ESTIMATING MISSING DATA IN TEMPORAL DATA STREAMS USING MULTI-DIRECTIONAL RECURRENT NEURAL NETWORKS
+1479
+attempt to reconstruct missing data by capturing the temporal
+relationship within each data stream but not the relationships
+across streams. Imputation methods [3]–[6] attempt to recon-
+struct missing data by capturing the synchronous relationships
+across data streams but not the temporal relationships within
+streams. Matrix completion methods [7]–[10] treat the data as
+static – ignoring the temporal aspect – or perfectly synchronized
+and assume a speciﬁc model of the data-generating process
+and/or the pattern of missing data.
+There is also a substantial literature that uses Recurrent Neu-
+ral Networks (RNNs) for prediction on the basis of time series
+with missing data. For example, [27] ﬁrst replaces all the miss-
+ing values with a mean value, then uses the feedback loop from
+the hidden states to update the imputed values and ﬁnally uses
+the reconstructed data streams as inputs to a standard RNN
+for prediction. [28] uses the Expectation-Maximization (EM)
+algorithm to impute the missing values and again uses the re-
+constructed data streams as inputs to a standard RNN for pre-
+diction. [29] uses a linear model to estimate missing values from
+the latest measurement and the hidden state within each stream
+followed by a standard RNN for prediction. In the ﬁrst two of
+these papers, missing values are imputed by using only the syn-
+chronous relationships across data streams but not the temporal
+relationships within streams; in the third paper, missing values
+are interpolated by using only the temporal relationships within
+each stream but not on the relationships across streams.
+A more recent literature extends these methods to deal with
+both missing data and irregularly sampled data [22]–[24], [30].
+All of these papers use the sampling times to capture the infor-
+mative missingness and time interval information to deal with
+irregular sampling, using the measurements, sampling informa-
+tion and time intervals as the inputs of an RNN. However, they
+differ in the replacements they use for missing values. [22],
+[23], [30] replace the missing values with 0, mean values or
+latest measurements – all of which are independent of either the
+intra-stream or inter-stream relationships or both. [24] imputes
+the missing values using only the most recent measurements,
+the mean value of each stream, and the time interval.
+III. PROBLEM FORMULATION
+Our formulation and method are applicable to a wide variety
+of settings with missing data. However, for ease of exposition
+– and to facilitate the discussion of our application to med-
+ical datasets – it is convenient to adopt medical terminology
+throughout.
+We consider a dataset consisting of N patients. For each pa-
+tient, we have a multivariate time series data stream of length
+T (the length T and the other components of the dataset may
+depend on the patient n but for the moment we suppress the
+dependence on n) that consists of time stamps S, measurements
+X, and labels Y, sampled from an (unknown) underlying distri-
+bution F: (S, X, Y) ∼F.
+For each t the time stamp st ∈R represents the actual time
+at which the measurements xt were taken. For convenience
+we normalize so that s1 = 0 (so that we are measuring actual
+times for each patient beginning from the ﬁrst observation for
+that patient); we assume actual times are strictly increasing:
+st+1 > st where 0 ≤t < T. Note that the measurements may
+not be sampled regularly, so that the interval st+1 −st between
+successive measurements need not be constant.
+There are D streams of measurements. We view each mea-
+surement as a real number, but it will typically be the case that
+not every stream is actually observed/measured at st. Hence
+we adopt notation in which the set of possible measurements at
+the t-th time stamp st is R∗= R ∪{∗}. We interpret xd
+t = ∗to
+mean that the stream d was not measured at st; otherwise xd
+t ∈R
+is the actual measurement of stream d at st. (In computations
+with neural networks, we set xd
+t = 0 when the measurement
+xd
+t is missing. This guarantees that the missing measurement
+has no effect on the architecture.) For convenience, we scale all
+measurements to lie in the interval [0, 1].
+It is convenient to introduce some additional notation. For
+each t, deﬁne the index mt
+d to equal 0 if xd
+t = ∗(i.e., the stream
+d was not measured at st) and to equal 1 if xd
+t ∈[0, 1] (the
+stream d was measured at st). We deﬁne δd
+t to be the actual
+amount of time that has elapsed from st since the stream d was
+measured previously; δd
+t can be deﬁned by setting δd
+1 = 0 and
+then proceeding recursively as follows:
+δd
+t =
+
+st −st−1 + δd
+t−1
+if t > 1, md
+t−1 = 0
+st −st−1
+if t > 1, md
+t−1 = 1.
+Write δt for the vector of elapsed times at time stamp t and
+Δ = {δ1, δ2, ..., δT }.
+The label yt represents the outcome realized at time stamp t
+(actual time st) such as discharge, clinical deterioration, death.
+Y is the vector of outcomes for this patient. Again, we scale so
+the labels (and eventually predictions) lie in the interval [0, 1].
+Frequently the outcome is binary in which case yt = 0 or yt = 1.
+The information available for a particular patient n is there-
+fore a triple consisting of a sequence of time stamps, an array
+of measurements at each time stamp (with the above conven-
+tion about missing measurements), and an array of labels at
+each time stamp. It is convenient to use functional notation to
+identify information about a particular patient, so xd
+t (n) is the
+measurement of stream d at time stamp t for patient n, etc.
+The entire dataset consists of all the triples for all the patients
+D = {(S(n), X(n), Y(n)}N
+n=1.
+Our objective is to ﬁnd a function f that provides the best
+estimate of missing values; i.e., the estimate that minimizes the
+estimation loss. As is usually done, we measure loss as the
+squared error, so if xd
+t is an (unobserved) actual measurement
+(sampled from F) and ˆxd
+t = f d
+t (S, X) is the estimate formed
+on the basis of observed data, then the squared loss for this
+particular measurement is L(ˆxd
+t , xd
+t ) = (ˆxd
+t −xd
+t )2. Hence the
+formal optimization problem is to ﬁnd a function f to solve:
+min
+f
+EF
+ T
+
+t=1
+D
+
+d=1
+(1 −md
+t )L(ˆxd
+t , xd
+t )
+
+= min
+f
+EF
+ T
+
+t=1
+D
+
+d=1
+(1 −md
+t )(f d
+t (S, X, Y) −xd
+t )2
+
+.
+(1)
+Authorized licensed use limited to: Chalmers University of Technology Sweden. Downloaded on October 28,2024 at 18:11:05 UTC from IEEE Xplore.  Restrictions apply. 

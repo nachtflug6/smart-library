@@ -1,0 +1,211 @@
+KDD ’22, August 14–18, 2022, Washington DC, USA
+Yu Ma et al.
+Datasets
+NMSE
+Top-1 Accuracy
+Methods
+SynD-A
+SynD-F
+SynD-AF
+ETT
+PM2.5
+IndD
+TimeLSTM
+0.0144
+0.0482
+0.0961
+0.1218
+0.4827
+0.4207
+RNN+Attention
+0.0092
+0.0534
+0.0439
+0.0521
+0.4789
+0.4008
+TiSASRec
+0.0056
+0.1089
+0.0410
+0.0455
+0.5057
+0.3423
+Transformer w/o PE
+0.0133
+0.0634
+0.0619
+0.0451
+0.5172
+0.3765
+Transformer+PE
+0.0056
+0.0212
+0.0266
+0.0460
+0.5211
+0.4993
+Transformer+ME
+0.0140
+0.0629
+0.0680
+0.0438
+0.5326
+0.5195
+Transformer+NsTKA
+0.0054
+0.0392
+0.0377
+0.0410
+0.5460
+0.5285
+Table 2: Results on one synthetic dataset and three real-world datasets. Bold values denotes the best results.
+𝑀𝑒𝑡ℎ𝑜𝑑𝑠
+IndD Top-1 Accuracy
+SynD NMSE
+Transformer + NsTKA
+0.5285
+0.0377
+Transformer + STKA
+0.5212
+0.0665
+Table 3: Ablation study of the non-stationary part of the
+NsTKA.
+contrary results for the 𝜇𝑖case do not necessarily mean that
+the frequency components in the cosine term is lack of time-
+dependency, it could be that well capturing the time-varying
+pattern of the periodical correlation of the signal is relatively
+difficult during training. The improvement of representation
+capability of our proposed NsTKA method might be accom-
+panied with certain decrease in robustness when dealing
+with certain datasets, which could be improved with more
+careful hyperparameter selection or more available data sam-
+ples. To further improve the robustness and performance of
+the model is also a future topic of our research.
+𝜇𝑖(𝑥)
+𝑙𝑖(𝑥)
+𝛼𝑖(𝑥)
+NMSE
+!
+!
+!
+0.0377
+%
+!
+!
+0.0377
+!
+%
+!
+0.0418
+!
+!
+%
+0.0834
+𝜇𝑖
+!
+!
+0.0355
+!
+𝑙𝑖
+!
+0.0532
+!
+!
+𝛼𝑖
+0.0680
+Table 4: Results on the dataset SynD with different combina-
+tions of kernels.
+5.6
+Case Study (Q3)
+To study how the proposed method performs on different scenarios,
+we create synthetic datasets with different levels of non-stationarity.
+Specifically, the coefficients 𝛼𝑖, 𝛽𝑖in Eq.14 and Eq.15 are chang-
+ing with different speed with respect to time. Namely, two speed-
+coefficients 𝑐𝛼𝑖,𝑐𝛽𝑖are further introduced. As a result, the new
+amplitude and frequency functions are 𝐴𝑖(𝑡) = 𝐴𝑖,0(1 + 𝑐𝛼𝑖𝛼𝑖𝑡/𝑇)
+and 𝜔𝑖(𝑡) = 𝜔𝑖,0 ∗𝑒𝑥𝑝(𝑐𝛽𝑖𝛽𝑖𝑡/𝑇), respectively. One thing to note is
+that, when the coefficients change in a negligible magnitude (i.e.,
+𝑐𝛼𝑖= 0,𝑐𝛽𝑖= 0), the synthetic signal is actually stationary. Intu-
+itively, Figure 4 illustrated as an example of signals with different
+values of 𝑐𝛼𝑖,𝑐𝛽𝑖. Compared with the stationary signal, the ampli-
+tude and frequency of other two ones change over time to different
+degrees.
+Figure 4: An example of signals with different values of
+𝑐𝛼𝑖,𝑐𝛽𝑖.
+𝑐𝛼𝑖
+𝑐𝛽𝑖
+Transformer
++NsTKA
+Transformer
++ME
+gain
+Stationary
+0
+0
+0.032
+0.0352
+-9.0%
+Frequency
+fluctuates
+1
+0.1
+0.0568
+0.1283
+-55.7%
+1
+0.5
+0.0558
+0.1053
+-47.0%
+1
+1
+0.0490
+0.1046
+-53.2%
+1
+1.1
+0.0431
+0.0926
+-53.5%
+1
+1.5
+0.0388
+0.1347
+-71.2%
+Amplitude
+fluctuates
+0.1
+1
+0.0433
+0.1188
+-63.6%
+0.5
+1
+0.0400
+0.1257
+-68.2%
+1.1
+1
+0.0412
+0.1345
+-69.4%
+1.5
+1
+0.0325
+0.1475
+-78.0%
+Table 5: Mean squared error of methods Transformer+NsTKA
+and Transformer+ME when fitting the signals with different
+non-stationary levels.
+While keeping all the other parameters in Eq. 13 the same, Table
+5 presents the relative gain between NsTKA and ME under the
+different values of 𝑐𝛼𝑖,𝑐𝛽𝑖. We can observe that:
+• For a stationary dataset, NsTKA shows a similar performance
+with the related method, ME, which is derived from a station-
+ary kernel. It suggests that NsTKA can also fit the dataset
+well on a degenerated setting, even though the kernel is
+non-stationary.
+• For non-stationary datasets, as the increasing level of non-
+stationarity, NsTKA shows a more and more significant
+1231

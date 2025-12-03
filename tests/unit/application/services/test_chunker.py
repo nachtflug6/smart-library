@@ -1,4 +1,4 @@
-from smart_library.application.services.chunker import TextChunker
+from smart_library.utils.chunker import TextChunker
 
 def test_chunker_basic_split():
     chunker = TextChunker(max_chars=20, overlap=5)

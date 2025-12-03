@@ -1,0 +1,34 @@
+YOON et al.: ESTIMATING MISSING DATA IN TEMPORAL DATA STREAMS USING MULTI-DIRECTIONAL RECURRENT NEURAL NETWORKS
+1489
+TABLE X
+PERFORMANCE COMPARISON FOR LABEL PREDICTION (AUROC) WITH/WITHOUT DONOR FEATURES IN UNOS DATASET
+TABLE XI
+PERFORMANCE COMPARISON FOR PREDICTION ORIENTED M-RNN
+TABLE XII
+PERFORMANCE COMPARISON FOR MISSING DATA ESTIMATION FOR CATEGORICAL VARIABLES
+presents the comparisons for prediction. As noted in the main
+text, the differences are not large, presumably because the donor
+information is completely static and the relevant aspects are cap-
+tured implicitly in the recipient data. Note that the RNN-based
+Interpolation-based methods do not utilize information across
+features; hence, whether or not donor features are available, the
+imputation performance of these methods is unchanged (See
+Table IX).
+As canbeseeninTables IXandX, theeffects of donor features
+on imputation and prediction accuracy are not large. The RMSE
+of M-RNN (MI) improves from from 0.0479 to 0.0451 (5.8%)
+on the UNOS-Heart dataset and 0.0606 to 0.0579 (4.5%) on
+the UNOS-Lung dataset. In terms of prediction, AUROC of
+M-RNN (MI) improves from from 0.6855 to 0.7153 (9.5%) on
+the UNOS-Heart dataset and from 0.6762 to 0.6883 (3.7%) on
+UNOS-Lung dataset.
+APPENDIX C
+PREDICTION-ORIENTED M-RNN
+Finally, we report the results of an experiment in which
+we optimized M-RNN for prediction accuracy rather than im-
+putation accuracy. To do this, we trained M-RNN to min-
+imize the cross-entropy L = 1
+N
+N
+n=1[yn log ˆyn + (1 −yn)
+Authorized licensed use limited to: Chalmers University of Technology Sweden. Downloaded on October 28,2024 at 18:11:05 UTC from IEEE Xplore.  Restrictions apply. 

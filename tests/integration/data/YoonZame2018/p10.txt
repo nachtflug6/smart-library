@@ -1,0 +1,54 @@
+1486
+IEEE TRANSACTIONS ON BIOMEDICAL ENGINEERING, VOL. 66, NO. 5, MAY 2019
+TABLE V
+PERFORMANCE COMPARISON FOR PATIENT STATE PREDICTION WITH A 1-LAYER RNN (PERFORMANCE GAIN IS COMPUTED IN TERMS OF 1-AUROC)
+Fig. 5.
+(a) The AUROC performance with various missing rates.
+(b) The AUROC gain over the two most competitive benchmarks.
+experiments with increased rates of missing data in order to
+understand the implications for the accuracy of prediction. To
+explore the predictive performance for a wide range of missing
+rates (from 0% to 90%), we begin with the Biobank dataset,
+which is a complete dataset. We randomly remove 10% to 90%
+of the measurements (with increments of 10%) to create multi-
+ple datasets with different missing rates. (In each case we use
+80% of the data for training and 20% for testing.) As before, we
+use M-RNN and various benchmarks for imputing missing data
+and a 1-layer RNN as the predictive model. (In this setting we
+are predicting a clinical diagnosis of diabetes.) In each setting,
+we conducted 10 trials, and report the performance in terms of
+AUROC.
+Fig. 5(a) illustrates the impact (in terms of AUROC) of
+increasing amounts of missing data for M-RNN and various
+benchmarks. As Fig. 5(a) shows, for M-RNN and all bench-
+marks, the prediction performance decreases as the amount of
+missing data increases. However, as Fig. 5(b) shows, M-RNN
+continues to outperform the benchmarks; indeed, the perfor-
+mance gap between M-RNN and the benchmarks widens when
+Fig. 6.
+AUROC comparisons in settings A and B using MIMIC-III
+dataset.
+more data is missing. That is: the importance of accurate impu-
+tation is greater when more data is missing.
+F. The Importance of Speciﬁc Features
+To this point, we have treated all missing data as equally
+important and given the same weight to all errors. However,
+this is not always the right thing to do. In particular, it is clear
+that not all missing data is equally important for prediction.
+To understand the importance of missing data for purposes of
+prediction we conduct two experiments in parallel. For the ﬁrst
+experiment (which we call Setting A: Purely Random Removal),
+we construct 5 sub-samples of the MIMIC-III dataset by ran-
+domly removing an additional 10%, 20%, 30%, 40%, 50% of
+the measurements for randomly chosen features. For the second
+experiment (which we call Setting B: Correlated Random Re-
+moval) we ﬁrst identify the four features that are most highly
+correlated with the mortality label; those are anion gap, bicar-
+bonate, systolic blood pressure, and pottasium. We then con-
+struct 5 sub-samples of the MIMIC-III dataset by removing an
+additional 10%, 20%, 30%, 40%, 50% of the measurements for
+these speciﬁc features. In both cases we repeat the exercise 10
+times and report average results. We then compare the predic-
+tion performance of M-RNN (MI) with the best benchmarks;
+the results are shown visually in Fig. 6.
+Authorized licensed use limited to: Chalmers University of Technology Sweden. Downloaded on October 28,2024 at 18:11:05 UTC from IEEE Xplore.  Restrictions apply. 

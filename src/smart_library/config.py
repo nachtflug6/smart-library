@@ -22,12 +22,15 @@ CHUNKER_CONFIG = {
 }
 
 class OllamaConfig:
-    BASE_URL = "http://host.docker.internal"
-    GENERATE_PORT = 11434
-    EMBEDDING_PORT = 11436
-    
-    GENERATE_URL = f"{BASE_URL}:{GENERATE_PORT}/api/generate"
-    EMBEDDING_URL = f"{BASE_URL}:{EMBEDDING_PORT}/api/embeddings"
+    # containers on the same Docker network
+    GENERATE_HOST = os.getenv("OLLAMA_GENERATE_HOST", "ollama_llama3")
+    EMBEDDING_HOST = os.getenv("OLLAMA_EMBED_HOST", "ollama_embed")
+
+    # internal container port always stays 11434
+    PORT = 11434
+
+    GENERATE_URL = f"http://{GENERATE_HOST}:{PORT}/api/generate"
+    EMBEDDING_URL = f"http://{EMBEDDING_HOST}:{PORT}/api/embeddings"
 
     GENERATION_MODEL = "llama3"
     EMBEDDING_MODEL = "nomic-embed-text"

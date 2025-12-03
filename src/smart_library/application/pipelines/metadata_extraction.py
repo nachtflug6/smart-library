@@ -1,8 +1,8 @@
 from smart_library.domain.entities.document import Document
-from smart_library.application.llm.ollama_client import OllamaClient
-from smart_library.prompts.metadata_extraction_prompt import MetadataExtractionPrompt
-from smart_library.application.services.document_service import DocumentService
-import json
+from smart_library.infrastructure.llm.clients.ollama_client import OllamaClient
+from smart_library.infrastructure.llm.prompts.metadata_extraction_prompt import MetadataExtractionPrompt
+from smart_library.domain.services.document_service import DocumentService
+from smart_library.infrastructure.llm.utils.output_utils import extract_json_from_llm_response
 
 class SimpleMetadataExtractor:
     """
@@ -15,15 +15,10 @@ class SimpleMetadataExtractor:
         self.prompt_builder = MetadataExtractionPrompt(instructions=prompt_instructions)
 
     def extract(self, document: Document, fields: list[str] = None, text: str = None) -> Document:
-        """
-        Extract metadata from the document's pages using an LLM and update the document's fields.
-        :param document: The Document object to update.
-        :param fields: List of fields to extract (defaults to all Document fields except id, created_at, modified_at, metadata).
-        :param text: Optional text to use for extraction (defaults to all pages' text).
-        """
-        # Determine which fields to extract
+        # Use bibliographic fields and types by default
         if fields is None:
-            fields = [f for f in Document.__dataclass_fields__ if f not in ("id", "created_at", "modified_at", "metadata")]
+            field_types = document.get_bibliographic_field_types()
+            fields = [f"{name} ({type_})" for name, type_ in field_types.items()]
 
         # Get the text to analyze
         if text is None:
@@ -33,12 +28,15 @@ class SimpleMetadataExtractor:
         # Build the prompt
         prompt = self.prompt_builder.get_prompt(text, fields)
 
+        print("Metadata Extraction Prompt:\n", prompt)
+
         # Call the LLM
         response = self.llm.generate(prompt)
-        try:
-            metadata = json.loads(response)
-        except Exception:
-            metadata = {}
+        print("LLM Response:\n", response)
+
+        # Use the output utils to extract JSON
+        metadata = extract_json_from_llm_response(response)
+        print("Extracted Metadata:\n", metadata)
 
         # Update the document fields with extracted metadata
         for key, value in metadata.items():

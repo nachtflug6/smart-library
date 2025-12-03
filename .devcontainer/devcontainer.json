@@ -42,7 +42,11 @@
 				"python.defaultInterpreterPath": "${workspaceFolder}/.venv/bin/python"
 			}
 		}
-	}
+	},
+
+	"runArgs": [
+		"--network=smartlib-net"
+	]
 
 	// Uncomment to connect as an existing user other than the container default. More info: https://aka.ms/dev-containers-non-root.
 	// "remoteUser": "devcontainer"

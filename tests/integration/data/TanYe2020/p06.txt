@@ -1,0 +1,117 @@
+Table 2: The AUC scores (mean ± std) of in-hospital mortality risk prediction with different observation windows for eICU.
+Red represents the best performance while Blue and Green indicate the second and third best performance, respectively.
+Models 
+1 day 
+2 days 
+3 days 
+4 days 
+5 days 
+6 days 
+LR (Hosmer et al. 2013) 
+0.738 ± 0.003 0.768 ± 0.003 0.781 ± 0.003 0.792 ± 0.003 0.800 ± 0.003 0.801 ± 0.003 
+RF (Breiman 2001) 
+0.775 ± 0.004 0.792 ± 0.004 0.801 ± 0.003 0.813 ± 0.003 0.823 ± 0.003 0.820 ± 0.003 
+IndRNN (Li et al. 2018) 
+0.820 ± 0.003 0.838 ± 0.003 0.852 ± 0.003 0.862 ± 0.003 0.867 ± 0.003 0.877 ± 0.002 
+GRU-raw (Chung et al. 2014) 
+0.756 ± 0.004 0.825 ± 0.003 0.845 ± 0.003 0.857 ± 0.003 0.867 ± 0.003 0.875 ± 0.003 
+GRU (Chung et al. 2014) 
+0.816 ± 0.003 0.836 ± 0.003 0.852 ± 0.003 0.866 ± 0.003 0.869 ± 0.003 0.875 ± 0.002 
+T-LSTM (Baytas et al. 2017) 
+0.793 ± 0.003 0.819 ± 0.003 0.836 ± 0.003 0.845 ± 0.003 0.860 ± 0.003 0.869 ± 0.003 
+T-LSTM-ND (Baytas et al. 2017) 
+0.820 ± 0.004 0.839 ± 0.004 0.854 ± 0.004 0.867 ± 0.004 0.874 ± 0.004 0.879 ± 0.004 
+GRU-D (Che et al. 2018) 
+0.737 ± 0.004 0.803 ± 0.004 0.827 ± 0.003 0.849 ± 0.003 0.858 ± 0.003 0.861 ± 0.003 
+InterpNet (Shukla and Marlin 2019) 0.720 ± 0.004 0.805 ± 0.004 0.834 ± 0.003 0.847 ± 0.003 0.854 ± 0.003 0.857 ± 0.003 
+T-GRU-raw 
+0.768 ± 0.004 0.830 ± 0.003 0.847 ± 0.003 0.861 ± 0.003 0.870 ± 0.003 0.876 ± 0.002 
+T-GRU-raw+s 
+0.777 ± 0.004 0.832 ± 0.003 0.851 ± 0.003 0.863 ± 0.003 0.870 ± 0.003 0.880 ± 0.002 
+T-GRU 
+0.822 ± 0.003 0.844 ± 0.003 0.859 ± 0.003 0.870 ± 0.003 0.875 ± 0.003 0.881 ± 0.002 
+T-GRU+u 
+0.826 ± 0.003 0.854 ± 0.003 0.866 ± 0.003 0.877 ± 0.002 0.883 ± 0.003 0.891 ± 0.002 
+DATA-GRU 
+0.836 ± 0.003 0.859 ± 0.003 0.872 ± 0.003 0.884 ± 0.002 0.890 ± 0.002 0.896 ± 0.002 
+ 
+independent of each other in the same layer but are con-
+nected across different layers (Li et al. 2018).
+• T-LSTM and T-LSTM-ND: T-LSTM (Baytas et al.
+2017) described in the introduction section. Since T-
+LSTM is designed for longitudinal records, it decomposes
+data into long and short memory, which may not be suit-
+able for ICU data. So we also compare with T-LSTM
+without such decomposition structure (T-LSTM-ND).
+• GRU-D: GRU-D (Che et al. 2018) described in the intro-
+duction section.
+• InterpNet: InterpNet (Shukla and Marlin 2019) de-
+scribed in the introduction section.
+• DATA-GRU variants: Besides above methods, we con-
+sider six variants of DATA-GRU to verify the effective-
+ness of each component: (a) standard GRU for original
+records (GRU-raw) and augmented records (GRU); (b) T-
+GRU and T-GRU-raw are GRU and GRU-raw with the
+time-aware mechanism; (c) T-GRU-raw+s is T-GRU-raw
+with symptom-aware attention; (d) T-GRU+u is T-GRU
+with unreliability-aware attention.
+Results and Discussion
+The AUC scores of DATA-GRU and comparing methods for
+MIMIC-III and eICU are provided in Table 1 and Table 2. It
+can be seen that the AUC scores of DATA-GRU are continu-
+ally larger than that of other methods for both datasets. E.g.,
+for the in-hospital mortality prediction of MIMIC-III, the
+AUC score of DATA-GRU is 0.919, which is signiﬁcantly
+larger than 0.903 achieved by InterpNet (Shukla and Marlin
+2019). These results demonstrate that DATA-GRU achieves
+the best performance regardless of the prediction levels and
+the lengths of observation window. There are several pos-
+sible reasons. Firstly, DATA-GRU introduces a time-aware
+structure to directly handle irregular intervals without the
+necessity of processing IMTS into equally-spaced, thus suc-
+cessfully preserving the contained useful information on the
+dynamics of patients’ health status. Secondly, DATA-GRU
+designs novel dual-attention consisting of two novel atten-
+tion mechanisms to handle missing values, thus capturing
+useful information from different views. Furthermore, all the
+parameters of DATA-GRU are optimized jointly, ensuring
+different components collaborate well to achieve global op-
+timal. Besides, several other observations are drawn:
+Firstly, DATA-GRU outperforms InterpNet (Shukla and
+Marlin 2019) by a large margin. InterpNet is the repre-
+sentative of processing IMTS into equally spaced, which
+may damage the medical considerations behind the sampling
+characteristic of EHR data and do not perform well when the
+number of original records is small, e.g., in-hospital mor-
+tality prediction for eICU with one day’s observation data.
+In comparison, DATA-GRU avoids processing IMTS into
+equally spaced by introducing a time-aware structure to han-
+dle irregular intervals, achieving better results.
+Secondly, DATA-GRU outperforms GRU-D (Che et al.
+2018) and T-LSTM (including T-LSTM-ND, Baytas et al.
+2017) signiﬁcantly. This is because GRU-D and T-LSTM are
+unable to identify the differences in the reliability of differ-
+ent data points and thus cannot adjust the assigned weights.
+As a result, imputed values could play equal contributions
+with actual records even when they deviate from reality, thus
+severely affecting ﬁnal prediction results.
+Thirdly, variations of RNN with the time-aware mecha-
+nism generally outperform variations without such mech-
+anism. E.g., for MIMIC-III, at the 1-day prediction level,
+AUC scores of T-GRU and T-LSTM-ND are 0.902 and
+0.899, which are larger than 0.894 and 0.892 achieved by
+IndRNN and GRU. These results demonstrate that the intro-
+duction of the time-aware mechanism promotes the capac-
+ity of handling irregularly spaced data. Experimental results
+show that T-LSTM does not perform well for these tasks,
+which is probably because its decomposition structure dam-
+ages the short-term information in ICU data.
+Finally, modeling augmented records usually results in
+better results than directly modeling original records, e.g.,
+for all the prediction tasks in eICU, T-GRU outperforms
+T-GRU-raw and T-GRU+u surpasses T-GRU-raw+s. This
+is probably because original EHR data is highly complex
+with both missing values and varying intervals, due to
+which the contained medical knowledge is difﬁcult to ex-
+tract. Conversely, temporal dependencies contained in aug-
+935

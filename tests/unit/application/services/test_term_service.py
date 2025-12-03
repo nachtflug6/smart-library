@@ -2,7 +2,7 @@ import pytest
 from unittest.mock import Mock
 from datetime import datetime
 from smart_library.domain.entities.term import Term
-from smart_library.application.services.term_service import TermService
+from smart_library.domain.services.term_service import TermService
 
 @pytest.fixture
 def mock_repo():

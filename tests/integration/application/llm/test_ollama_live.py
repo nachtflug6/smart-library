@@ -10,6 +10,7 @@ def test_ollama_generate_basic():
     )
     prompt = "Say hello in one sentence."
     response = client.generate(prompt)
+    print("LLM response:", response)
     assert isinstance(response, str)
     assert len(response.strip()) > 0
     assert "hello" in response.lower()
@@ -22,6 +23,7 @@ def test_ollama_embedding_basic():
     )
     text = "hello world"
     embedding = embedder.embed(text)
+    print("Embedding output:", embedding)
     assert isinstance(embedding, list)
     assert all(isinstance(x, float) for x in embedding)
     assert len(embedding) > 0

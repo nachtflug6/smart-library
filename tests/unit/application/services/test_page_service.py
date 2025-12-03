@@ -2,7 +2,7 @@ import pytest
 from unittest.mock import Mock
 from datetime import datetime
 from smart_library.domain.entities.page import Page
-from smart_library.application.services.page_service import PageService
+from smart_library.domain.services.page_service import PageService
 
 @pytest.fixture
 def mock_page_repo():

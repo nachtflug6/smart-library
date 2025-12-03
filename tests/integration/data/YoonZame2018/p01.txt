@@ -1,0 +1,104 @@
+IEEE TRANSACTIONS ON BIOMEDICAL ENGINEERING, VOL. 66, NO. 5, MAY 2019
+1477
+Estimating Missing Data in Temporal Data
+Streams Using Multi-Directional Recurrent
+Neural Networks
+Jinsung Yoon
+, William R. Zame, and Mihaela van der Schaar, Fellow, IEEE
+Abstract—Missing data is a ubiquitous problem. It is
+especially challenging in medical settings because many
+streams of measurements are collected at different—and
+often irregular—times. Accurate estimation of the missing
+measurements is critical for many reasons, including di-
+agnosis, prognosis, and treatment. Existing methods ad-
+dress this estimation problem by interpolating within data
+streams or imputing across data streams (both of which
+ignore important information) or ignoring the temporal as-
+pect of the data and imposing strong assumptions about
+the nature of the data-generating process and/or the pat-
+tern of missing data (both of which are especially prob-
+lematic for medical data). We propose a new approach,
+based on a novel deep learning architecture that we call
+a Multi-directional Recurrent Neural Network that interpo-
+lates within data streams and imputes across data streams.
+We demonstrate the power of our approach by applying it to
+ﬁve real-world medical datasets. We show that it provides
+dramatically improved estimation of missing measurements
+in comparison to 11 state-of-the-art benchmarks (including
+Spline and Cubic Interpolations, MICE, MissForest, matrix
+completion, and several RNN methods); typical improve-
+ments in Root Mean Squared Error are between 35%–50%.
+Additional experiments based on the same ﬁve datasets
+demonstrate that the improvements provided by our method
+are extremely robust.
+Index Terms—Missing data, temporal data streams,
+imputation, recurrent neural nets.
+I. INTRODUCTION
+M
+ISSING data/measurements present a ubiquitous prob-
+lem. The problem is especially challenging in medical
+settings which present time series containing many streams of
+measurements that are sampled at different and irregular times,
+and is especially important in these settings because accurate
+Manuscript received November 23, 2017; revised February 28, 2018,
+June 19, 2018, and September 9, 2018; accepted October 1, 2018.
+Date of publication October 8, 2018; date of current version April 19,
+2019. This work was supported in part by the Ofﬁce of Naval Research
+(ONR) and in part by the National Science Foundation under Grants
+ECCS1462245, ECCS1533983, and ECCS1407712. (Corresponding
+author: Jinsung Yoon.)
+J. Yoon is with the Department of Electrical and Computer Engineer-
+ing, University of California, Los Angeles, CA 90095 USA (e-mail:,
+jsyoon0823@ucla.edu).
+W. R. Zame is with the Department of Economics and Mathematics,
+University of California.
+M. van der Schaar is with the Department of Engineering Science,
+University of Oxford and also with the Alan Turing Institute.
+Digital Object Identiﬁer 10.1109/TBME.2018.2874712
+estimation of these missing measurements is often critical for
+accurate diagnosis, prognosis and treatment, as well as for ac-
+curate modeling and statistical analyses. This paper presents a
+new method for estimating missing measurements in time series
+data, based on a novel deep learning architecture. By compar-
+ing our method with current state-of-the-art benchmarks on a
+variety of real-world medical datasets, we demonstrate that our
+method is much more accurate in estimating missing measure-
+ments, and that this accuracy is reﬂected in improved prediction
+of outcomes.
+The most familiar methods for estimating missing data fol-
+low one of three approaches, usually called interpolation, im-
+putation and matrix completion. Interpolation methods such as
+[1], [2] exploit the correlation among measurements at differ-
+ent times within each stream but ignore the correlation across
+streams. Imputation methods such as [3]–[6] exploit the corre-
+lation among measurements at the same time across different
+streams but ignore the correlation within streams. Because med-
+ical measurements are frequently correlated both within streams
+and across streams (e.g., blood pressure at a given time is cor-
+related both with blood pressure at other times and with heart
+rate), each of these approaches loses potentially important infor-
+mation. Matrix completion methods such as [7]–[10] do exploit
+correlations within and across streams, but assume that the data
+is static – hence ignore the temporal component of the data –
+or that the data is perfectly synchronized – an assumption that
+is routinely violated in medical time series data. Some of these
+methods also make modeling assumptions about the nature of
+the data-generating process or of the pattern of missing data. Our
+approach is expressly designed to exploit both the correlation
+within streams and the correlation across streams and to take
+into account the temporal and non-synchronous character of the
+data; our approach makes no modeling assumptions about the
+data-generating process or the pattern of missing data. (We do
+assume – as is standard in most of the literature – that the data is
+missing at random [1]. Dealing with data that is not missing at
+random [11] presents additional challenges and is left for future
+works.)
+Our method relies on a novel neural network architecture that
+we call a Multi-directional Recurrent Neural Network (M-RNN).
+Our M-RNN contains both an interpolation block and an im-
+putation block and it trains these blocks simultaneously, rather
+than separately (See Fig. 1 and 2). Like a bi-directional RNN
+(Bi-RNN) [12], an M-RNN operates forward and backward
+0018-9294 © 2018 IEEE. Personal use is permitted, but republication/redistribution requires IEEE permission.
+See http://www.ieee.org/publications standards/publications/rights/index.html for more information.
+Authorized licensed use limited to: Chalmers University of Technology Sweden. Downloaded on October 28,2024 at 18:11:05 UTC from IEEE Xplore.  Restrictions apply. 
