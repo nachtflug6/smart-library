@@ -1,6 +1,6 @@
 from smart_library.domain.entities.document import Document
-from smart_library.infrastructure.llm.clients.ollama_client import OllamaClient
-from smart_library.infrastructure.llm.prompts.metadata_extraction_prompt import MetadataExtractionPrompt
+from smart_library.infrastructure.llm.clients.llama3_client import Llama3Client
+from smart_library.infrastructure.llm.prompts.llama3_extraction_prompt import Llama3ExtractionPrompt
 from smart_library.domain.services.document_service import DocumentService
 from smart_library.infrastructure.llm.utils.output_utils import extract_json_from_llm_response
 
@@ -9,30 +9,35 @@ class SimpleMetadataExtractor:
     Extracts metadata from a Document's pages using an LLM and updates the Document.
     """
 
-    def __init__(self, ollama_url, ollama_model, document_service=None, prompt_instructions=None):
-        self.llm = OllamaClient(ollama_url, ollama_model)
-        self.document_service = document_service or DocumentService.default_instance()
-        self.prompt_builder = MetadataExtractionPrompt(instructions=prompt_instructions)
+    DEFAULT_TASK = "metadata extraction"
+    DEFAULT_INSTRUCTIONS = (
+        "Extract bibliographic metadata from the provided document text. "
+        "Return only a single JSON object containing exactly the requested fields. "
+        "If a field cannot be extracted directly from the text, set its value to null. "
+        "Do not infer or hallucinate missing information. "
+        "For list fields, return a JSON list; for all others, return a JSON value. "
+        "Do not include explanations, comments, or text outside the JSON object."
+    )
 
-    def extract(self, document: Document, fields: list[str] = None, text: str = None) -> Document:
-        # Use bibliographic fields and types by default
-        if fields is None:
-            field_types = document.get_bibliographic_field_types()
-            fields = [f"{name} ({type_})" for name, type_ in field_types.items()]
+    def __init__(self, ollama_url, ollama_model, document_service=None, prompt_instructions=None):
+        self.llm = Llama3Client()
+        self.document_service = document_service or DocumentService.default_instance()
+        self.task = self.DEFAULT_TASK
+        self.instructions = prompt_instructions or self.DEFAULT_INSTRUCTIONS
+        self.prompt_builder = Llama3ExtractionPrompt(task=self.task, instructions=self.instructions)
+
+    def extract(self, document: Document, group: str = "bibliographic", text: str = None) -> Document:
 
         # Get the text to analyze
         if text is None:
             pages = self.document_service.get_pages(document.id)
-            text = "\n".join([p.full_text or "" for p in pages])
+            text = pages[0].full_text if pages and pages[0].full_text else ""
 
         # Build the prompt
-        prompt = self.prompt_builder.get_prompt(text, fields)
-
-        print("Metadata Extraction Prompt:\n", prompt)
+        prompt_dict = self.prompt_builder.get_prompt(text, document, group)
 
         # Call the LLM
-        response = self.llm.generate(prompt)
-        print("LLM Response:\n", response)
+        response = self.llm.chat(prompt_dict)
 
         # Use the output utils to extract JSON
         metadata = extract_json_from_llm_response(response)

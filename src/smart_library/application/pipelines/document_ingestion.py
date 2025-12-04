@@ -73,9 +73,8 @@ class DocumentIngestionService:
         # 4. Optional metadata extraction (only on first page)
         if extract_metadata and first_page_text:
             if self.metadata_extractor:
-                doc.full_text = first_page_text
                 doc_with_metadata = self.metadata_extractor.extract(doc)
-                self.document_service.update_document_metadata(doc_id, doc_with_metadata.metadata)
+                self.document_service.update_document(doc_with_metadata)
                 # Optionally update other fields (title, authors, etc.) if needed
 
         return doc_id

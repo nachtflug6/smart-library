@@ -30,6 +30,7 @@ class OllamaConfig:
     PORT = 11434
 
     GENERATE_URL = f"http://{GENERATE_HOST}:{PORT}/api/generate"
+    CHAT_URL = f"http://{GENERATE_HOST}:{PORT}/api/chat"
     EMBEDDING_URL = f"http://{EMBEDDING_HOST}:{PORT}/api/embeddings"
 
     GENERATION_MODEL = "llama3"
