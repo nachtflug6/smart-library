@@ -1,16 +1,12 @@
 // For format details, see https://aka.ms/devcontainer.json. For config options, see the
 // README at: https://github.com/devcontainers/templates/tree/main/src/docker-existing-dockerfile
 {
-	"name": "Existing Dockerfile",
-	"build": {
-		// Sets the run context to one level up instead of the .devcontainer folder.
-		"context": "..",
-		// Update the 'dockerFile' property if you aren't using the standard 'Dockerfile' filename.
-		"dockerfile": "../Dockerfile"
-	},
+	"name": "Smart Library Dev",
 	"containerEnv": {
 		"OPENAI_API_KEY": "${localEnv:OPENAI_API_KEY}"
 	},
+
+	"overrideCommand": false,
 
 	// Features to add to the dev container. More info: https://containers.dev/features.
 	"features": {
@@ -19,11 +15,11 @@
 		"ghcr.io/devcontainers/features/github-cli:1": {} // optional, for `gh`
 	},
 
-	// Use 'forwardPorts' to make a list of ports inside the container available locally.
-	// "forwardPorts": [],
-
-	// Run after the container is created to confirm git is installed.
-	"postCreateCommand": "python3 -m venv .venv && .venv/bin/pip install -r requirements.txt || true",
+	"dockerComposeFile": [
+		"../docker-compose.yml"
+	],
+	"service": "devcontainer",
+	"workspaceFolder": "/workspace",
 
 	// Configure tool-specific properties.
 	"customizations": {
@@ -44,9 +40,8 @@
 		}
 	},
 
-	"runArgs": [
-		"--network=smartlib-net"
-	]
+	// Run after the container is created to confirm git is installed.
+	"postCreateCommand": "python3 -m venv .venv && .venv/bin/pip install -r requirements.txt || true"
 
 	// Uncomment to connect as an existing user other than the container default. More info: https://aka.ms/dev-containers-non-root.
 	// "remoteUser": "devcontainer"

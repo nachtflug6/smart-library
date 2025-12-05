@@ -1,0 +1,72 @@
+version: "3.9"
+
+services:
+  grobid:
+    image: grobid/grobid:0.8.2-full
+    container_name: grobid
+    ports:
+      - "8070:8070"
+      - "8071:8071"
+    networks:
+      - smartlib-net
+    runtime: nvidia      # GPU support
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - capabilities: [gpu]
+
+  ollama_llama3_1:
+    image: ollama/ollama:latest
+    container_name: ollama_llama3_1
+    ports:
+      - "11434:11434"
+    networks:
+      - smartlib-net
+    volumes:
+      - ollama_data:/root/.ollama
+    command: >
+      /bin/sh -c "
+        ollama serve &
+        sleep 2 &&
+        ollama pull llama3.1:8b &&
+        wait
+      "
+
+  ollama_embed_1:
+    image: ollama/ollama:latest
+    container_name: ollama_embed_1
+    ports:
+      - "11436:11434"   # external port -> internal 11434
+    networks:
+      - smartlib-net
+    volumes:
+      - ollama_data:/root/.ollama
+    command: >
+      /bin/sh -c "
+        ollama serve &
+        sleep 2 &&
+        ollama pull nomic-embed-text &&
+        wait
+      "
+
+  devcontainer:
+    build:
+      context: .
+      dockerfile: .devcontainer/Dockerfile
+    container_name: smartlib_dev
+    networks:
+      - smartlib-net
+    volumes:
+      - ./:/workspace:cached
+    depends_on:
+      - grobid
+      - ollama_llama3_1
+      - ollama_embed_1
+
+networks:
+  smartlib-net:
+    driver: bridge
+
+volumes:
+  ollama_data:

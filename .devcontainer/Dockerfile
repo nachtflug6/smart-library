@@ -14,4 +14,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # Use vscode user after system install
 USER vscode
 
-WORKDIR /workspaces/smart-library
+WORKDIR /workspace
+
+CMD ["sleep", "infinity"]
