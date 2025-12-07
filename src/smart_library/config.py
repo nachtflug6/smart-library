@@ -22,17 +22,14 @@ CHUNKER_CONFIG = {
 }
 
 class OllamaConfig:
-    # containers on the same Docker network
-    GENERATE_HOST = os.getenv("OLLAMA_GENERATE_HOST", "ollama_llama3")
-    EMBEDDING_HOST = os.getenv("OLLAMA_EMBED_HOST", "ollama_embed")
-
-    # internal container port always stays 11434
+    # both services use the same container now
+    HOST = os.getenv("OLLAMA_HOST", "ollama")
     PORT = 11434
 
-    GENERATE_URL = f"http://{GENERATE_HOST}:{PORT}/api/generate"
-    CHAT_URL = f"http://{GENERATE_HOST}:{PORT}/api/chat"
-    EMBEDDING_URL = f"http://{EMBEDDING_HOST}:{PORT}/api/embeddings"
+    GENERATE_URL = f"http://{HOST}:{PORT}/api/generate"
+    CHAT_URL = f"http://{HOST}:{PORT}/api/chat"
+    EMBEDDING_URL = f"http://{HOST}:{PORT}/api/embeddings"
 
-    GENERATION_MODEL = "llama3"
+    GENERATION_MODEL = "llama3.1:8b"
     EMBEDDING_MODEL = "nomic-embed-text"
 

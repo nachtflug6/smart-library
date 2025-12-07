@@ -16,39 +16,24 @@ services:
           devices:
             - capabilities: [gpu]
 
-  ollama_llama3_1:
+  ollama:
     image: ollama/ollama:latest
-    container_name: ollama_llama3_1
+    container_name: ollama
     ports:
       - "11434:11434"
-    networks:
-      - smartlib-net
     volumes:
       - ollama_data:/root/.ollama
+    networks:
+      - smartlib-net
+    entrypoint: ["/bin/sh", "-c"]
     command: >
-      /bin/sh -c "
-        ollama serve &
-        sleep 2 &&
-        ollama pull llama3.1:8b &&
-        wait
       "
+      ollama serve &
+      sleep 4 &&
+      ollama pull llama3.1:8b &&
+      ollama pull nomic-embed-text &&
+      wait"
 
-  ollama_embed_1:
-    image: ollama/ollama:latest
-    container_name: ollama_embed_1
-    ports:
-      - "11436:11434"   # external port -> internal 11434
-    networks:
-      - smartlib-net
-    volumes:
-      - ollama_data:/root/.ollama
-    command: >
-      /bin/sh -c "
-        ollama serve &
-        sleep 2 &&
-        ollama pull nomic-embed-text &&
-        wait
-      "
 
   devcontainer:
     build:
@@ -61,8 +46,7 @@ services:
       - ./:/workspace:cached
     depends_on:
       - grobid
-      - ollama_llama3_1
-      - ollama_embed_1
+      - ollama
 
 networks:
   smartlib-net:

@@ -10,7 +10,7 @@ class RealDocumentService:
         return RealDocumentService()
     def get_pages(self, doc_id):
         # Use a real test page from the integration data folder
-        with open("/workspaces/smart-library/tests/integration/data/Ma2022/p01.txt", "r") as f:
+        with open("./tests/integration/data/Ma2022/p01.txt", "r") as f:
             page_text = f.read()
         return [Page(
             page_number=1,
@@ -28,7 +28,7 @@ def test_metadata_extraction_with_ollama():
         abstract=None
     )
     extractor = SimpleMetadataExtractor(
-        ollama_url=OllamaConfig.GENERATE_URL,
+        ollama_url=OllamaConfig.CHAT_URL,
         ollama_model=OllamaConfig.GENERATION_MODEL,
         document_service=RealDocumentService()
     )

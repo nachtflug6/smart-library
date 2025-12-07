@@ -16,4 +16,12 @@ USER vscode
 
 WORKDIR /workspace
 
+# Install Python dependencies (cached)
+COPY requirements.txt /workspace/
+RUN pip install --user -r /workspace/requirements.txt
+
+# # Copy the entire project
+# COPY . /workspace/
+# RUN pip install --user -e /workspace/
+
 CMD ["sleep", "infinity"]

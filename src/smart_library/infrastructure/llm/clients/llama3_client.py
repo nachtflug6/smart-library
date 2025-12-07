@@ -4,7 +4,7 @@ from smart_library.config import OllamaConfig
 class Llama3Client:
     def __init__(self):
         self.url = OllamaConfig.CHAT_URL
-        self.model = "llama3"
+        self.model = OllamaConfig.GENERATION_MODEL
 
     def chat(self, prompt: dict):
         messages = []
