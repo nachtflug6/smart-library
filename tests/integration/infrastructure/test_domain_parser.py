@@ -1,7 +1,7 @@
 import pytest
 from pathlib import Path
 from smart_library.infrastructure.grobid.service import GrobidService
-from smart_library.infrastructure.parsers.domain_parser import parse_grobid_struct_to_domain
+from smart_library.infrastructure.parsers.document import parse_document
 from smart_library.domain.entities.document import Document
 from smart_library.domain.entities.page import Page
 from smart_library.domain.entities.text import Text
@@ -15,7 +15,7 @@ def test_tei_domain_parser_from_grobid_struct():
     service = GrobidService()
     grobid_struct = service.parse_fulltext(pdf_path)
 
-    doc = parse_grobid_struct_to_domain(grobid_struct, source_path=str(pdf_path))
+    doc = parse_document(grobid_struct, source_path=str(pdf_path))
 
     assert isinstance(doc, Document)
     assert isinstance(doc.pages, list)

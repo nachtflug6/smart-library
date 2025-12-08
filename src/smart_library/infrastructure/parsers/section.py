@@ -1,4 +1,5 @@
 from smart_library.domain.entities.text import Text
+from smart_library.domain.constants.text_types import TextType
 from .paragraph import parse_paragraphs
 from smart_library.infrastructure.parsers.utils import extract_page_number_from_coords
 
@@ -23,7 +24,7 @@ def parse_sections(struct, page_map):
                 section_text_obj = Text(
                     title=section_title,
                     content=section_title,
-                    text_type="section",
+                    text_type=TextType.SECTION,
                     document_id=None,  # will set later
                     page_id=page_id,   # set from coords if available
                     parent_id=None,    # will set to doc_id later

@@ -1,4 +1,5 @@
 from smart_library.domain.entities.text import Text
+from smart_library.domain.constants.text_types import TextType
 from smart_library.infrastructure.parsers.utils import extract_page_number_from_coords
 
 def parse_paragraphs(section, section_text_obj, page_map):
@@ -19,7 +20,8 @@ def parse_paragraphs(section, section_text_obj, page_map):
         para_text_obj = Text(
             title=None,
             content=norm_text,
-            text_type="paragraph",
+            character_count=len(norm_text) if norm_text else 0,
+            text_type=TextType.PARAGRAPH,
             document_id=None,  # will set later
             page_id=page_id,
             parent_id=getattr(section_text_obj, "id", None) if section_text_obj else None,
