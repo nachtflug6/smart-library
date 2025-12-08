@@ -18,7 +18,7 @@ def test_grobid_mapper_xml_to_dict(xml_file):
         xml_str = f.read()
 
     mapper = GrobidMapper()
-    result = mapper.xml_to_header(xml_str)
+    result = mapper.xml_to_struct(xml_str)
 
     # assert isinstance(result, dict)
     # assert "metadata" in result
@@ -28,4 +28,4 @@ def test_grobid_mapper_xml_to_dict(xml_file):
     # for key in ["title", "abstract", "publisher", "publication_date"]:
     #     assert key in result["metadata"]
     print(f"GrobidMapper.xml_to_dict output for {xml_file} (truncated):")
-    print(str(result))
+    print(str(result["body"]))  # Print first 500 characters of body for inspection
