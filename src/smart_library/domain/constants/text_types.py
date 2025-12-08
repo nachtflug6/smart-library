@@ -12,3 +12,5 @@ class TextType(str, Enum):
     NOTE = "note"
     PARAPHRASE = "paraphrase"
     EXAMPLE = "example"
+    PARAGRAPH = "paragraph"
+    SECTION = "section"

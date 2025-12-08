@@ -1,7 +1,7 @@
 from dataclasses import dataclass, field
 from typing import Optional, List
-
 from smart_library.domain.entities.entity import Entity
+from smart_library.domain.entities.text import Text
 
 @dataclass
 class Page(Entity):
@@ -24,3 +24,5 @@ class Page(Entity):
     has_tables: Optional[bool] = None
     has_figures: Optional[bool] = None
     has_equations: Optional[bool] = None
+
+    texts: List[Text] = field(default_factory=list)  # <-- Add this

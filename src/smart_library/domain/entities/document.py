@@ -1,6 +1,8 @@
 from dataclasses import dataclass, field
 from typing import Optional, List, Dict
 from smart_library.domain.entities.entity import Entity
+from smart_library.domain.entities.page import Page
+from smart_library.domain.entities.text import Text
 from datetime import datetime
 
 @dataclass
@@ -49,6 +51,8 @@ class Document(Entity):
         default=None,
         metadata={"format": "integer, number of pages", "group": "structure", "llm_type": "integer"}
     )
+    pages: List[Page] = field(default_factory=list)
+    texts: List[Text] = field(default_factory=list)
 
     # -----------------------------
     # Bibliographic Metadata
