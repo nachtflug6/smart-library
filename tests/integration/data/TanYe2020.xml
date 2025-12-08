@@ -1,0 +1,2458 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TEI
+    xmlns="http://www.tei-c.org/ns/1.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xsi:schemaLocation="http://www.tei-c.org/ns/1.0 https://raw.githubusercontent.com/kermitt2/grobid/master/grobid-home/schemas/xsd/Grobid.xsd">
+    <teiHeader xml:lang="en">
+        <fileDesc>
+            <titleStmt>
+                <title level="a" type="main" coords="1,158.69,97.62,294.63,12.83;1,140.17,113.56,331.66,12.83">DATA-GRU: Dual-Attention Time-Aware Gated Recurrent Unit for Irregular Multivariate Time Series</title>
+            </titleStmt>
+            <publicationStmt>
+                <publisher/>
+                <availability status="unknown">
+                    <licence/>
+                </availability>
+            </publicationStmt>
+            <sourceDesc>
+                <biblStruct>
+                    <analytic>
+                        <author>
+                            <persName coords="1,119.69,137.31,73.01,10.69">
+                                <forename type="first">Qingxiong</forename>
+                                <surname>Tan</surname>
+                            </persName>
+                            <affiliation key="aff0" coords="1,152.66,162.70,310.66,8.93">
+                                <orgName type="department">Department of Computer Science</orgName>
+                                <orgName type="institution">Hong Kong Baptist University</orgName>
+                                <address>
+                                    <settlement>Hong Kong</settlement>
+                                </address>
+                            </affiliation>
+                        </author>
+                        <author>
+                            <persName coords="1,206.03,137.31,43.28,10.69">
+                                <forename type="first">Mang</forename>
+                                <surname>Ye</surname>
+                            </persName>
+                            <email>mangye@comp.hkbu.edu.hk</email>
+                            <affiliation key="aff0" coords="1,152.66,162.70,310.66,8.93">
+                                <orgName type="department">Department of Computer Science</orgName>
+                                <orgName type="institution">Hong Kong Baptist University</orgName>
+                                <address>
+                                    <settlement>Hong Kong</settlement>
+                                </address>
+                            </affiliation>
+                        </author>
+                        <author>
+                            <persName coords="1,262.23,137.31,64.22,10.69">
+                                <forename type="first">Baoyao</forename>
+                                <surname>Yang</surname>
+                            </persName>
+                            <email>byyang@comp.hkbu.edu.hk</email>
+                            <affiliation key="aff0" coords="1,152.66,162.70,310.66,8.93">
+                                <orgName type="department">Department of Computer Science</orgName>
+                                <orgName type="institution">Hong Kong Baptist University</orgName>
+                                <address>
+                                    <settlement>Hong Kong</settlement>
+                                </address>
+                            </affiliation>
+                        </author>
+                        <author>
+                            <persName coords="1,340.01,137.31,45.27,10.69">
+                                <forename type="first">Si-Qi</forename>
+                                <surname>Liu</surname>
+                            </persName>
+                            <email>siqiliu@comp.hkbu.edu.hk</email>
+                            <affiliation key="aff0" coords="1,152.66,162.70,310.66,8.93">
+                                <orgName type="department">Department of Computer Science</orgName>
+                                <orgName type="institution">Hong Kong Baptist University</orgName>
+                                <address>
+                                    <settlement>Hong Kong</settlement>
+                                </address>
+                            </affiliation>
+                        </author>
+                        <author>
+                            <persName coords="1,398.23,137.31,82.60,10.69">
+                                <forename type="first">Andy</forename>
+                                <forename type="middle">Jinhua</forename>
+                                <surname>Ma</surname>
+                            </persName>
+                            <affiliation key="aff1" coords="1,142.85,174.36,330.28,8.93">
+                                <orgName type="department">School of Data and Computer Science</orgName>
+                                <orgName type="institution">Sun Yat-Sen University</orgName>
+                                <address>
+                                    <settlement>Guangzhou</settlement>
+                                    <country key="CN">China</country>
+                                </address>
+                            </affiliation>
+                        </author>
+                        <author>
+                            <persName coords="1,152.89,150.41,87.79,9.75">
+                                <forename type="first">Terry</forename>
+                                <surname>Cheuk-Fung</surname>
+                            </persName>
+                        </author>
+                        <author>
+                            <persName coords="1,243.41,150.41,14.47,9.75">
+                                <surname>Yip</surname>
+                            </persName>
+                            <affiliation key="aff2" coords="1,118.46,186.02,379.08,8.93">
+                                <orgName type="department">Department of Medicine and Therapeutics</orgName>
+                                <orgName type="institution">The Chinese University of Hong Kong</orgName>
+                                <address>
+                                    <settlement>Hong Kong</settlement>
+                                </address>
+                            </affiliation>
+                        </author>
+                        <author>
+                            <persName coords="1,270.16,150.41,76.67,9.75">
+                                <forename type="first">Lai-Hung</forename>
+                                <surname>Grace</surname>
+                            </persName>
+                        </author>
+                        <author>
+                            <persName coords="1,349.56,150.41,23.83,9.75">
+                                <surname>Wong</surname>
+                            </persName>
+                            <affiliation key="aff2" coords="1,118.46,186.02,379.08,8.93">
+                                <orgName type="department">Department of Medicine and Therapeutics</orgName>
+                                <orgName type="institution">The Chinese University of Hong Kong</orgName>
+                                <address>
+                                    <settlement>Hong Kong</settlement>
+                                </address>
+                            </affiliation>
+                        </author>
+                        <author>
+                            <persName coords="1,386.81,150.41,63.33,9.75">
+                                <forename type="first">Pong</forename>
+                                <forename type="middle">C</forename>
+                                <surname>Yuen</surname>
+                            </persName>
+                            <email>pcyuen@comp.hkbu.edu.hk</email>
+                            <affiliation key="aff0" coords="1,152.66,162.70,310.66,8.93">
+                                <orgName type="department">Department of Computer Science</orgName>
+                                <orgName type="institution">Hong Kong Baptist University</orgName>
+                                <address>
+                                    <settlement>Hong Kong</settlement>
+                                </address>
+                            </affiliation>
+                        </author>
+                        <title level="a" type="main" coords="1,158.69,97.62,294.63,12.83;1,140.17,113.56,331.66,12.83">DATA-GRU: Dual-Attention Time-Aware Gated Recurrent Unit for Irregular Multivariate Time Series</title>
+                    </analytic>
+                    <monogr>
+                        <imprint>
+                            <date/>
+                        </imprint>
+                    </monogr>
+                    <idno type="MD5">D93CE0817A45F2A2DA9E72D71892E098</idno>
+                </biblStruct>
+            </sourceDesc>
+        </fileDesc>
+        <encodingDesc>
+            <appInfo>
+                <application version="0.8.2" ident="GROBID" when="2025-12-08T16:32+0000">
+                    <desc>GROBID - A machine learning software for extracting information from scholarly documents</desc>
+                    <label type="revision">a91ee48</label>
+                    <label type="parameters">startPage=-1, endPage=-1, consolidateCitations=0, consolidateHeader=1, consolidateFunders=0, includeRawAffiliations=false, includeRawCitations=false, includeRawCopyrights=false, generateTeiIds=false, generateTeiCoordinates=[ref, p, biblStruct, persName, figure, formula, head, note, title, affiliation], sentenceSegmentation=false, flavor=null</label>
+                    <ref target="https://github.com/kermitt2/grobid"/>
+                </application>
+            </appInfo>
+        </encodingDesc>
+        <profileDesc>
+            <abstract>
+                <div
+                    xmlns="http://www.tei-c.org/ns/1.0">
+                    <p coords="1,63.96,255.01,218.57,8.03;1,63.96,264.97,218.58,8.03;1,63.96,274.94,218.57,8.03;1,63.96,284.90,218.57,8.03;1,63.96,294.86,218.57,8.03;1,63.96,304.82,218.57,8.03;1,63.96,314.79,218.57,8.03;1,63.96,324.75,218.57,8.03;1,63.96,334.71,218.57,8.03;1,63.96,344.67,218.57,8.03;1,63.96,354.64,218.57,8.03;1,63.96,364.60,218.57,8.03;1,63.96,374.56,218.57,8.03;1,63.96,384.52,218.57,8.03;1,63.96,394.49,218.58,8.03;1,63.96,404.45,218.57,8.03;1,63.96,414.41,218.58,8.03;1,63.96,424.37,218.57,8.03;1,63.96,434.33,218.58,8.03;1,63.96,444.30,218.57,8.03;1,63.96,454.26,218.58,8.03;1,63.96,464.22,218.57,8.03;1,63.96,474.18,218.57,8.03;1,63.96,484.15,199.59,8.03">Due to the discrepancy of diseases and symptoms, patients usually visit hospitals irregularly and different physiological variables are examined at each visit, producing large amounts of irregular multivariate time series (IMTS) data with missing values and varying intervals. Existing methods process IMTS into regular data so that standard machine learning models can be employed. However, time intervals are usually determined by the status of patients, while missing values are caused by changes in symptoms. Therefore, we propose a novel end-to-end Dual-Attention Time-Aware Gated Recurrent Unit (DATA-GRU) for IMTS to predict the mortality risk of patients. In particular, DATA-GRU is able to: 1) preserve the informative varying intervals by introducing a timeaware structure to directly adjust the influence of the previous status in coordination with the elapsed time, and 2) tackle missing values by proposing a novel dual-attention structure to jointly consider data-quality and medical-knowledge. A novel unreliability-aware attention mechanism is designed to handle the diversity in the reliability of different data, while a new symptom-aware attention mechanism is proposed to extract medical reasons from original clinical records. Extensive experimental results on two real-world datasets demonstrate that DATA-GRU can significantly outperform state-of-the-art methods and provide meaningful clinical interpretation.</p>
+                </div>
+            </abstract>
+        </profileDesc>
+    </teiHeader>
+    <facsimile>
+        <surface n="1" ulx="0.0" uly="0.0" lrx="612.0" lry="792.0"/>
+        <surface n="2" ulx="0.0" uly="0.0" lrx="612.0" lry="792.0"/>
+        <surface n="3" ulx="0.0" uly="0.0" lrx="612.0" lry="792.0"/>
+        <surface n="4" ulx="0.0" uly="0.0" lrx="612.0" lry="792.0"/>
+        <surface n="5" ulx="0.0" uly="0.0" lrx="612.0" lry="792.0"/>
+        <surface n="6" ulx="0.0" uly="0.0" lrx="612.0" lry="792.0"/>
+        <surface n="7" ulx="0.0" uly="0.0" lrx="612.0" lry="792.0"/>
+        <surface n="8" ulx="0.0" uly="0.0" lrx="612.0" lry="792.0"/>
+    </facsimile>
+    <text xml:lang="en">
+        <body>
+            <div
+                xmlns="http://www.tei-c.org/ns/1.0">
+                <head coords="1,140.81,510.08,64.88,10.69">Introduction</head>
+                <p coords="1,54.00,525.41,238.51,8.93;1,54.00,536.37,238.50,8.93;1,54.00,547.33,238.50,8.93;1,54.00,558.29,109.40,8.93;1,79.85,569.25,212.65,8.93;1,54.00,580.21,238.50,8.93;1,54.00,591.17,238.50,8.93;1,54.00,602.13,143.22,8.93;1,263.16,602.13,8.78,8.93">The widely-used electronic health records (EHR) produces a large quantity of health data, providing valuable opportunities to develop advanced machine learning methods to improve healthcare service 
+                    <ref type="bibr" coords="1,167.08,558.29,83.70,8.93" target="#b25">(Shickel et al. 2017;</ref>
+                    <ref type="bibr" coords="1,254.44,558.29,38.07,8.93;1,54.00,569.25,25.85,8.93">Liu et al. 2018a)</ref>. One important task is to predict the mortality risk of patients based on their historical EHR data. Accurate prediction results help doctors evaluate early treatment effects and design effective treatment plans 
+                    <ref type="bibr" coords="1,199.71,602.13,63.44,8.93" target="#b19">(Liu et al. 2018b</ref>).
+                </p>
+                <p coords="1,63.96,613.10,228.56,8.93;1,54.00,624.06,230.75,8.93;1,288.63,624.06,3.88,8.93;1,54.00,635.01,238.50,8.93;1,54.00,645.97,238.50,8.93;1,54.00,656.93,238.52,8.93;1,54.00,667.89,238.50,8.93;1,319.50,363.29,26.01,8.93;1,353.74,363.29,204.26,8.93;1,347.72,374.25,210.28,8.93;1,319.50,385.21,238.51,8.93;1,319.50,396.17,238.50,8.93;1,319.50,407.12,61.19,8.93;1,319.50,441.78,238.51,8.93;1,319.50,452.73,238.50,8.94;1,319.50,463.69,238.50,8.94;1,319.50,474.65,238.50,8.94;1,319.50,485.62,238.50,8.93;1,319.50,496.58,238.51,8.93;1,319.50,507.54,238.50,8.93;1,319.50,518.50,118.72,8.93">This task is challenging since EHR data consists of irregular multivariate time series (IMTS), as illustrated in Fig. 
+                    <ref type="figure" coords="1,284.75,624.06,3.88,8.93">1</ref>. At different stages of diseases, patients visit hospitals under varying intervals due to the dynamics of health status. Moreover, different physiological variables are examined at different visits because of the changes in symptoms, e.g., when Figure 
+                    <ref type="figure" coords="1,349.87,363.29,3.88,8.93">1</ref>: Illustration of irregular multivariate time series 
+                    <ref type="bibr" coords="1,319.50,374.25,28.22,8.93">(IMTS)</ref>. The time intervals between successive visits vary significantly from each other. Meanwhile, certain physiological variables are not examined at some visits, causing missing values. a certain symptom disappears, corresponding variables are no longer examined, resulting in missing values. The varying time intervals between successive visits and missing values raise two key challenges in using IMTS to achieve accurate mortality risk prediction results. In addition, these properties provide valuable information in improving prediction performance since they usually reflect the health status and symptoms of patients.
+                </p>
+                <p coords="1,329.46,530.76,228.53,8.93;1,319.50,541.72,187.43,8.93;1,353.25,552.68,76.33,8.93;1,375.69,563.64,117.88,8.93;1,340.94,574.60,78.42,8.93;1,354.04,585.56,203.96,8.93;1,319.50,596.52,155.01,8.93;1,455.50,607.47,102.50,8.93;1,319.50,618.43,238.50,8.93;1,319.50,629.39,34.06,8.93;1,436.78,629.39,121.22,8.93;1,319.50,640.35,238.50,8.93;1,319.50,651.31,238.50,8.93;1,319.50,662.27,238.50,8.93;1,319.50,673.23,22.44,8.93;1,507.06,684.19,50.94,8.93;1,319.50,695.14,238.50,8.93;2,54.00,57.11,238.51,8.93;2,54.00,68.07,238.50,8.93;2,54.00,79.03,238.50,8.93;2,54.00,89.98,238.51,8.93;2,54.00,100.94,38.18,8.93;2,194.94,100.94,97.56,8.93;2,54.00,111.90,238.50,8.93;2,54.00,122.86,238.50,8.93;2,54.00,133.82,238.50,8.93;2,54.00,144.78,238.50,8.93;2,54.00,155.74,238.50,8.93;2,54.00,166.70,172.65,8.93">Machine learning methods have been successfully applied in many areas, e.g., speech recognition 
+                    <ref type="bibr" coords="1,511.17,541.72,46.84,8.93;1,319.50,552.68,33.75,8.93" target="#b0">(Afouras et al. 2018)</ref>, computer version 
+                    <ref type="bibr" coords="1,432.19,552.68,65.78,8.93">(Ye et al. 2019a;</ref>
+                    <ref type="bibr" coords="1,500.59,552.68,27.68,8.93">2019b;</ref>
+                    <ref type="bibr" coords="1,530.89,552.68,27.12,8.93">2019c;</ref>
+                    <ref type="bibr" coords="1,319.50,563.64,56.19,8.93" target="#b10">Fu et al. 2019)</ref>, natural language processing 
+                    <ref type="bibr" coords="1,496.03,563.64,61.98,8.93;1,319.50,574.60,21.44,8.93" target="#b3">(Camburu et al. 2018)</ref>, energy prediction 
+                    <ref type="bibr" coords="1,422.76,574.60,73.56,8.93" target="#b37">(Yuan et al. 2017;</ref>
+                    <ref type="bibr" coords="1,499.73,574.60,22.69,8.93" target="#b36">2015;</ref>
+                    <ref type="bibr" coords="1,525.82,574.60,32.18,8.93;1,319.50,585.56,34.54,8.93" target="#b15">Kang et al. 2017)</ref>. The state-of-the-art sequence modeling methods are recurrent neural networks (RNNs) 
+                    <ref type="bibr" coords="1,478.01,596.52,79.99,8.93" target="#b8">(Chung et al. 2014;</ref>
+                    <ref type="bibr" coords="1,319.50,607.47,68.66,8.93" target="#b22">Pang et al. 2019;</ref>
+                    <ref type="bibr" coords="1,391.27,607.47,64.23,8.93" target="#b11">Gao et al. 2019)</ref>. The major limitation of standard RNN is that it is designed for data with constant intervals 
+                    <ref type="bibr" coords="1,357.18,629.39,79.61,8.93" target="#b1">(Baytas et al. 2017)</ref>, which cannot handle the irregular time-series data. Most clinical prediction methods convert IMTS into equally spaced by discretizing the time axis into non-overlapping intervals with a hand-designed interval 
+                    <ref type="bibr" coords="1,346.31,673.23,70.69,8.93" target="#b31">(Tan et al. 2019;</ref>
+                    <ref type="bibr" coords="1,421.37,673.23,64.87,8.93" target="#b32">Xu et al. 2018;</ref>
+                    <ref type="bibr" coords="1,490.61,673.23,67.39,8.93" target="#b30">Tan et al. 2018;</ref>
+                    <ref type="bibr" coords="1,319.50,684.19,62.49,8.93" target="#b4">Che et al. 2017;</ref>
+                    <ref type="bibr" coords="1,384.29,684.19,122.77,8.93" target="#b17">Lipton, Kale, and Wetzel 2016)</ref>. Then missing values are filled via imputation methods. However, when the manually selected interval is long, it may cause the loss of temporal information; Conversely, it may increase the missing data rate when the interval is short. Thus, a learningbased method is introduced to obtain an optimal interval in InterpNet 
+                    <ref type="bibr" coords="2,94.38,100.94,100.57,8.93" target="#b26">(Shukla and Marlin 2019)</ref>. However, when Interp-Net finally specifies the interval, it still unavoidably introduces additional noise or causes information loss, because different patients could have very different numbers of visits. Moreover, these methods usually assume that there is an expected fixed time interval. This assumption may not valid in practice due to the dynamics of diseases.
+                </p>
+                <p coords="2,63.96,178.87,228.54,8.93;2,54.00,189.82,238.50,8.93;2,54.00,200.78,238.50,8.93;2,54.00,211.74,95.08,8.93;2,233.78,211.74,58.72,8.93;2,54.00,222.70,238.50,8.93;2,54.00,233.66,238.50,8.93;2,54.00,244.62,216.53,8.93;2,97.30,255.58,195.20,8.93;2,54.00,266.54,238.52,8.93;2,54.00,277.49,238.50,8.93;2,54.00,288.45,238.50,8.93;2,54.00,299.41,238.50,8.93;2,54.00,310.37,238.50,8.93;2,54.00,321.33,238.50,8.93;2,54.00,332.29,238.50,8.93;2,54.00,343.25,238.50,8.93;2,54.00,354.21,238.50,8.93;2,54.00,365.16,238.50,8.93;2,54.00,376.12,188.97,8.93">A better way to handle IMTS data is to directly model the unequally spaced data. Time-aware LSTM (T-LSTM) incorporates irregular time intervals to adjust the hidden status in the memory cell 
+                    <ref type="bibr" coords="2,153.07,211.74,80.71,8.93" target="#b1">(Baytas et al. 2017)</ref>. However, T-LSTM is designed for ICD-9 codes, which cannot address the missing data problem in real-valued variables. The recently proposed GRU-D tries to handle both problems 
+                    <ref type="bibr" coords="2,273.14,244.62,19.37,8.93;2,54.00,255.58,43.30,8.93" target="#b5">(Che et al. 2018)</ref>. GRU-D introduces observed records and corresponding timestamps into standard GRU to impute missing values as the decay of previous input values toward the overall mean over time. However, GRU-D only combines the empirical mean value and the previous observation to impute missing values. This strategy cannot capture the global structure information of sequence data. Furthermore, GRU-D ignores the diversity in the reliability of different data points, especially the relatively larger unreliability of imputed records compared with actual records. As a result, it assigns equal weights to actually observed data and imputed data, which seriously damages its performance.
+                </p>
+                <p coords="2,63.96,388.29,228.54,8.93;2,54.00,399.25,238.50,8.93;2,54.00,410.21,238.50,8.93;2,54.00,421.17,238.51,8.93;2,54.00,432.13,238.50,8.93;2,54.00,443.09,238.51,8.93;2,54.00,454.05,238.50,8.93;2,54.00,465.01,238.50,8.93;2,54.00,475.96,238.52,8.93;2,54.00,486.92,238.50,8.93;2,54.00,497.88,238.50,8.93;2,54.00,508.84,46.56,8.93;2,162.55,508.84,129.97,8.93;2,54.00,519.80,238.50,8.93;2,54.00,530.76,238.50,8.93;2,54.00,541.72,238.50,8.93;2,54.00,552.67,238.50,8.94;2,54.00,563.63,238.49,8.94;2,54.00,574.59,238.50,8.93;2,54.00,585.55,238.50,8.93;2,54.00,596.51,238.51,8.93;2,54.00,607.47,238.50,8.93;2,54.00,618.43,238.50,8.93;2,54.00,629.39,238.50,8.93;2,54.00,640.35,238.51,8.93;2,54.00,651.30,238.50,8.94;2,54.00,662.25,238.50,8.94;2,54.00,673.22,238.50,8.93;2,54.00,684.18,238.50,8.93;2,54.00,695.14,238.50,8.93">To address the aforementioned challenges, this paper presents a novel end-to-end Dual-Attention Time-Aware Gated Recurrent Unit (DATA-GRU) for IMTS to improve the mortality risk prediction performance. To preserve informative varying intervals, which reflect dynamics in the conditions of patients, we introduce a time-aware structure to handle irregular time intervals. This strategy avoids processing IMTS into equally spaced, thus protecting temporal information in dense records and avoiding introducing extra noise to sparse records. Since missing values cause data misalignment, they need to be imputed so as to compose tensor 
+                    <ref type="bibr" coords="2,104.50,508.84,58.05,8.93" target="#b9">(Comon 2014)</ref>. However, the imputation process would impair medical information contained in missing values. Therefore, we propose a novel dual-attention structure with two new attention mechanisms to simultaneously focus on the data-quality view and the medical-knowledge view. For the data-quality view, a novel unreliability-aware attention mechanism is proposed to estimate diversity in the unreliability of different data and accordingly assign them learnable attention weights to ensure high-quality data play more important roles. Our main ideas are that imputed data normally are less reliable than actual records and different imputed data could have different degrees of unreliability, e.g., data inferred from sparse observations are less reliable than from dense observations. For the medical-knowledge view, a novel symptom-aware attention mechanism is proposed to directly extract medical information from original clinical records. Different from other domains, missing values in EHR data possess important medical considerations.
+                </p>
+                <p coords="2,319.50,57.10,238.51,8.93;2,319.50,68.06,238.50,8.93;2,319.50,79.02,176.42,8.93">It should be noted that DATA-GRU is designed in an end-toend architecture to ensure the parameters of different parts are trained jointly to achieve global optimal.</p>
+                <p coords="2,329.46,90.91,228.54,8.93">The main contributions of this paper are listed as follows:</p>
+                <p coords="2,319.50,108.55,238.50,9.96;2,329.46,120.13,228.54,8.93;2,329.46,131.09,114.00,8.93">• We propose a new end-to-end DATA-GRU network with two novel structures to handle the two key challenges in medical IMTS data analysis.</p>
+                <p coords="2,319.50,147.27,238.50,9.96;2,329.46,158.85,228.54,8.93;2,329.46,169.80,228.54,8.93;2,329.46,180.76,228.54,8.93;2,329.46,191.72,182.63,8.93">• We introduce a time-aware structure into deep learning architecture to directly incorporate irregular time intervals to adjust the influence of the previous status. This strategy preserves the contained useful information on dynamic changes in the health status of patients.</p>
+                <p coords="2,319.50,207.91,238.51,9.96;2,329.46,219.48,228.54,8.93;2,329.46,230.44,228.54,8.93;2,329.46,241.40,228.54,8.93;2,329.46,252.36,228.54,8.93;2,329.46,263.32,228.54,8.93;2,329.46,274.28,184.28,8.93">• We design a new dual-attention structure to handle missing values from both data-quality and medical-knowledge views. Novel unreliability-aware attention is proposed to assign learnable weights to different data in coordination with their reliabilities, while new symptom-aware attention is designed to learn medical information from the sampling characteristics of original EHR data.</p>
+                <p coords="2,319.50,290.46,238.51,9.96;2,329.46,302.03,228.54,8.93;2,329.46,312.99,228.54,8.93;2,329.46,323.95,155.51,8.93">• We empirically show that DATA-GRU outperforms stateof-the-art methods on two real-world datasets. The case study indicates that the learned attention weights can provide meaningful clinical interpretation.</p>
+            </div>
+            <div
+                xmlns="http://www.tei-c.org/ns/1.0">
+                <head coords="2,403.17,348.54,71.16,10.69">Related Work</head>
+                <p coords="2,319.50,366.62,238.50,8.93;2,319.50,377.58,133.22,8.93;2,345.84,388.54,82.57,8.93;2,492.96,388.54,65.05,8.93;2,319.50,399.50,238.52,8.93;2,319.50,410.45,220.34,8.93;2,329.46,422.34,228.56,8.93;2,319.50,433.30,238.50,8.93;2,319.50,444.26,238.50,8.93;2,319.50,455.22,114.80,8.93;2,512.11,455.22,45.89,8.93;2,319.50,466.18,238.50,8.93;2,319.50,477.14,95.66,8.93;2,490.84,477.14,46.90,8.93;2,361.45,488.09,196.56,8.93;2,319.50,499.05,238.50,8.93;2,319.50,510.01,238.50,8.93;2,319.50,520.97,171.02,8.93;2,319.50,531.93,120.83,8.93;2,509.51,531.93,48.49,8.93;2,319.50,542.89,238.50,8.93;2,319.50,553.85,64.67,8.93;2,457.56,553.85,4.29,8.93;2,536.28,553.85,21.72,8.93;2,319.50,564.81,238.50,8.93;2,319.50,575.77,238.50,8.93;2,319.50,586.72,238.50,8.93;2,319.50,597.68,238.50,8.93;2,319.50,608.64,238.50,8.93;2,319.50,619.60,238.51,8.93;2,319.50,630.56,218.89,8.93">Attention methods have been successfully applied in many tasks, e.g., machine translation 
+                    <ref type="bibr" coords="2,458.76,377.58,99.25,8.93;2,319.50,388.54,23.24,8.93" target="#b24">(Shankar and Sarawagi 2019)</ref> and computer vision 
+                    <ref type="bibr" coords="2,431.51,388.54,61.45,8.93" target="#b10">(Fu et al. 2019)</ref>. However, data in their domains usually have regular time intervals or have no time attribute, which is unsuitable for the EHR data. Several works have investigated the attention mechanism for EHR data. To increase the interpretability of networks, RETAIN introduces an attention network to detect influential visits and key variables 
+                    <ref type="bibr" coords="2,438.50,455.22,73.61,8.93" target="#b6">(Choi et al. 2016)</ref>. A graphbased attention model is proposed to learn robust representations of EHR data 
+                    <ref type="bibr" coords="2,418.83,477.14,72.01,8.93" target="#b7">(Choi et al. 2017)</ref>. Similarly, 
+                    <ref type="bibr" coords="2,541.41,477.14,16.60,8.93;2,319.50,488.09,41.95,8.93" target="#b21">(Ma et al. 2018</ref>) introduce a knowledge-based attention mechanism to embed nodes in the knowledge graph. Three attention mechanisms are introduced to measure relationships between current status and past state in RNN 
+                    <ref type="bibr" coords="2,493.21,520.97,64.80,8.93" target="#b20">(Ma et al. 2017)</ref> and monitor health conditions 
+                    <ref type="bibr" coords="2,443.34,531.93,66.17,8.93" target="#b29">(Suo et al. 2017)</ref>. The attention mechanism is also used to handle the low measuring quality problem 
+                    <ref type="bibr" coords="2,387.96,553.85,69.59,8.93" target="#b12">(Heo et al. 2018)</ref>. 
+                    <ref type="bibr" coords="2,465.64,553.85,70.64,8.93" target="#b28">(Song et al. 2018</ref>) use masked self-attention to dispense the recurrence in the network. The attention mechanisms used in these methods can promote the performance and interpretability of models at some extents. However, these attention-based methods are usually designed for regular time-series data (or generated regular data), thus cannot be applied to the irregularly sampled EHR data, which is a key problem for health data.
+                </p>
+            </div>
+            <div
+                xmlns="http://www.tei-c.org/ns/1.0">
+                <head coords="2,393.53,655.15,90.44,10.69">Proposed Method</head>
+                <p coords="2,319.50,673.23,238.50,8.93;2,319.50,684.19,238.51,8.93;2,319.50,695.14,165.76,8.93">In this section, we present the proposed Dual-Attention Time-Aware Gated Recurrent Unit (DATA-GRU). We firstly introduce the notations used in this paper.</p>
+                <p coords="3,319.86,104.02,34.00,5.49;3,317.70,111.95,38.32,5.49;3,377.77,142.25,62.43,5.49;3,377.42,157.36,132.51,5.49;3,443.35,202.66,43.02,5.49;3,376.84,202.66,51.71,5.49;3,379.41,181.07,110.17,5.93;3,397.52,224.87,14.86,5.17;3,497.01,225.28,21.15,5.17;3,317.26,193.69,41.28,5.49;3,326.97,201.63,21.86,5.49;3,307.86,82.42,15.06,5.81;3,303.82,88.37,23.14,5.81;3,300.33,94.32,30.12,5.81;3,404.34,193.03,22.03,4.84;3,466.17,191.98,18.36,4.84;3,493.03,199.59,14.38,4.84;3,76.91,67.65,10.33,8.53;3,163.95,98.21,61.22,5.49;3,239.84,54.42,24.90,6.61;3,137.25,222.75,5.50,8.53;3,161.44,145.48,19.08,5.49;3,130.20,155.74,19.08,5.49;3,168.11,222.75,5.96,8.53;3,122.80,110.62,146.62,5.59;3,205.85,167.86,23.59,5.49;3,207.93,173.48,19.43,5.49;3,207.41,179.10,20.46,5.49;3,169.02,73.37,51.07,5.81;3,167.81,202.91,3.12,5.49;3,89.10,64.06,67.77,5.81;3,118.26,89.68,74.77,5.81;3,137.51,126.25,1.49,3.64;3,136.98,130.94,8.95,3.64;3,133.68,126.95,3.31,6.61;3,168.50,126.34,1.49,3.64;3,167.98,131.02,8.95,3.64;3,164.36,127.04,3.65,6.60;3,218.47,138.78,1.91,3.64;3,218.12,143.46,1.06,3.64;3,214.50,139.48,3.65,6.61;3,170.99,164.83,5.07,3.37;3,169.80,160.01,1.49,3.64;3,169.27,164.69,1.07,3.64;3,166.38,160.71,2.93,6.61;3,137.53,178.90,3.21,3.37;3,136.34,174.07,1.49,3.64;3,135.82,178.76,11.35,3.64;3,132.51,174.77,3.31,6.62;3,173.47,189.53,1.29,2.26;3,163.39,181.41,1.29,2.26;3,104.40,157.77,1.06,3.63;3,102.07,157.58,2.34,3.83;3,97.52,153.79,4.40,6.60;3,133.63,76.88,1.92,3.37;3,130.86,72.05,1.92,3.64;3,130.22,76.74,1.06,3.64;3,127.09,72.75,3.67,6.61;3,305.66,56.74,19.46,5.81;3,307.49,62.70,15.80,5.81;3,309.88,68.65,11.01,5.81;3,377.57,150.16,135.10,5.49;3,54.00,333.09,44.85,9.75">Unreliabilityaware attention Actually recorded values Imputed values, which may not always reflect reality Status of patients Symptoms and signs Examination of xis Medical knowledge Visit i Visit i+1 Symptom-aware attention Dualattention mechanism determine evaluate decide h t-1 Interpretable embedding Output ht x t T-GRU T-GRU u t Symptom-aware attention Unreliability-aware attention Attention weights learning Standard GRU unit 1 Time-aware mechanism Dual-attention mechanism s t deep x s t deep α u t α 0/1 s t c 0/ s t true x 1 1 t ' w 1 d t h clinical IMTS data Actual trajectories of different physiological variables Notations</p>
+                <formula xml:id="formula_0" coords="3,54.00,345.24,238.50,21.92">Let D = {(X k , y k )|k = 1, 2, • • • , K} denote a dataset with K samples.</formula>
+                <p coords="3,104.52,358.23,187.98,8.93;3,54.00,369.19,238.50,8.93;3,54.00,381.07,57.65,9.18">Each data sample contains a multivariate time series (MTS) and a target value. We represent MTS of the kth sample as</p>
+                <formula xml:id="formula_1" coords="3,115.60,379.28,173.16,13.10">X k = (x k 1 , • • • , x k t , • • • , x T k k ) ∈ R T k ×N</formula>
+                <p coords="3,290.01,381.32,2.49,8.93;3,54.00,392.03,238.50,9.83;3,54.00,402.99,114.14,9.18;3,168.14,401.72,4.23,5.99;3,168.14,407.80,3.01,5.99;3,173.04,402.62,49.94,10.20;3,223.65,402.62,68.85,9.54;3,54.00,413.95,123.67,9.83;3,178.17,412.68,4.23,5.99;3,185.87,413.95,106.63,9.18;3,54.00,425.14,32.60,8.94;3,86.60,423.64,4.23,5.99;3,86.60,429.71,3.01,5.99;3,91.50,425.15,201.00,8.93;3,54.00,436.11,238.50,8.93;3,54.00,447.07,238.50,8.93;3,54.00,457.41,8.58,9.96;3,62.58,461.62,3.01,5.99;3,68.30,457.41,26.76,10.20;3,95.57,457.41,67.89,10.20;3,164.13,457.41,128.37,9.96;3,54.00,468.99,238.51,8.93;3,54.00,479.95,238.50,8.93;3,54.00,490.91,238.50,8.93;3,54.00,502.79,124.81,9.83;3,178.81,501.00,4.23,5.99;3,187.17,503.02,69.69,8.94;3,256.85,501.52,4.23,5.99;3,256.85,507.95,9.40,5.99;3,270.24,503.03,22.26,8.93;3,54.00,516.00,19.93,8.93">, where N is the number of all input features; T k is the number of visits in the kth sample; x k t (1 ≤ t ≤ T k ) denotes records of input features at time t; x t.n k is the value of the nth feature of x k t . The two key challenges for irregular MTS (IMTS) are: a) time irregularities, which refers to varying intervals between successive visits, i.e., the time intervals dataset {t tt t-1 |t = 1, 2, • • • , T k } has multiple values; b) missing values (i.e., several physiological variables are not examined at some visits because of the changes in symptoms), due to which the length of each time-series feature is often shorter than T k . Thus, we represent X k as a time series t k all and a tuple</p>
+                <formula xml:id="formula_2" coords="3,54.00,513.79,238.50,48.55">S k = (t k , x k ), where t k all = [t k 1 , t k 2 , • • • , t T k k ] is the list of timestamps of all visits; t k = [t k .1 , • • • , t k .n , • • • , t k .N ] is the list of timestamps for each input feature ( t k .n (1 ≤ k ≤ K) is a subset of t k all ); and x k = [x k .1 , • • • , x k .n , • • • , x k .N ]</formula>
+                <p coords="3,270.63,551.44,21.87,8.93;3,54.00,562.39,179.29,8.93">is the corresponding list of recorded input features.</p>
+            </div>
+            <div
+                xmlns="http://www.tei-c.org/ns/1.0">
+                <head coords="3,54.00,582.33,223.10,9.75">Dual-Attention Time-Aware GRU (DATA-GRU)</head>
+                <p coords="3,54.00,596.52,238.50,8.93;3,54.00,607.47,15.25,8.93;3,84.50,607.47,208.00,8.93;3,54.00,618.43,238.50,8.93;3,54.00,629.39,238.51,8.93;3,54.00,640.35,238.51,8.93;3,54.00,651.31,238.50,8.93;3,54.00,662.27,238.50,8.93;3,54.00,673.23,238.50,8.93;3,54.00,684.19,238.50,8.93;3,54.00,695.14,238.50,8.93;3,319.50,333.72,238.50,8.93;3,319.50,344.68,238.51,8.93;3,319.50,355.63,238.50,8.93;3,319.50,366.59,238.51,8.93;3,319.50,377.55,238.50,8.93;3,319.50,388.51,199.00,8.93">The architecture of the proposed DATA-GRU is shown in Fig. 
+                    <ref type="figure" coords="3,69.25,607.47,15.25,8.93" target="#fig_0">2(a)</ref>. Compared with standard GRU, DATA-GRU has two novel components, i.e., time-aware mechanism and dual-attention mechanism, which simultaneously handles varying intervals and missing values. The time-aware mechanism is introduced to handle irregular intervals. Although standard GRU (and other variations of RNN) has recursive formulation and can handle variable-length sequences, but it can only handle the time-series data with equal intervals between successive elements. Thus, standard GRU has no structure to handle irregular intervals with missing values. However, as mentioned above, processing IMTS data of different patients into equally spaced would seriously damage data quality, making it nearly impossible to achieve accurate prediction results. Therefore, we introduce the time-aware structure to directly handle varying time intervals.
+                </p>
+                <p coords="3,329.46,404.84,228.54,8.93;3,319.50,415.80,238.51,8.93;3,319.50,426.76,112.75,8.93;3,447.75,426.76,110.27,8.93;3,319.50,437.72,238.50,8.93;3,319.50,448.68,238.50,8.93;3,319.50,459.63,238.50,8.93;3,319.50,470.59,238.50,8.93;3,319.50,481.55,238.50,8.93;3,319.50,492.51,238.50,8.93;3,319.50,503.47,238.50,8.93;3,319.50,514.43,238.51,8.93;3,319.50,525.39,238.50,8.93;3,319.50,536.35,238.50,8.93;3,319.50,547.30,238.50,8.93;3,319.50,558.26,238.50,8.93;3,319.50,569.22,218.27,8.93">The dual-attention structure is designed to handle missing values from both data-quality and medical-knowledge views, as illustrated in Fig. 
+                    <ref type="figure" coords="3,432.25,426.76,15.49,8.93" target="#fig_0">2(b)</ref>. It is noteworthy that imputed values may not always reflect reality and are less reliable than actual records. To achieve accurate and reliable predictions, it is suggested to assign smaller weights to less reliable data and weaken its role by developing an unreliability-aware attention mechanism. In addition, unlike other domains, missing values in EHR data may contain important medical considerations, e.g., whether certain physiological variables are examined or not may indicate the emergence of specific symptoms and signs. Mining such medical information will further promote final results. Therefore, a novel symptom-aware attention is proposed to learn medical information from the medical-knowledge view. The details of DATA-GRU are presented in the following sections.
+                </p>
+                <p coords="3,329.46,585.55,228.54,8.93;3,319.50,596.51,238.50,8.93;3,319.50,607.47,238.50,8.93;3,319.50,618.43,238.50,8.93;3,319.50,629.39,238.50,8.93;3,319.50,640.35,238.50,8.93;3,319.50,651.30,238.51,8.93;3,319.50,662.26,238.50,8.93;3,319.50,673.22,238.50,8.93;3,319.50,684.18,238.50,8.93;3,319.50,694.89,238.50,9.18">Time-aware mechanism. As mentioned above, we only impute missing values rather than generating equally spaced data to avoid noise generation. Most methods utilize simple imputation methods, e.g., forward filling with past values and mean value imputation, or their combinations to handle missing values. However, these methods are incapable of capturing the global structure of time-series data. Since Gaussian process (GP) can incorporate global structure information from all available records to conduct imputation, we use it to fill missing values in IMTS. For the kth sample, time series pairs of many variables in the tu-</p>
+                <formula xml:id="formula_3" coords="4,54.00,54.90,238.50,25.24">ple S k = (t k , x k ), where t k = [t k .1 , • • • , t k .n , • • • , t k .N ] and x k = [x k .1 , • • • , x k .n , • • • , x k .N ],</formula>
+                <p coords="4,176.17,69.31,116.33,8.93;4,54.00,81.50,51.32,8.94;4,105.32,79.99,4.23,5.99;4,105.32,86.42,9.40,5.99;4,119.28,80.89,17.30,9.24;4,136.58,79.99,4.23,5.99;4,136.58,85.60,3.97,6.97;4,141.49,81.26,7.20,9.18;4,148.68,79.99,4.23,5.99;4,148.68,85.60,3.97,6.97;4,153.58,80.89,37.08,10.70;4,191.33,79.99,4.23,5.99;4,196.23,80.89,96.26,9.54;4,54.00,92.46,238.50,8.93;4,54.00,104.58,6.65,8.94;4,60.64,102.56,4.23,5.99;4,60.64,109.15,4.92,5.99;4,68.82,104.58,142.18,8.94;4,211.01,102.56,4.23,5.99;4,211.01,109.15,4.92,5.99;4,216.43,104.59,76.06,8.93;4,54.00,116.41,142.51,10.71;4,196.51,115.51,4.23,5.99;4,196.51,121.95,9.40,5.99;4,210.03,116.41,28.37,10.71;4,232.31,116.41,15.50,9.96;4,247.81,114.99,4.23,5.99;4,247.81,121.59,4.92,5.99;4,253.23,116.41,39.27,9.54;4,54.00,127.99,238.50,8.93;4,54.00,138.33,238.50,10.71;4,54.00,149.29,118.15,10.71">are shorter than the list of all timestamps t k all = [t k 1 , t k 2 , • • • , t T k k ] due to missing values. For each variable, we represent actually observed records as X k n and corresponding timestamps as T k n . The estimation of the missing value at time t * (t * ∈ t k all &amp; t * / ∈ T k n ) is made via the computation of the conditional distribution, which is a Gaussian distribution with a mean function E[x * ] and a covariance function Con[x * ]:</p>
+                <formula xml:id="formula_4" coords="4,54.00,166.08,238.50,69.61">p(x * |t * , X k n , T k n ) ∼ N (u * , δ 2 * ) (1) E[x * ] = k(t * ) T (K(T k n , T k n ) + δ 2 I N ) -1 X k n (2) Con[x * ] = k(t * , t * ) -k(t * ) T (K(T k n , T k n ) + δ 2 I N ) -1 k(t * ) (3) where K(T k n , T k n )</formula>
+                <p coords="4,132.92,225.14,159.58,8.93;4,54.00,235.48,238.50,10.71;4,54.00,247.05,230.73,9.59">is the covariance matrix between observed records; k(t * ) is the covariance matrix between the estimated value and observed records; I N is a unit matrix.</p>
+                <p coords="4,63.96,258.02,228.54,8.93;4,54.00,268.97,238.50,8.93;4,54.00,279.93,238.51,8.93;4,54.00,290.89,238.50,8.93;4,54.00,301.85,238.50,8.93;4,54.00,312.81,238.51,8.93;4,54.00,323.77,238.50,8.93;4,54.00,334.73,238.50,8.93;4,54.00,345.69,238.50,8.93;4,54.00,356.65,238.50,8.93;4,54.00,367.60,238.50,8.93;4,54.00,378.56,238.50,8.93;4,54.00,389.52,198.96,8.93;4,63.96,439.18,228.54,8.93;4,54.00,451.30,203.32,8.93">It should be noted that imputed values may not always be reliable: 1) compared with actual records, imputed values are relatively less reliable since they are inferred from actual records; 2) different imputed data typically have different degrees of reliability. When imputing the missing value at a timestamp with intensive observations nearby, the estimated value is reliable due to the increase of posterior knowledge. Conversely, data inferred from sparse observations are less reliable. GP naturally provides covariance functions to quantitatively describe unreliability of estimated data. Since actual records are relatively absolutely reliable compared with imputed values, we set their unreliability scores to zero. Thus, we get unreliability scores of different data: For each sample, we represent its IMTS as three data streams: an augmented input record, i.e.,</p>
+                <formula xml:id="formula_5" coords="4,54.00,449.27,238.49,24.51">X k r = [x k .1 , • • • , x k .n , • • • , x k .N ] = [x k 1 , • • • , x k t , • • • , x k T k ] T</formula>
+                <p coords="4,261.37,462.26,31.13,8.93;4,54.00,473.22,238.50,8.93;4,54.00,485.35,97.24,8.93">, which is a unequally spaced MTS without missing values; an unreliability scores matrix</p>
+                <formula xml:id="formula_6" coords="4,54.00,483.32,238.49,25.75">U k r = [u k .1 , • • • , u k .n , • • • , u k .N ] = [u k 1 , • • • , u k t , • • • , u k T k ]</formula>
+                <p coords="4,144.19,496.03,4.70,5.99;4,150.46,497.55,142.04,8.93;4,54.00,510.94,6.65,8.94;4,60.64,508.92,4.23,5.99;4,60.64,515.51,3.70,5.99;4,69.19,510.95,223.31,8.93;4,54.00,523.38,77.21,8.94;4,131.21,521.35,4.23,5.99;4,131.21,527.95,3.70,5.99;4,136.11,523.38,119.87,8.93">T , which has the same shape with X k r and quantitatively describes the unreliability degree of each element in X k r ; and a list of time intervals</p>
+                <formula xml:id="formula_7" coords="4,54.00,521.87,238.49,25.69">Δ k all = [Δ k 1 , • • • , Δ k t , • • • , Δ k T k ],</formula>
+                <p coords="4,156.38,535.04,35.13,9.54;4,191.52,539.25,3.01,5.99;4,197.79,535.04,17.12,10.20;4,217.63,535.04,29.76,10.20;4,63.96,546.00,208.11,10.20;4,272.08,546.62,20.42,9.58;4,54.00,557.57,193.06,9.59;4,250.93,557.58,41.56,8.93;4,54.00,568.54,238.50,8.93;4,54.00,579.50,238.50,8.93;4,54.00,590.46,238.50,8.93;4,54.00,601.41,238.51,8.93;4,54.00,612.37,238.50,8.93;4,54.00,621.34,238.50,12.39;4,54.00,634.04,238.50,10.65;4,54.00,645.25,238.50,8.93;4,54.00,655.96,224.79,10.34;4,278.79,654.69,4.14,5.99;4,278.79,660.78,13.20,5.99;4,54.00,667.17,57.85,8.93">where Δ t = t tt t-1 . DATA-GRU takes input records x t , time intervals Δ t and unreliability scores u t as inputs, as shown in Fig. 
+                    <ref type="figure" coords="4,247.06,557.58,3.88,8.93" target="#fig_0">2</ref>. The time intervals are directly incorporated into DATA-GRU to adjust the hidden status in the previous memory cell. To ensure the influence of previous status fades with the increase of the time interval, we suggest to utilize a decay function to transform it into weight. We tested several decay functions, e.g., w Δt=1/log(e+Δt) , w Δt = e -Δt and w Δt=1/Δt , and found that w Δt=1/log(e+Δt) is slightly better. Therefore, we use it to transform time intervals into proper weights to adjust hidden state. The mathematical formulations for w Δt and h d t-1 are as follows:
+                </p>
+                <p coords="4,139.42,677.88,67.16,10.65">w Δt=1/log(e+Δt)</p>
+                <p coords="4,280.88,678.13,11.62,8.93">(5)</p>
+                <formula xml:id="formula_8" coords="4,132.48,693.13,160.02,12.57">h d t-1 = h t-1 w Δt (6)</formula>
+                <p coords="4,329.46,57.11,228.54,8.93;4,319.50,68.07,238.51,8.93;4,319.50,79.03,238.51,8.93;4,319.50,89.98,238.51,8.93;4,319.50,100.94,238.51,8.93;4,319.50,111.90,168.56,8.93">For convenience, we name the variant of GRU equipped with the time-aware mechanism as T-GRU. Compared with standard GRU, T-GRU can directly analyze unequally spaced univariate or multivariate time series without the necessity of processing it into equally spaced data and thus can preserve the informative varying intervals.</p>
+                <p coords="4,329.46,123.11,228.54,8.93;4,319.50,134.07,238.50,8.93;4,319.50,145.03,238.50,8.93;4,319.50,155.99,238.50,8.93;4,319.50,166.95,238.50,8.93;4,319.50,177.91,238.50,8.93;4,319.50,188.87,223.61,8.93">Dual-attention mechanism. Imputed records in augmented data may not always reflect reality and the imputation process could damage medical considerations behind sampling characteristics of original EHR data, both affecting risk prediction. To this end, a novel dual-attention structure is further integrated into T-GRU to handle missing values by jointly considering data quality and medical knowledge.</p>
+                <p coords="4,329.46,200.08,228.54,8.93;4,319.50,211.03,238.51,8.93;4,319.50,221.99,238.50,8.93;4,319.50,232.95,238.50,8.93;4,319.50,243.91,238.51,8.93;4,319.50,254.87,238.50,8.93;4,319.50,265.83,238.50,8.93;4,319.50,276.78,238.50,8.93;4,319.50,287.49,226.04,9.84;4,550.25,287.13,7.74,9.24;4,319.50,298.09,18.99,9.24;4,338.49,298.46,219.51,9.83;4,319.50,309.66,238.50,8.93;4,319.50,320.62,238.50,8.93;4,319.50,331.33,40.73,9.83;4,360.27,330.07,4.71,5.99;4,360.24,336.14,3.01,5.99;4,368.25,330.96,59.20,9.24;4,428.84,330.07,4.71,5.99;4,434.05,331.33,7.32,9.83;4,444.03,330.96,14.19,9.24;4,458.22,330.07,4.71,5.99;4,463.43,330.96,94.57,9.54;4,319.50,342.54,238.50,8.93;4,319.50,353.50,238.50,8.93;4,319.50,364.46,26.87,8.93">Unreliability-aware attention is proposed from the dataquality view. Since the degrees of unreliability diverse between actual records and imputed records, and also vary among different imputed records, we propose an unreliability-aware attention mechanism to adjust weights assigned to different data to ensure high-quality data play important roles to promote prediction performance while the influence of low-quality data is limited. For convenience, unreliability score is converted into reliability score via c t = 1-u t . Since c t is only able to identify the quality of different elements within each time series but is unable to identify important variables, we learn unreliability-aware weights from c t using α u t = sigmoid(W u c t + b u ) and utilize the learned weights to adjust scores contributed by different elements in time series of different variables. The expressions are given below:</p>
+                <formula xml:id="formula_9" coords="4,381.98,375.55,176.02,44.07">c t = 1 -u t (7) α u t = sigmoid(W u c t + b u ) (8) x u t = x t α u t (9)</formula>
+                <p coords="4,329.46,425.02,228.55,8.93;4,319.50,435.98,238.50,8.93;4,319.50,446.94,238.50,8.93;4,319.50,457.90,238.52,8.93;4,319.50,468.85,238.50,8.93;4,319.50,479.81,238.50,8.93;4,319.50,490.77,238.50,8.93;4,319.50,501.73,238.50,8.93;4,319.50,512.69,238.52,8.93;4,319.50,523.65,238.50,8.93;4,319.50,534.61,238.50,8.93;4,319.50,545.57,238.51,8.93;4,319.50,556.53,238.51,8.93;4,319.50,567.48,238.51,8.93;4,319.50,578.19,37.60,9.18;4,357.10,576.93,3.76,5.99;4,357.10,583.00,16.28,7.00;4,379.38,577.82,42.87,10.20;4,423.83,577.82,8.18,9.24;4,432.01,582.04,3.01,5.99;4,435.52,577.82,34.36,10.20;4,472.59,577.82,85.41,9.96;4,319.50,590.69,52.17,9.18;4,371.68,589.42,3.76,5.99;4,371.68,595.50,27.73,7.00;4,404.73,590.32,39.90,10.20;4,444.64,589.42,3.76,5.99;4,444.64,595.50,16.28,7.00;4,465.02,590.94,92.98,8.93;4,319.50,603.43,238.50,8.93;4,319.50,614.39,238.50,8.93;4,319.50,625.35,238.50,8.93;4,319.50,636.31,238.50,8.93;4,319.50,647.27,238.50,8.93;4,319.50,658.23,238.50,8.93;4,319.50,668.94,206.11,9.18;4,525.62,667.67,3.76,5.99;4,525.62,673.75,20.06,6.49;4,550.25,668.57,7.74,9.24;4,319.50,681.72,40.13,8.87;4,359.64,680.45,3.76,5.99;4,359.64,686.53,27.73,7.00;4,387.86,681.35,170.14,10.71;4,319.50,694.90,41.09,9.18;4,360.63,693.63,3.76,5.99;4,360.60,699.71,20.10,6.49;4,386.27,694.53,53.62,9.24;4,439.93,693.63,3.76,5.99;4,439.90,699.71,16.32,7.00;4,456.71,694.53,64.78,10.71;4,521.53,693.63,3.76,5.99;4,521.50,699.71,20.10,6.49;4,545.84,695.14,12.16,8.93;5,202.66,98.23,350.31,8.46;5,56.55,106.46,11.73,8.46;5,202.66,106.46,350.31,8.46;5,56.55,116.08,33.23,8.46;5,202.66,116.08,350.31,8.46;5,56.55,125.62,38.06,8.46;5,202.66,125.27,350.37,8.81;5,56.55,135.24,20.31,8.46;5,202.66,135.24,350.31,8.46;5,56.55,144.75,34.86,8.46;5,202.66,144.75,350.31,8.46;5,56.55,154.39,52.01,8.46;5,202.66,154.39,350.31,8.46;5,56.55,163.90,30.50,8.46;5,202.66,163.90,350.31,8.46;5,56.55,173.52,37.09,8.46;5,202.66,173.52,350.31,8.46;5,56.55,184.79,47.16,8.46;5,202.66,184.79,350.31,8.46;5,56.55,193.49,56.38,8.46;5,202.66,193.84,350.31,8.46;5,56.55,203.48,29.43,8.46;5,202.66,203.48,350.31,8.46;5,56.55,212.64,39.74,8.46;5,202.66,212.99,350.31,8.46;5,56.55,221.80,50.32,8.46;5,202.66,221.80,350.31,8.46;5,54.00,255.37,147.34,9.18;5,201.35,254.10,3.76,5.99;5,201.35,260.18,20.06,6.49;5,221.92,255.62,70.59,8.93;5,54.00,267.73,57.85,8.93">The sampling characteristic of original EHR data possesses important medical considerations. We avoid damaging informative varying intervals in IMTS by introducing the time-aware structure, which is a big step forward compared with the typical methods of processing IMTS into equally spaced. However, the imputation process may still damage some medical information, i.e., missing values which are typically caused by changes in the symptoms of patients. To this end, from the medical-knowledge view, we propose novel symptom-aware attention to further supplement unreliability-aware attention. To exclude the impact of imputed records, we filter out all the imputed values with an actual records pass filter (ARPF), which only allows actually observed records to pass through, namely c s t 0/1 = F ARP F (c t ) = c t -0.5 for reliability scores and x s t 0/true = x t c s t 0/1 for input records, such that sampling characteristics of original EHR data are preserved. The filtered data has severe irregularities and the contained medical information is difficult to extract by using standard machine learning methods, whose architectures are designed for regular data. Therefore, we utilize the aforementioned T-GRU to handle the time irregularity problem to extract deep symptom-aware input values x s t deep = T GRU(x s t 0/true , w Δt ) and deep symptom-aware attention weights α s t deep = T GRU(α s t 0/1 , w Δt ). Then, α s t deep are  
+                    <ref type="bibr" coords="5,73.71,98.23,80.12,8.46" target="#b13">(Hosmer et al. 2013)</ref> 0.815 ± 0.007 0.821 ± 0.009 0.810 ± 0.008 0.798 ± 0.008 0.791 ± 0.007 0.777 ± 0.007 RF 
+                    <ref type="bibr" coords="5,70.71,106.46,61.64,8.46" target="#b2">(Breiman 2001)</ref> 0.849 ± 0.007 0.856 ± 0.009 0.842 ± 0.008 0.834 ± 0.007 0.823 ± 0.007 0.820 ± 0.007 IndRNN 
+                    <ref type="bibr" coords="5,92.22,116.08,58.11,8.46" target="#b16">(Li et al. 2018)</ref> 0.888 ± 0.006 0.894 ± 0.007 0.888 ± 0.007 0.875 ± 0.006 0.867 ± 0.006 0.858 ± 0.006 GRU-raw 
+                    <ref type="bibr" coords="5,97.06,125.62,75.18,8.46" target="#b8">(Chung et al. 2014)</ref> 0.885 ± 0.005 0.888 ± 0.007 0.874 ± 0.007 0.867 ± 0.006 0.857 ± 0.006 0.852 ± 0.006 GRU 
+                    <ref type="bibr" coords="5,79.32,135.24,75.30,8.46" target="#b8">(Chung et al. 2014)</ref> 0.883 ± 0.006 0.892 ± 0.007 0.881 ± 0.006 0.875 ± 0.006 0.866 ± 0.006 0.859 ± 0.006 T-LSTM 
+                    <ref type="bibr" coords="5,93.87,144.75,75.64,8.46" target="#b1">(Baytas et al. 2017)</ref> 0.863 ± 0.006 0.896 ± 0.007 0.872 ± 0.007 0.856 ± 0.007 0.851 ± 0.006 0.840 ± 0.006 T-LSTM-ND 
+                    <ref type="bibr" coords="5,111.00,154.39,75.66,8.46" target="#b1">(Baytas et al. 2017)</ref> 0.885 ± 0.005 0.899 ± 0.007 0.890 ± 0.006 0.874 ± 0.006 0.863 ± 0.006 0.855 ± 0.006 GRU-D 
+                    <ref type="bibr" coords="5,89.51,163.90,64.98,8.46" target="#b5">(Che et al. 2018)</ref> 0.900 ± 0.005 0.923 ± 0.006 0.895 ± 0.006 0.875 ± 0.006 0.876 ± 0.006 0.866 ± 0.006 InterpNet 
+                    <ref type="bibr" coords="5,96.10,173.52,100.00,8.46" target="#b26">(Shukla and Marlin 2019)</ref> 0.903 ± 0.005 0.925 ± 0.005 0.901 ± 0.005 0.887 ± 0.005 0.879 ± 0.005 0.872 ± 0.005 T-GRU-raw 0.889 ± 0.005 0.901 ± 0.006 0.887 ± 0.006 0.874 ± 0.006 0.860 ± 0.006 0.856 ± 0.006 T-GRU-raw+s 0.897 ± 0.005 0.925 ± 0.005 0.900 ± 0.005 0.882 ± 0.006 0.871 ± 0.005 0.863 ± 0.005 T-GRU 0.893 ± 0.005 0.902 ± 0.006 0.898 ± 0.006 0.881 ± 0.006 0.868 ± 0.006 0.861 ± 0.006 T-GRU+u 0.913 ± 0.005 0.927 ± 0.005 0.910 ± 0.005 0.897 ± 0.005 0.885 ± 0.005 0.878 ± 0.005 DATA-GRU 0.919 ± 0.004 0.934 ± 0.005 0.921 ± 0.005 0.907 ± 0.004 0.898 ± 0.005 0.893 ± 0.004 used to adjust weights assigned to x s t deep . The expressions are as follows:
+                </p>
+                <formula xml:id="formula_10" coords="5,105.24,278.75,187.26,70.26">c s t 0/1 = F ARP F (c t ) = c t -0.5 (10) x s t 0/true = x t c s t 0/1 (11) x s t deep = T GRU(x s t 0/true , w Δt ) (12) α s t deep = T GRU(α s t 0/1 , w Δt ) (13) x s t = x s t deep α s t deep</formula>
+                <p coords="5,275.90,337.96,16.60,8.93;5,63.96,351.18,228.53,8.93;5,54.00,362.14,238.50,8.93;5,54.00,373.10,238.51,8.93;5,54.00,384.06,238.50,8.93;5,54.00,395.02,160.24,8.93">(14) Interpretable embedding. To utilize information from both views, we combine them via an embedding layer. We select rectified linear unit (ReLU) as the activation function because it enables the learned representations to be interpretable. The expression is given below:</p>
+                <formula xml:id="formula_11" coords="5,90.35,407.19,202.15,13.24">x adjust t = ReLU (W e mb[x u t ; x s t ] + b emb ) (15)</formula>
+                <p coords="5,63.96,422.91,220.80,8.93;5,288.63,422.91,3.87,8.93;5,54.00,433.87,157.16,8.93;5,219.46,433.87,73.04,8.93;5,54.00,444.83,84.55,8.93;5,63.96,537.37,228.54,8.93;5,54.00,548.33,238.51,8.93;5,54.00,559.28,152.80,8.93">The adjusted previous hidden status as given in Eq. ( 
+                    <ref type="formula" coords="5,284.76,422.91,3.87,8.93">6</ref>) and the adjusted input as given in Eq. ( 
+                    <ref type="formula" coords="5,211.16,433.87,8.30,8.93">15</ref>) are then injected into a standard GRU: Objective Function. We use a softmax layer to generate the mortality risk scores from the hidden status at the last timestamp of the observation window:
+                </p>
+                <formula xml:id="formula_12" coords="5,54.00,455.17,238.50,69.86">z t = δ(W z x adjust t + U z h d t-1 + b z ) (16) r t = δ(W r x adjust t + U r h d t-1 + b r ) (17) ht = tanh(W x adjust t + U (r t h d t-1 ) + b) (18) h t = (1 -z t ) h d t-1 + z t ht (19) where δ(•) is sigmoid function; W z , U z , W r , U r , W</formula>
+                <formula xml:id="formula_13" coords="5,106.86,571.70,185.63,10.20">ỹt = sof tmax(W pred h t + b pred ) (20)</formula>
+                <p coords="5,54.00,585.11,219.34,9.83">where W pred and b pred are trainable matrix and vector.</p>
+                <p coords="5,63.96,596.31,228.54,8.93;5,54.00,606.66,238.14,9.54;5,54.00,617.61,168.58,9.54">We use cross-entropy as the objective function to calculate the classification loss between the true mortality label ỹ and the predicted label ỹt for each patient:</p>
+                <formula xml:id="formula_14" coords="5,64.78,631.32,216.92,30.25">Loss(ỹ, ỹt ) = 1 T k T k t=1 (ỹ log ỹt + (1 -ỹ) log(1 -ỹt ))</formula>
+                <p coords="5,275.90,662.27,16.60,8.93;5,54.00,673.23,238.50,8.93;5,54.00,684.19,238.50,8.93;5,54.00,695.15,71.34,8.93">(21) During the training process, the losses for all the patients in each minibatch are summed up to obtain the total loss for back propagation.</p>
+            </div>
+            <div
+                xmlns="http://www.tei-c.org/ns/1.0">
+                <head coords="5,406.21,254.27,65.08,10.69;5,319.50,269.77,205.45,9.75">Experiments Data Description and Experimental Settings</head>
+                <p coords="5,319.50,284.18,238.50,8.93;5,319.50,295.14,44.26,8.93;5,451.40,295.14,106.61,8.93;5,319.50,306.09,68.88,8.93;5,468.76,306.09,4.29,8.93">We conduct experiments on two real-world datasets, i.e., MIMIC-III 
+                    <ref type="bibr" coords="5,367.81,295.14,83.59,8.93" target="#b14">(Johnson et al. 2016</ref>) and eICU Collaborative Research Dataset 
+                    <ref type="bibr" coords="5,390.87,306.09,77.89,8.93" target="#b23">(Pollard et al. 2018)</ref>.
+                </p>
+                <p coords="5,329.46,317.05,228.54,8.93;5,319.50,328.01,238.50,8.93;5,319.50,338.97,238.50,8.93;5,319.50,349.93,238.50,8.93;5,319.50,360.89,238.50,8.93;5,319.50,371.85,238.50,8.93;5,319.50,382.81,238.50,8.93;5,319.50,393.77,238.50,8.93;5,319.50,404.72,238.50,8.93;5,319.50,415.68,238.51,8.93;5,319.50,426.64,238.50,8.93;5,319.50,437.60,238.50,8.93;5,319.50,448.56,238.50,8.93;5,319.50,459.52,184.88,8.93">MIMIC-III consists of medical records of 58K patients collected at Beth Israel Deaconess Medical Center over 11 years. We use the 20 most frequent laboratory parameters and the 30 most frequent chartevents as inputs. We set the observation window as 5 days and utilize all the patients meeting the following three conditions: 1) adult (aged 18 years or above); 2) at least one of the 20 laboratory parameters is not empty; 3) at least one of the 30 chartevents is not empty. We finally get a cohort of 34,660 patients. We conduct two kinds of prediction tasks: in-hospital mortality risk prediction (predict the likelihood of death for a patient during the treatment in hospital) and short-term mortality risk prediction (predict the likelihood of death for a patient a few days after the end of the observation window).</p>
+                <p coords="5,329.46,470.48,228.54,8.93;5,319.50,481.44,238.50,8.93;5,319.50,492.40,238.50,8.93;5,319.50,503.35,238.50,8.93;5,319.50,514.31,238.50,8.93;5,319.50,525.27,238.50,8.93;5,319.50,536.23,238.50,8.93;5,319.50,547.19,148.57,8.93">eICU consists of medical records of 200,859 patients collected from 208 critical care units in the United States between 2014 and 2015. We utilize the 50 most frequent laboratory parameters as inputs. We conduct in-hospital mortality risk prediction with different lengths of observation window (increase from the first day to the first 6 days after admission). We utilize all the adult patients with at least 2 visits within the observation window.</p>
+                <p coords="5,329.46,558.15,228.53,8.93;5,319.50,569.11,238.50,8.93;5,319.50,580.06,238.50,8.93;5,319.50,591.02,223.25,8.93">For both datasets, 70% of patients are randomly chosen as the training set and the rest patients are used as the test set. The experimental results are evaluated in terms of the area under the receiver operator characteristic curves (AUC).</p>
+            </div>
+            <div
+                xmlns="http://www.tei-c.org/ns/1.0">
+                <head coords="5,319.50,611.17,96.66,9.75">Comparing Methods</head>
+                <p coords="5,319.50,624.96,238.50,9.96">• Logistic Regression (LR) and Random Forests (RF):</p>
+                <p coords="5,329.46,636.53,68.77,8.93;5,354.81,647.49,28.67,8.93;5,443.91,647.49,114.10,8.93;5,329.46,658.45,228.54,8.93;5,329.46,669.41,42.88,8.93;5,319.50,683.57,238.50,9.96">As baselines, LR 
+                    <ref type="bibr" coords="5,401.22,636.53,156.77,8.93;5,329.46,647.49,23.24,8.93" target="#b13">(Hosmer Jr, Lemeshow, and Sturdivant 2013)</ref> and RF 
+                    <ref type="bibr" coords="5,385.58,647.49,58.33,8.93" target="#b2">(Breiman 2001</ref>) are used to model means of IMTS data since they are unable to model variable length sequences. • Independent Recurrent Neural Network (IndRNN):
+                </p>
+                <p coords="5,329.46,695.14,228.54,8.93;6,202.66,98.23,350.31,8.46;6,56.55,106.11,11.73,8.46;6,202.66,106.11,350.31,8.46;6,56.55,115.62,33.24,8.46;6,202.66,115.62,350.31,8.46;6,56.55,125.27,38.06,8.46;6,202.66,125.27,350.31,8.46;6,56.55,134.77,20.31,8.46;6,202.66,134.77,350.31,8.46;6,56.55,144.40,34.86,8.46;6,202.66,144.40,350.31,8.46;6,56.55,153.93,52.00,8.46;6,202.66,153.93,350.31,8.46;6,56.55,163.55,30.50,8.46;6,202.66,163.55,350.31,8.46;6,56.55,173.06,496.42,8.46;6,56.55,184.79,47.15,8.46;6,202.66,184.79,350.31,8.46;6,56.55,193.49,56.38,8.46;6,202.66,193.84,305.50,8.46">Different from standard RNNs, neurons in IndRNN are  
+                    <ref type="bibr" coords="6,71.27,98.23,80.01,8.46" target="#b13">(Hosmer et al. 2013)</ref> 0.738 ± 0.003 0.768 ± 0.003 0.781 ± 0.003 0.792 ± 0.003 0.800 ± 0.003 0.801 ± 0.003 RF 
+                    <ref type="bibr" coords="6,70.69,106.11,61.67,8.46" target="#b2">(Breiman 2001)</ref> 0.775 ± 0.004 0.792 ± 0.004 0.801 ± 0.003 0.813 ± 0.003 0.823 ± 0.003 0.820 ± 0.003 IndRNN 
+                    <ref type="bibr" coords="6,92.23,115.62,57.94,8.46" target="#b16">(Li et al. 2018)</ref> 0.820 ± 0.003 0.838 ± 0.003 0.852 ± 0.003 0.862 ± 0.003 0.867 ± 0.003 0.877 ± 0.002 GRU-raw 
+                    <ref type="bibr" coords="6,97.06,125.27,75.18,8.46" target="#b8">(Chung et al. 2014)</ref> 0.756 ± 0.004 0.825 ± 0.003 0.845 ± 0.003 0.857 ± 0.003 0.867 ± 0.003 0.875 ± 0.003 GRU 
+                    <ref type="bibr" coords="6,79.32,134.77,75.16,8.46" target="#b8">(Chung et al. 2014)</ref> 0.816 ± 0.003 0.836 ± 0.003 0.852 ± 0.003 0.866 ± 0.003 0.869 ± 0.003 0.875 ± 0.002 T-LSTM 
+                    <ref type="bibr" coords="6,93.86,144.40,75.63,8.46" target="#b1">(Baytas et al. 2017)</ref> 0.793 ± 0.003 0.819 ± 0.003 0.836 ± 0.003 0.845 ± 0.003 0.860 ± 0.003 0.869 ± 0.003 T-LSTM-ND 
+                    <ref type="bibr" coords="6,111.00,153.93,75.65,8.46" target="#b1">(Baytas et al. 2017)</ref> 0.820 ± 0.004 0.839 ± 0.004 0.854 ± 0.004 0.867 ± 0.004 0.874 ± 0.004 0.879 ± 0.004 GRU-D 
+                    <ref type="bibr" coords="6,89.51,163.55,64.98,8.46" target="#b5">(Che et al. 2018)</ref> 0.737 ± 0.004 0.803 ± 0.004 0.827 ± 0.003 0.849 ± 0.003 0.858 ± 0.003 0.861 ± 0.003 InterpNet (Shukla and Marlin 2019) 0.720 ± 0.004 0.805 ± 0.004 0.834 ± 0.003 0.847 ± 0.003 0.854 ± 0.003 0.857 ± 0.003 T-GRU-raw 0.768 ± 0.004 0.830 ± 0.003 0.847 ± 0.003 0.861 ± 0.003 0.870 ± 0.003 0.876 ± 0.002 T-GRU-raw+s 0.777 ± 0.004 0.832 ± 0.003 0.851 ± 0.003 0.863 ± 0.003 0.870 ± 0.003 0.
+                </p>
+                <p coords="6,508.16,193.84,44.81,8.46;6,56.55,203.48,29.43,8.46;6,202.66,203.48,350.31,8.46;6,56.55,212.99,39.74,8.46;6,202.66,212.99,350.31,8.46;6,56.55,221.80,50.32,8.46;6,202.66,221.80,350.31,8.46;6,63.96,255.62,228.53,8.93;6,63.96,266.58,116.21,8.93;6,236.35,266.58,8.58,8.93">880 ± 0.002 T-GRU 0.822 ± 0.003 0.844 ± 0.003 0.859 ± 0.003 0.870 ± 0.003 0.875 ± 0.003 0.881 ± 0.002 T-GRU+u 0.826 ± 0.003 0.854 ± 0.003 0.866 ± 0.003 0.877 ± 0.002 0.883 ± 0.003 0.891 ± 0.002 DATA-GRU 0.836 ± 0.003 0.859 ± 0.003 0.872 ± 0.003 0.884 ± 0.002 0.890 ± 0.002 0.896 ± 0.002 independent of each other in the same layer but are connected across different layers 
+                    <ref type="bibr" coords="6,182.67,266.58,53.68,8.93" target="#b16">(Li et al. 2018</ref>).
+                </p>
+                <p coords="6,54.00,281.63,173.92,9.96;6,82.56,293.21,209.94,8.93;6,63.96,304.16,228.54,8.93;6,63.96,315.12,228.54,8.93;6,63.96,326.08,228.54,8.93;6,63.96,337.04,214.08,8.93">• T-LSTM and T-LSTM-ND: T-LSTM 
+                    <ref type="bibr" coords="6,233.67,282.25,58.83,8.93;6,63.96,293.21,18.59,8.93" target="#b1">(Baytas et al. 2017</ref>) described in the introduction section. Since T-LSTM is designed for longitudinal records, it decomposes data into long and short memory, which may not be suitable for ICU data. So we also compare with T-LSTM without such decomposition structure (T-LSTM-ND).
+                </p>
+                <p coords="6,54.00,352.09,79.22,9.96;6,197.84,352.71,94.66,8.93;6,63.96,363.67,63.09,8.93">• GRU-D: GRU-D 
+                    <ref type="bibr" coords="6,135.66,352.71,62.18,8.93" target="#b5">(Che et al. 2018</ref>) described in the introduction section.
+                </p>
+                <p coords="6,54.00,378.72,238.50,9.96;6,63.96,390.29,138.08,8.93">• InterpNet: InterpNet (Shukla and Marlin 2019) described in the introduction section. </p>
+            </div>
+            <div
+                xmlns="http://www.tei-c.org/ns/1.0">
+                <head coords="6,54.00,504.14,106.08,9.75">Results and Discussion</head>
+                <p coords="6,54.00,519.80,238.50,8.93;6,54.00,530.76,171.69,8.93;6,280.28,530.76,12.22,8.93;6,54.00,541.72,238.50,8.93;6,54.00,552.68,238.50,8.93;6,54.00,563.64,238.51,8.93;6,54.00,574.60,238.50,8.93;6,54.00,585.56,158.41,8.93;6,75.44,596.51,217.06,8.93;6,54.00,607.47,238.51,8.93;6,54.00,618.43,238.50,8.93;6,54.00,629.39,238.50,8.93;6,54.00,640.35,238.50,8.93;6,54.00,651.31,238.50,8.93;6,54.00,662.27,238.50,8.93;6,54.00,673.23,238.50,8.93;6,54.00,684.18,238.50,8.93;6,54.00,695.14,238.50,8.93;6,319.50,255.62,238.50,8.93;6,319.50,266.58,238.50,8.93;6,319.50,277.54,238.50,8.93;6,319.50,288.50,209.48,8.93;6,329.46,299.75,228.53,8.93;6,319.50,310.70,238.50,8.93;6,319.50,321.66,238.50,8.93;6,319.50,332.62,238.50,8.93;6,319.50,343.58,238.50,8.93;6,319.50,354.54,238.51,8.93;6,319.50,365.50,238.50,8.93;6,319.50,376.46,238.50,8.93;6,319.50,387.42,238.50,8.93;6,319.50,398.38,185.01,8.93">The AUC scores of DATA-GRU and comparing methods for MIMIC-III and eICU are provided in Table 
+                    <ref type="table" coords="6,228.09,530.76,4.98,8.93" target="#tab_2">1</ref> and 
+                    <ref type="table" coords="6,252.25,530.76,28.02,8.93" target="#tab_4">Table 2</ref>. It can be seen that the AUC scores of DATA-GRU are continually larger than that of other methods for both datasets. E.g., for the in-hospital mortality prediction of MIMIC-III, the AUC score of DATA-GRU is 0.919, which is significantly larger than 0.903 achieved by InterpNet 
+                    <ref type="bibr" coords="6,214.95,585.56,77.56,8.93;6,54.00,596.51,21.44,8.93" target="#b26">(Shukla and Marlin 2019)</ref>. These results demonstrate that DATA-GRU achieves the best performance regardless of the prediction levels and the lengths of observation window. There are several possible reasons. Firstly, DATA-GRU introduces a time-aware structure to directly handle irregular intervals without the necessity of processing IMTS into equally-spaced, thus successfully preserving the contained useful information on the dynamics of patients' health status. Secondly, DATA-GRU designs novel dual-attention consisting of two novel attention mechanisms to handle missing values, thus capturing useful information from different views. Furthermore, all the parameters of DATA-GRU are optimized jointly, ensuring different components collaborate well to achieve global optimal. Besides, several other observations are drawn: Firstly, DATA-GRU outperforms InterpNet (Shukla and Marlin 2019) by a large margin. InterpNet is the representative of processing IMTS into equally spaced, which may damage the medical considerations behind the sampling characteristic of EHR data and do not perform well when the number of original records is small, e.g., in-hospital mortality prediction for eICU with one day's observation data. In comparison, DATA-GRU avoids processing IMTS into equally spaced by introducing a time-aware structure to handle irregular intervals, achieving better results.
+                </p>
+                <p coords="6,329.46,409.63,180.12,8.93;6,346.40,420.59,156.63,8.93;6,344.69,431.54,213.32,8.93;6,319.50,442.50,238.50,8.93;6,319.50,453.46,238.50,8.93;6,319.50,464.42,238.50,8.93;6,319.50,475.38,238.50,8.93;6,319.50,486.34,164.53,8.93">Secondly, DATA-GRU outperforms GRU-D 
+                    <ref type="bibr" coords="6,513.64,409.63,44.36,8.93;6,319.50,420.59,23.24,8.93" target="#b5">(Che et al. 2018)</ref> and T-LSTM (including T-LSTM-ND, 
+                    <ref type="bibr" coords="6,506.69,420.59,51.32,8.93;6,319.50,431.54,23.24,8.93" target="#b1">Baytas et al. 2017)</ref> significantly. This is because GRU-D and T-LSTM are unable to identify the differences in the reliability of different data points and thus cannot adjust the assigned weights. As a result, imputed values could play equal contributions with actual records even when they deviate from reality, thus severely affecting final prediction results.
+                </p>
+                <p coords="6,329.46,497.59,228.54,8.93;6,319.50,508.55,238.50,8.93;6,319.50,519.51,238.50,8.93;6,319.50,530.46,238.51,8.93;6,319.50,541.42,238.50,8.93;6,319.50,552.38,238.50,8.93;6,319.50,563.34,238.50,8.93;6,319.50,574.30,238.51,8.93;6,319.50,585.26,238.50,8.93;6,319.50,596.22,238.50,8.93;6,319.50,607.18,177.36,8.93">Thirdly, variations of RNN with the time-aware mechanism generally outperform variations without such mechanism. E.g., for MIMIC-III, at the 1-day prediction level, AUC scores of T-GRU and T-LSTM-ND are 0.902 and 0.899, which are larger than 0.894 and 0.892 achieved by IndRNN and GRU. These results demonstrate that the introduction of the time-aware mechanism promotes the capacity of handling irregularly spaced data. Experimental results show that T-LSTM does not perform well for these tasks, which is probably because its decomposition structure damages the short-term information in ICU data.</p>
+                <p coords="6,329.46,618.43,228.54,8.93;6,319.50,629.39,238.51,8.93;6,319.50,640.34,238.50,8.93;6,319.50,651.30,238.50,8.93;6,319.50,662.26,238.50,8.93;6,319.50,673.22,238.50,8.93;6,319.50,684.18,238.50,8.93;6,319.50,695.14,238.50,8.93;7,54.00,250.69,238.50,8.93;7,54.00,261.65,238.50,8.93;7,54.00,272.61,238.50,8.93;7,54.00,283.57,238.50,8.93;7,54.00,294.53,238.50,8.93;7,54.00,305.49,238.50,8.93;7,54.00,316.45,184.87,8.93">Finally, modeling augmented records usually results in better results than directly modeling original records, e.g., for all the prediction tasks in eICU, T-GRU outperforms T-GRU-raw and T-GRU+u surpasses T-GRU-raw+s. This is probably because original EHR data is highly complex with both missing values and varying intervals, due to which the contained medical knowledge is difficult to extract. Conversely, temporal dependencies contained in aug-  mented data are easier to capture. In addition, T-GRU+u and T-GRU-raw+s outperform T-GRU and T-GRU-raw respectively, which demonstrate the effeteness of each attention mechanism. Furthermore, DATA-GRU consistently outperforms T-GRU+u and T-GRU-raw+s, which proves that the proposed dual-attention can effectively capture information from different views and improve final results.</p>
+            </div>
+            <div
+                xmlns="http://www.tei-c.org/ns/1.0">
+                <head coords="7,54.00,338.58,52.43,9.75">Case Study</head>
+                <p coords="7,54.00,354.85,238.50,8.93;7,54.00,365.81,238.50,8.93;7,54.00,376.77,238.50,8.93;7,54.00,387.73,104.68,8.93;7,168.93,387.73,123.58,8.93;7,54.00,398.69,238.50,8.93;7,54.00,409.65,238.50,8.93;7,54.00,420.61,216.50,8.93;7,277.35,420.61,15.15,8.93;7,141.03,497.32,151.47,8.93;7,54.00,508.28,238.50,8.93;7,54.00,519.24,238.51,8.93;7,54.00,530.20,238.50,8.93;7,54.00,541.15,238.50,8.93;7,54.00,552.11,174.18,8.93;7,241.16,552.11,51.35,8.93;7,54.00,563.07,238.50,8.93;7,54.00,574.03,238.50,8.93;7,54.00,584.99,238.50,8.93;7,54.00,595.95,238.50,8.93;7,54.00,606.91,238.50,8.93;7,54.00,617.87,238.50,8.93;7,54.00,628.83,87.77,8.93;7,266.17,628.83,26.34,8.93;7,54.00,639.78,238.50,8.93;7,54.00,650.74,238.50,8.93;7,54.00,661.70,191.48,8.93;7,111.83,673.23,180.67,8.93;7,54.00,684.18,238.50,8.93;7,54.00,695.14,56.63,8.93;7,152.43,695.14,140.08,8.93;7,319.50,448.09,238.50,8.93;7,319.50,459.04,238.50,8.93;7,319.50,470.00,238.50,8.93;7,319.50,480.96,238.50,8.93;7,323.51,491.92,234.49,8.93;7,319.50,502.88,238.50,8.93;7,319.50,513.84,238.50,8.93;7,319.50,524.80,238.50,8.93;7,319.50,535.76,238.51,8.93;7,319.50,546.72,238.50,8.93;7,319.50,557.67,238.50,8.93;7,319.50,568.63,169.63,8.93">To demonstrate the benefit of applying DATA-GRU to realworld risk prediction tasks, we analyze attention weights learned by unreliability-aware and symptom-aware components of DATA-GRU. Fig. 
+                    <ref type="figure" coords="7,161.32,387.73,4.98,8.93" target="#fig_5">3</ref> shows a case study for predicting the in-hospital clinical outcome of a pneumonia patient in MIMIC-III based on the EHR data within 5 days after admission. The patient information is provided in Table 
+                    <ref type="table" coords="7,273.61,420.61,3.74,8.93" target="#tab_6">3</ref>. In  
+                    <ref type="bibr" coords="7,121.44,497.32,19.59,8.93">3(a2)</ref>, which shows that the unreliabilityaware mechanism assigns larger weights on the first several records. This is because many physiological variables of the patient are actually examined in these visits. Furthermore, the unreliability-aware attention mechanism can effectively identify important variables. Fig. 
+                    <ref type="figure" coords="7,232.18,552.11,4.98,8.93" target="#fig_7">4</ref> shows attention weights contributed by all the 50 input variables. We can see that attention scores assigned to these variables are different. The item IDs of the 5 variables with the largest weights for the pneumonia patient are 87 (Braden Score), 787 (Carbon Dioxide), 742 (calprevflg), 646 (SpO2), and 51277 (RDW), most of which have been proved to be closely related to pneumonia 
+                    <ref type="bibr" coords="7,146.09,628.83,120.07,8.93" target="#b27">(Sin, Man, and Marrie 2005)</ref>. This proves that the unreliability-aware attention can effectively identify important variables and assign larger weights to reliable records to help them play important roles. 
+                    <ref type="bibr" coords="7,63.96,673.23,42.62,8.93">Fig. 3(b1)</ref> shows the attention matrix learned by the symptom-aware attention mechanism, which can be seen is different from 
+                    <ref type="bibr" coords="7,113.85,695.14,38.58,8.93">Fig. 3(a1)</ref>. This is because the unreliability-  aware attention considers the quality of data, while the symptom-aware attention focuses on learning medical knowledge from original clinical records. The average attention score contributed by each visit is provided in Fig. 
+                    <ref type="figure" coords="7,319.50,491.92,4.01,8.93" target="#fig_5">3</ref>(b2), which clearly shows that the symptom-aware attention focuses on visits in the middle. This is probably because the time intervals in the middle are small, due to which the symptoms of the patient change frequently within a certain period. All these results prove that the proposed dualattention mechanism can analyze EHR data from different views and capture different aspects of information, thus effectively improving risk prediction results.
+                </p>
+            </div>
+            <div
+                xmlns="http://www.tei-c.org/ns/1.0">
+                <head coords="7,410.18,591.23,57.13,10.69">Conclusion</head>
+                <p coords="7,319.50,607.47,238.50,8.93;7,319.50,618.43,238.51,8.93;7,319.50,629.39,238.50,8.93;7,319.50,640.35,238.50,8.93;7,319.50,651.31,238.50,8.93;7,319.50,662.27,238.50,8.93;7,319.50,673.23,238.50,8.93;7,319.50,684.19,238.52,8.93;7,319.50,695.15,238.50,8.93;8,54.00,57.11,116.48,8.93">This paper proposes a novel DATA-GRU to predict the mortality risk of patients by using IMTS data. A time-aware mechanism is introduced to directly handle the irregular time intervals and preserve the contained useful information. Furthermore, a novel dual-attention mechanism is designed to tackle missing values in IMTS from both the data-quality view and the medical-knowledge view. Extensive experimental results and case study demonstrate that DATA-GRU outperforms existing methods significantly and provides in-terpretable prediction results.</p>
+            </div>
+            <figure
+                xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_0" coords="3,54.00,257.83,504.00,9.59;3,54.00,268.18,45.50,9.54;3,99.51,268.79,458.50,9.59;3,54.00,279.75,504.00,8.93;3,54.00,290.71,504.00,8.93;3,54.00,301.67,402.89,8.93">
+                <head>Figure 2 :</head>
+                <label>2</label>
+                <figDesc>Figure2: Architecture of DATA-GRU and illustration of dual-attention mechanism. (a) DATA-GRU takes input records x t , time intervals Δ t and unreliability scores u t as inputs. Parts in purple, green, and cyan denote time-aware mechanism, symptomaware attention, and unreliability-aware attention, respectively. DATA-GRU handles irregular intervals by converting them into weights via a decay function to adjust the influence of previous status on current status. (b) DATA-GRU tackles missing values by designing a novel dual-attention structure to jointly consider data-quality and medical-knowledge.</figDesc>
+            </figure>
+            <figure
+                xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_1" coords="4,80.74,413.90,32.02,10.71;4,123.00,407.47,125.17,9.54;4,123.00,420.62,131.60,10.71;4,280.88,414.52,11.62,8.93">
+                <figDesc>u[x * ] = 0, for actually observed records Con[x * ] &gt; 0, for imputed values (4)</figDesc>
+            </figure>
+            <figure
+                xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_2" coords="5,267.64,515.20,23.77,9.18;5,54.00,526.16,222.80,9.83">
+                <figDesc>and U are trainable matrices; b z , b r and b are trainable vectors.</figDesc>
+            </figure>
+            <figure
+                xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_3" coords="6,54.00,405.34,238.50,9.96;6,63.96,416.92,228.54,8.93;6,63.96,427.88,228.54,8.93;6,63.96,438.84,228.54,8.93;6,63.96,449.80,228.54,8.93;6,63.96,460.76,228.54,8.93;6,63.96,471.71,228.54,8.93;6,63.96,482.67,135.61,8.93">
+                <head>•</head>
+                <figDesc>DATA-GRU variants: Besides above methods, we consider six variants of DATA-GRU to verify the effectiveness of each component: (a) standard GRU for original records (GRU-raw) and augmented records (GRU); (b) T-GRU and T-GRU-raw are GRU and GRU-raw with the time-aware mechanism; (c) T-GRU-raw+s is T-GRU-raw with symptom-aware attention; (d) T-GRU+u is T-GRU with unreliability-aware attention.</figDesc>
+            </figure>
+            <figure
+                xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_4" coords="7,163.80,149.27,25.98,4.49;7,115.21,153.69,122.63,6.42;7,410.72,149.42,25.98,4.49;7,366.89,154.68,114.13,6.42;7,94.33,175.10,164.38,6.42;7,346.41,174.98,155.89,6.42">
+                <figDesc>Symptom-aware attention weights (a2) Unreliability-aware weights at different timestamps (b2) Symptom-aware weights at different timestamps</figDesc>
+            </figure>
+            <figure
+                xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_5" coords="7,54.00,196.73,504.00,8.93;7,54.00,207.69,504.00,8.93;7,54.00,218.65,400.10,8.93;7,314.23,54.81,218.97,93.02">
+                <head>Figure 3 :</head>
+                <label>3</label>
+                <figDesc>Figure 3: Visualization of attention weights. (a1) the weight matrix learned by unreliability-aware attention of DATA-GRU, which shows score assigned to each variable at each visit; (a2) the average weight of different variables at each visit; (b1) and (b2) provide weight matrix and average weight learned by symptom-aware attention of DATA-GRU.</figDesc>
+                <graphic coords="7,314.23,54.81,218.97,93.02" type="bitmap"/>
+            </figure>
+            <figure
+                xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_6" coords="7,54.00,431.57,238.50,8.93;7,54.00,442.52,238.50,8.93;7,54.00,453.48,238.50,8.93;7,54.00,464.44,238.50,8.93;7,54.00,475.40,238.50,8.93;7,54.00,486.36,238.50,8.93;7,54.00,497.32,63.55,8.93">
+                <head>Fig. 3 ,</head>
+                <label>3</label>
+                <figDesc>X-axis denotes time steps and Y-axis represents the learned attention score.Fig. 3(a1)  shows the attention weight matrix learned by the unreliability-aware attention mechanism, which demonstrates that different attention scores are assigned to different elements in different time series. The average attention score of different variables at each visit is given in Fig.</figDesc>
+            </figure>
+            <figure
+                xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_7" coords="7,321.68,415.41,234.15,8.93">
+                <head>Figure 4 :</head>
+                <label>4</label>
+                <figDesc>Figure 4: Attention weights assigned to different variables.</figDesc>
+            </figure>
+            <figure
+                xmlns="http://www.tei-c.org/ns/1.0" type="table" xml:id="tab_2" coords="5,54.00,63.41,504.00,43.28">
+                <head>Table 1 :</head>
+                <label>1</label>
+                <figDesc>The AUC scores (mean ± std) of different levels of mortality risk predictions for MIMIC-III. Red represents the best performance while Blue and Green indicate the second and third best performance, respectively.</figDesc>
+                <table coords="5,56.55,87.89,484.63,18.80">
+                    <row>
+                        <cell>Models</cell>
+                        <cell>In-hospital</cell>
+                        <cell>1 day</cell>
+                        <cell>5 days</cell>
+                        <cell>10 days</cell>
+                        <cell>15 days</cell>
+                        <cell>20 days</cell>
+                    </row>
+                    <row>
+                        <cell>LR</cell>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                    </row>
+                </table>
+            </figure>
+            <figure
+                xmlns="http://www.tei-c.org/ns/1.0" type="table" xml:id="tab_4" coords="6,54.00,63.41,504.00,43.28">
+                <head>Table 2 :</head>
+                <label>2</label>
+                <figDesc>The AUC scores (mean ± std) of in-hospital mortality risk prediction with different observation windows for eICU. Red represents the best performance while Blue and Green indicate the second and third best performance, respectively.</figDesc>
+                <table coords="6,56.55,87.89,482.20,18.80">
+                    <row>
+                        <cell>Models</cell>
+                        <cell>1 day</cell>
+                        <cell>2 days</cell>
+                        <cell>3 days</cell>
+                        <cell>4 days</cell>
+                        <cell>5 days</cell>
+                        <cell>6 days</cell>
+                    </row>
+                    <row>
+                        <cell>LR</cell>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                    </row>
+                </table>
+            </figure>
+            <figure
+                xmlns="http://www.tei-c.org/ns/1.0" type="table" xml:id="tab_6" coords="7,319.50,257.49,238.50,143.16">
+                <head>Table 3 :</head>
+                <label>3</label>
+                <figDesc>Patient information in the case study. All the timestamps use admission time of the patient as the benchmark.</figDesc>
+                <table coords="7,321.45,281.46,234.36,119.19">
+                    <row>
+                        <cell/>
+                        <cell cols="24">Diagnosis In-hospital clinical outcome</cell>
+                        <cell/>
+                        <cell cols="24">Death time Risk predicted by DATA-GRU</cell>
+                    </row>
+                    <row>
+                        <cell cols="7">Pneumonia</cell>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                        <cell cols="6">Death</cell>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                        <cell cols="10">17.99 days</cell>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                        <cell cols="5">0.906</cell>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                    </row>
+                    <row>
+                        <cell/>
+                        <cell>1</cell>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                    </row>
+                    <row>
+                        <cell>Attention weight</cell>
+                        <cell>0.2 0.4 0.6 0.8</cell>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                    </row>
+                    <row>
+                        <cell/>
+                        <cell>0</cell>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                    </row>
+                    <row>
+                        <cell/>
+                        <cell>87</cell>
+                        <cell>787</cell>
+                        <cell>742</cell>
+                        <cell>646</cell>
+                        <cell>51277</cell>
+                        <cell>51265</cell>
+                        <cell>50983</cell>
+                        <cell>198</cell>
+                        <cell>50882</cell>
+                        <cell>51250</cell>
+                        <cell>811</cell>
+                        <cell>51249</cell>
+                        <cell>51221</cell>
+                        <cell>51006</cell>
+                        <cell>1127</cell>
+                        <cell>51301</cell>
+                        <cell>677</cell>
+                        <cell>781</cell>
+                        <cell>50868</cell>
+                        <cell>50931</cell>
+                        <cell>211</cell>
+                        <cell>50971</cell>
+                        <cell>618</cell>
+                        <cell>456</cell>
+                        <cell>786</cell>
+                        <cell>788</cell>
+                        <cell>861</cell>
+                        <cell>51279</cell>
+                        <cell>50960</cell>
+                        <cell>821</cell>
+                        <cell>220602</cell>
+                        <cell>50902</cell>
+                        <cell>455</cell>
+                        <cell>829</cell>
+                        <cell>50970</cell>
+                        <cell>828</cell>
+                        <cell>678</cell>
+                        <cell>813</cell>
+                        <cell>50893</cell>
+                        <cell>837</cell>
+                        <cell>8441</cell>
+                        <cell>814</cell>
+                        <cell>833</cell>
+                        <cell>791</cell>
+                        <cell>51222</cell>
+                        <cell>51248</cell>
+                        <cell>827</cell>
+                        <cell>220615</cell>
+                        <cell>225624</cell>
+                        <cell>50912</cell>
+                    </row>
+                    <row>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                        <cell cols="24">ITEM ID of physiological variables</cell>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                        <cell/>
+                    </row>
+                </table>
+            </figure>
+        </body>
+        <back>
+            <div type="references">
+                <listBibl>
+                    <biblStruct coords="8,54.00,91.52,238.50,8.03;8,54.00,101.48,225.52,8.03" xml:id="b0">
+                        <analytic>
+                            <title level="a" type="main" coords="8,89.35,101.48,133.86,8.03">Deep audio-visual speech recognition</title>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">T</forename>
+                                    <surname>Afouras</surname>
+                                </persName>
+                            </author>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">J</forename>
+                                    <forename type="middle">S</forename>
+                                    <surname>Chung</surname>
+                                </persName>
+                            </author>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">A</forename>
+                                    <surname>Senior</surname>
+                                </persName>
+                            </author>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">O</forename>
+                                    <surname>Vinyals</surname>
+                                </persName>
+                            </author>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">A</forename>
+                                    <surname>Zisserman</surname>
+                                </persName>
+                            </author>
+                        </analytic>
+                        <monogr>
+                            <title level="j" coords="8,230.03,101.73,44.86,7.79">IEEE TPAMI</title>
+                            <imprint>
+                                <date type="published" when="2018">2018</date>
+                            </imprint>
+                        </monogr>
+                    </biblStruct>
+                    <biblStruct coords="8,54.00,113.89,238.50,8.03;8,54.00,123.85,238.50,8.03;8,54.00,133.81,24.66,8.03" xml:id="b1">
+                        <analytic>
+                            <title level="a" type="main" coords="8,86.06,123.85,168.66,8.03">Patient subtyping via time-aware lstm networks</title>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">I</forename>
+                                    <forename type="middle">M</forename>
+                                    <surname>Baytas</surname>
+                                </persName>
+                            </author>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">C</forename>
+                                    <surname>Xiao</surname>
+                                </persName>
+                            </author>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">X</forename>
+                                    <surname>Zhang</surname>
+                                </persName>
+                            </author>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">F</forename>
+                                    <surname>Wang</surname>
+                                </persName>
+                            </author>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">A</forename>
+                                    <forename type="middle">K</forename>
+                                    <surname>Jain</surname>
+                                </persName>
+                            </author>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">J</forename>
+                                    <surname>Zhou</surname>
+                                </persName>
+                            </author>
+                        </analytic>
+                        <monogr>
+                            <title level="m" coords="8,271.33,124.10,15.88,7.79">KDD</title>
+                            <imprint>
+                                <date type="published" when="2017">2017</date>
+                                <biblScope unit="page" from="65" to="74"/>
+                            </imprint>
+                        </monogr>
+                    </biblStruct>
+                    <biblStruct coords="8,54.00,146.22,238.50,8.03" xml:id="b2">
+                        <analytic>
+                            <title level="a" type="main" coords="8,123.00,146.22,55.37,8.03">Random forests</title>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">L</forename>
+                                    <surname>Breiman</surname>
+                                </persName>
+                            </author>
+                        </analytic>
+                        <monogr>
+                            <title level="j" coords="8,184.57,146.46,63.73,7.79">Machine learning</title>
+                            <imprint>
+                                <biblScope unit="volume">45</biblScope>
+                                <biblScope unit="issue">1</biblScope>
+                                <biblScope unit="page" from="5" to="32"/>
+                                <date type="published" when="2001">2001</date>
+                            </imprint>
+                        </monogr>
+                    </biblStruct>
+                    <biblStruct coords="8,54.00,158.63,238.50,8.03;8,54.00,168.59,238.50,8.03;8,54.00,178.55,126.37,8.03" xml:id="b3">
+                        <analytic>
+                            <title level="a" type="main" coords="8,89.93,168.59,202.57,8.03;8,54.00,178.55,43.78,8.03">e-snli: natural language inference with natural language explanations</title>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">O.-M</forename>
+                                    <surname>Camburu</surname>
+                                </persName>
+                            </author>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">T</forename>
+                                    <surname>Rocktäschel</surname>
+                                </persName>
+                            </author>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">T</forename>
+                                    <surname>Lukasiewicz</surname>
+                                </persName>
+                            </author>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">P</forename>
+                                    <surname>Blunsom</surname>
+                                </persName>
+                            </author>
+                        </analytic>
+                        <monogr>
+                            <title level="m" coords="8,114.37,178.79,16.94,7.79">NIPS</title>
+                            <imprint>
+                                <date type="published" when="2018">2018. 9539-9549</date>
+                            </imprint>
+                        </monogr>
+                    </biblStruct>
+                    <biblStruct coords="8,54.00,190.96,238.50,8.03;8,54.00,200.92,238.50,8.03;8,54.00,210.88,238.50,8.03;8,54.00,220.84,15.69,8.03" xml:id="b4">
+                        <analytic>
+                            <title level="a" type="main" coords="8,281.54,190.96,10.96,8.03;8,54.00,200.92,238.50,8.03;8,54.00,210.88,119.91,8.03">An rnn architecture with dynamic temporal matching for personalized predictions of parkinson's disease</title>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">C</forename>
+                                    <surname>Che</surname>
+                                </persName>
+                            </author>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">C</forename>
+                                    <surname>Xiao</surname>
+                                </persName>
+                            </author>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">J</forename>
+                                    <surname>Liang</surname>
+                                </persName>
+                            </author>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">B</forename>
+                                    <surname>Jin</surname>
+                                </persName>
+                            </author>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">J</forename>
+                                    <surname>Zho</surname>
+                                </persName>
+                            </author>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">F</forename>
+                                    <surname>Wang</surname>
+                                </persName>
+                            </author>
+                        </analytic>
+                        <monogr>
+                            <title level="j" coords="8,190.27,211.12,78.07,7.79">SIAM on Data Mining</title>
+                            <imprint>
+                                <biblScope unit="page" from="198" to="206"/>
+                                <date type="published" when="2017">2017</date>
+                            </imprint>
+                        </monogr>
+                    </biblStruct>
+                    <biblStruct coords="8,54.00,233.25,238.50,8.03;8,54.00,243.21,238.50,8.03;8,54.00,253.17,128.68,8.03" xml:id="b5">
+                        <analytic>
+                            <title level="a" type="main" coords="8,54.00,243.21,238.50,8.03;8,54.00,253.17,21.37,8.03">Recurrent neural networks for multivariate time series with missing values</title>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">Z</forename>
+                                    <surname>Che</surname>
+                                </persName>
+                            </author>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">S</forename>
+                                    <surname>Purushotham</surname>
+                                </persName>
+                            </author>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">K</forename>
+                                    <surname>Cho</surname>
+                                </persName>
+                            </author>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">D</forename>
+                                    <surname>Sontag</surname>
+                                </persName>
+                            </author>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">Y</forename>
+                                    <surname>Liu</surname>
+                                </persName>
+                            </author>
+                        </analytic>
+                        <monogr>
+                            <title level="j" coords="8,82.16,253.42,60.68,7.79">Scientific reports</title>
+                            <imprint>
+                                <biblScope unit="volume">8</biblScope>
+                                <biblScope unit="issue">1</biblScope>
+                                <biblScope unit="page">6085</biblScope>
+                                <date type="published" when="2018">2018</date>
+                            </imprint>
+                        </monogr>
+                    </biblStruct>
+                    <biblStruct coords="8,54.00,265.58,238.50,8.03;8,54.00,275.54,238.50,8.03;8,54.00,285.50,238.50,8.03" xml:id="b6">
+                        <analytic>
+                            <title level="a" type="main" coords="8,104.06,275.54,188.44,8.03;8,54.00,285.50,156.14,8.03">Retain: An interpretable predictive model for healthcare using reverse time attention mechanism</title>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">E</forename>
+                                    <surname>Choi</surname>
+                                </persName>
+                            </author>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">M</forename>
+                                    <forename type="middle">T</forename>
+                                    <surname>Bahadori</surname>
+                                </persName>
+                            </author>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">J</forename>
+                                    <surname>Sun</surname>
+                                </persName>
+                            </author>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">J</forename>
+                                    <surname>Kulas</surname>
+                                </persName>
+                            </author>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">A</forename>
+                                    <surname>Schuetz</surname>
+                                </persName>
+                            </author>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">W</forename>
+                                    <surname>Stewart</surname>
+                                </persName>
+                            </author>
+                        </analytic>
+                        <monogr>
+                            <title level="m" coords="8,226.71,285.74,16.94,7.79">NIPS</title>
+                            <imprint>
+                                <date type="published" when="2016">2016</date>
+                                <biblScope unit="page" from="3504" to="3512"/>
+                            </imprint>
+                        </monogr>
+                    </biblStruct>
+                    <biblStruct coords="8,54.00,297.91,238.50,8.03;8,54.00,307.87,238.50,8.03;8,54.00,317.83,124.26,8.03" xml:id="b7">
+                        <analytic>
+                            <title level="a" type="main" coords="8,77.57,307.87,214.94,8.03;8,54.00,317.83,50.78,8.03">Gram: graph-based attention model for healthcare representation learning</title>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">E</forename>
+                                    <surname>Choi</surname>
+                                </persName>
+                            </author>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">M</forename>
+                                    <forename type="middle">T</forename>
+                                    <surname>Bahadori</surname>
+                                </persName>
+                            </author>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">L</forename>
+                                    <surname>Song</surname>
+                                </persName>
+                            </author>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">W</forename>
+                                    <forename type="middle">F</forename>
+                                    <surname>Stewart</surname>
+                                </persName>
+                            </author>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">J</forename>
+                                    <surname>Sun</surname>
+                                </persName>
+                            </author>
+                        </analytic>
+                        <monogr>
+                            <title level="m" coords="8,121.23,318.07,15.88,7.79">KDD</title>
+                            <imprint>
+                                <date type="published" when="2017">2017</date>
+                                <biblScope unit="page" from="787" to="795"/>
+                            </imprint>
+                        </monogr>
+                    </biblStruct>
+                    <biblStruct coords="8,54.00,330.24,238.50,8.03;8,54.00,340.20,238.50,8.03;8,54.00,350.16,133.65,8.03" xml:id="b8">
+                        <monogr>
+                            <title level="m" type="main" coords="8,257.14,330.24,35.36,8.03;8,54.00,340.20,238.50,8.03;8,54.00,350.16,10.28,8.03">Empirical evaluation of gated recurrent neural networks on sequence modeling</title>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">J</forename>
+                                    <surname>Chung</surname>
+                                </persName>
+                            </author>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">C</forename>
+                                    <surname>Gulcehre</surname>
+                                </persName>
+                            </author>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">K</forename>
+                                    <surname>Cho</surname>
+                                </persName>
+                            </author>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">Y</forename>
+                                    <surname>Bengio</surname>
+                                </persName>
+                            </author>
+                            <idno type="arXiv">arXiv:1412.3555</idno>
+                            <imprint>
+                                <date type="published" when="2014">2014</date>
+                            </imprint>
+                        </monogr>
+                        <note type="report_type">arXiv preprint</note>
+                    </biblStruct>
+                    <biblStruct coords="8,54.00,362.57,238.50,8.03;8,54.00,372.53,112.72,8.03" xml:id="b9">
+                        <analytic>
+                            <title level="a" type="main" coords="8,119.99,362.57,101.33,8.03">Tensors: a brief introduction</title>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">P</forename>
+                                    <surname>Comon</surname>
+                                </persName>
+                            </author>
+                        </analytic>
+                        <monogr>
+                            <title level="j" coords="8,229.05,362.81,63.45,7.79;8,54.00,372.77,63.91,7.79">IEEE Signal Processing Magazine</title>
+                            <imprint>
+                                <biblScope unit="volume">31</biblScope>
+                                <biblScope unit="issue">3</biblScope>
+                                <biblScope unit="page" from="44" to="53"/>
+                                <date type="published" when="2014">2014</date>
+                            </imprint>
+                        </monogr>
+                    </biblStruct>
+                    <biblStruct coords="8,54.00,384.93,238.50,8.03;8,54.00,394.90,238.50,8.03;8,54.00,404.86,20.17,8.03" xml:id="b10">
+                        <analytic>
+                            <title level="a" type="main" coords="8,54.00,394.90,169.02,8.03">Dual attention network for scene segmentation</title>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">J</forename>
+                                    <surname>Fu</surname>
+                                </persName>
+                            </author>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">J</forename>
+                                    <surname>Liu</surname>
+                                </persName>
+                            </author>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">H</forename>
+                                    <surname>Tian</surname>
+                                </persName>
+                            </author>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">Y</forename>
+                                    <surname>Li</surname>
+                                </persName>
+                            </author>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">Y</forename>
+                                    <surname>Bao</surname>
+                                </persName>
+                            </author>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">Z</forename>
+                                    <surname>Fang</surname>
+                                </persName>
+                            </author>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">H</forename>
+                                    <surname>Lu</surname>
+                                </persName>
+                            </author>
+                        </analytic>
+                        <monogr>
+                            <title level="m" coords="8,242.54,395.14,19.73,7.79">CVPR</title>
+                            <imprint>
+                                <date type="published" when="2019">2019</date>
+                                <biblScope unit="page" from="3146" to="3154"/>
+                            </imprint>
+                        </monogr>
+                    </biblStruct>
+                    <biblStruct coords="8,54.00,417.26,238.50,8.03;8,54.00,427.23,213.24,8.03" xml:id="b11">
+                        <analytic>
+                            <title level="a" type="main" coords="8,227.04,417.26,65.46,8.03;8,54.00,427.23,156.88,8.03">Hierarchical lstms with adaptive attention for visual captioning</title>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">L</forename>
+                                    <surname>Gao</surname>
+                                </persName>
+                            </author>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">X</forename>
+                                    <surname>Li</surname>
+                                </persName>
+                            </author>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">J</forename>
+                                    <surname>Song</surname>
+                                </persName>
+                            </author>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">H</forename>
+                                    <forename type="middle">T</forename>
+                                    <surname>Shen</surname>
+                                </persName>
+                            </author>
+                        </analytic>
+                        <monogr>
+                            <title level="j" coords="8,217.75,427.47,44.86,7.79">IEEE TPAMI</title>
+                            <imprint>
+                                <date type="published" when="2019">2019</date>
+                            </imprint>
+                        </monogr>
+                    </biblStruct>
+                    <biblStruct coords="8,54.00,439.63,238.50,8.03;8,54.00,449.59,238.50,8.03;8,54.00,459.56,157.88,8.03" xml:id="b12">
+                        <analytic>
+                            <title level="a" type="main" coords="8,128.12,449.59,164.38,8.03;8,54.00,459.56,84.40,8.03">Uncertainty-aware attention for reliable interpretation and prediction</title>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">J</forename>
+                                    <surname>Heo</surname>
+                                </persName>
+                            </author>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">H</forename>
+                                    <forename type="middle">B</forename>
+                                    <surname>Lee</surname>
+                                </persName>
+                            </author>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">S</forename>
+                                    <surname>Kim</surname>
+                                </persName>
+                            </author>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">J</forename>
+                                    <surname>Lee</surname>
+                                </persName>
+                            </author>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">K</forename>
+                                    <forename type="middle">J</forename>
+                                    <surname>Kim</surname>
+                                </persName>
+                            </author>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">E</forename>
+                                    <surname>Yang</surname>
+                                </persName>
+                            </author>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">S</forename>
+                                    <forename type="middle">J</forename>
+                                    <surname>Hwang</surname>
+                                </persName>
+                            </author>
+                        </analytic>
+                        <monogr>
+                            <title level="m" coords="8,154.85,459.80,16.94,7.79">NIPS</title>
+                            <imprint>
+                                <date type="published" when="2018">2018</date>
+                                <biblScope unit="page" from="909" to="918"/>
+                            </imprint>
+                        </monogr>
+                    </biblStruct>
+                    <biblStruct coords="8,54.00,471.96,238.50,8.03;8,54.00,481.92,134.70,8.03" xml:id="b13">
+                        <monogr>
+                            <title level="m" type="main" coords="8,279.56,472.20,12.95,7.79;8,54.00,482.17,84.25,7.79">Applied logistic regression</title>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">D</forename>
+                                    <forename type="middle">W</forename>
+                                    <surname>Hosmer</surname>
+                                    <genName>Jr</genName>
+                                </persName>
+                            </author>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">S</forename>
+                                    <surname>Lemeshow</surname>
+                                </persName>
+                            </author>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">R</forename>
+                                    <forename type="middle">X</forename>
+                                    <surname>Sturdivant</surname>
+                                </persName>
+                            </author>
+                            <imprint>
+                                <date type="published" when="2013">2013</date>
+                                <biblScope unit="volume">398</biblScope>
+                            </imprint>
+                        </monogr>
+                    </biblStruct>
+                    <biblStruct coords="8,54.00,494.33,238.50,8.03;8,54.00,504.29,238.50,8.03;8,54.00,514.25,238.51,8.03;8,54.00,524.22,89.41,8.03" xml:id="b14">
+                        <analytic>
+                            <title level="a" type="main" coords="8,104.47,514.25,184.36,8.03">Mimic-iii, a freely accessible critical care database</title>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">A</forename>
+                                    <forename type="middle">E</forename>
+                                    <surname>Johnson</surname>
+                                </persName>
+                            </author>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">T</forename>
+                                    <forename type="middle">J</forename>
+                                    <surname>Pollard</surname>
+                                </persName>
+                            </author>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">L</forename>
+                                    <surname>Shen</surname>
+                                </persName>
+                            </author>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">H</forename>
+                                    <forename type="middle">L</forename>
+                                    <surname>Li-Wei</surname>
+                                </persName>
+                            </author>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">M</forename>
+                                    <surname>Feng</surname>
+                                </persName>
+                            </author>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">M</forename>
+                                    <surname>Ghassemi</surname>
+                                </persName>
+                            </author>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">B</forename>
+                                    <surname>Moody</surname>
+                                </persName>
+                            </author>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">P</forename>
+                                    <surname>Szolovits</surname>
+                                </persName>
+                            </author>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">L</forename>
+                                    <forename type="middle">A</forename>
+                                    <surname>Celi</surname>
+                                </persName>
+                            </author>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">R</forename>
+                                    <forename type="middle">G</forename>
+                                    <surname>Mark</surname>
+                                </persName>
+                            </author>
+                        </analytic>
+                        <monogr>
+                            <title level="j" coords="8,54.00,524.46,51.06,7.79">Scientific data</title>
+                            <imprint>
+                                <biblScope unit="volume">3</biblScope>
+                                <biblScope unit="page">160035</biblScope>
+                                <date type="published" when="2016">2016</date>
+                            </imprint>
+                        </monogr>
+                    </biblStruct>
+                    <biblStruct coords="8,54.00,536.62,238.50,8.03;8,54.00,546.58,238.50,8.03;8,54.00,556.55,88.17,8.03" xml:id="b15">
+                        <analytic>
+                            <title level="a" type="main" coords="8,270.08,536.62,22.42,8.03;8,54.00,546.58,187.70,8.03">Shortterm wind speed prediction using eemd-lssvm model</title>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">A</forename>
+                                    <surname>Kang</surname>
+                                </persName>
+                            </author>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">Q</forename>
+                                    <surname>Tan</surname>
+                                </persName>
+                            </author>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">X</forename>
+                                    <surname>Yuan</surname>
+                                </persName>
+                            </author>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">X</forename>
+                                    <surname>Lei</surname>
+                                </persName>
+                            </author>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">Y</forename>
+                                    <surname>Yuan</surname>
+                                </persName>
+                            </author>
+                        </analytic>
+                        <monogr>
+                            <title level="j" coords="8,248.96,546.83,43.54,7.79;8,54.00,556.79,45.33,7.79">Advances in Meteorology</title>
+                            <imprint>
+                                <biblScope unit="volume">2017</biblScope>
+                                <biblScope unit="page" from="1" to="22"/>
+                                <date type="published" when="2017">2017</date>
+                            </imprint>
+                        </monogr>
+                    </biblStruct>
+                    <biblStruct coords="8,54.00,568.95,238.50,8.03;8,54.00,578.91,238.50,8.03;8,54.00,588.88,96.62,8.03" xml:id="b16">
+                        <analytic>
+                            <title level="a" type="main" coords="8,241.20,568.95,51.30,8.03;8,54.00,578.91,238.50,8.03;8,54.00,588.88,10.65,8.03">Independently recurrent neural network (indrnn): Building a longer and deeper rnn</title>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">S</forename>
+                                    <surname>Li</surname>
+                                </persName>
+                            </author>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">W</forename>
+                                    <surname>Li</surname>
+                                </persName>
+                            </author>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">C</forename>
+                                    <surname>Cook</surname>
+                                </persName>
+                            </author>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">C</forename>
+                                    <surname>Zhu</surname>
+                                </persName>
+                            </author>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">Y</forename>
+                                    <surname>Gao</surname>
+                                </persName>
+                            </author>
+                        </analytic>
+                        <monogr>
+                            <title level="m" coords="8,81.13,589.12,19.73,7.79">CVPR</title>
+                            <imprint>
+                                <date type="published" when="2018">2018</date>
+                                <biblScope unit="page" from="5457" to="5466"/>
+                            </imprint>
+                        </monogr>
+                    </biblStruct>
+                    <biblStruct coords="8,54.00,601.28,238.50,8.03;8,54.00,611.24,238.51,8.03;8,54.00,621.21,238.50,8.03;8,54.00,631.17,54.53,8.03" xml:id="b17">
+                        <analytic>
+                            <title level="a" type="main" coords="8,234.36,601.28,58.14,8.03;8,54.00,611.24,238.51,8.03;8,54.00,621.21,67.19,8.03">Directly modeling missing data in sequences with rnns: Improved classification of clinical time series</title>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">Z</forename>
+                                    <forename type="middle">C</forename>
+                                    <surname>Lipton</surname>
+                                </persName>
+                            </author>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">D</forename>
+                                    <surname>Kale</surname>
+                                </persName>
+                            </author>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">R</forename>
+                                    <surname>Wetzel</surname>
+                                </persName>
+                            </author>
+                        </analytic>
+                        <monogr>
+                            <title level="m" coords="8,139.34,621.45,153.16,7.79;8,54.00,631.41,14.93,7.79">Machine Learning for Healthcare Conference</title>
+                            <imprint>
+                                <date type="published" when="2016">2016</date>
+                                <biblScope unit="page" from="253" to="270"/>
+                            </imprint>
+                        </monogr>
+                    </biblStruct>
+                    <biblStruct coords="8,54.00,643.57,238.50,8.03;8,54.00,653.54,238.50,8.03;8,54.00,663.50,170.13,8.03" xml:id="b18">
+                        <analytic>
+                            <title level="a" type="main" coords="8,256.00,643.57,36.50,8.03;8,54.00,653.54,238.50,8.03;8,54.00,663.50,131.63,8.03">Early prediction of diabetes complications from electronic health records: A multi-task survival analysis approach</title>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">B</forename>
+                                    <surname>Liu</surname>
+                                </persName>
+                            </author>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">Y</forename>
+                                    <surname>Li</surname>
+                                </persName>
+                            </author>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">Z</forename>
+                                    <surname>Sun</surname>
+                                </persName>
+                            </author>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">S</forename>
+                                    <surname>Ghosh</surname>
+                                </persName>
+                            </author>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">K</forename>
+                                    <surname>Ng</surname>
+                                </persName>
+                            </author>
+                        </analytic>
+                        <monogr>
+                            <title level="m" coords="8,202.46,663.74,17.33,7.79">AAAI</title>
+                            <imprint>
+                                <date type="published" when="2018">2018</date>
+                            </imprint>
+                        </monogr>
+                    </biblStruct>
+                    <biblStruct coords="8,54.00,675.90,238.50,8.03;8,54.00,685.87,238.50,8.03;8,54.00,695.83,135.46,8.03" xml:id="b19">
+                        <analytic>
+                            <title level="a" type="main" coords="8,268.60,675.90,23.90,8.03;8,54.00,685.87,238.50,8.03;8,54.00,695.83,97.36,8.03">Learning the joint representation of heterogeneous temporal events for clinical endpoint prediction</title>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">L</forename>
+                                    <surname>Liu</surname>
+                                </persName>
+                            </author>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">J</forename>
+                                    <surname>Shen</surname>
+                                </persName>
+                            </author>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">M</forename>
+                                    <surname>Zhang</surname>
+                                </persName>
+                            </author>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">Z</forename>
+                                    <surname>Wang</surname>
+                                </persName>
+                            </author>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">J</forename>
+                                    <surname>Tang</surname>
+                                </persName>
+                            </author>
+                        </analytic>
+                        <monogr>
+                            <title level="m" coords="8,167.80,696.07,17.33,7.79">AAAI</title>
+                            <imprint>
+                                <date type="published" when="2018">2018b</date>
+                            </imprint>
+                        </monogr>
+                    </biblStruct>
+                    <biblStruct coords="8,319.50,57.79,238.50,8.03;8,319.50,67.76,238.50,8.03;8,319.50,77.72,206.83,8.03" xml:id="b20">
+                        <analytic>
+                            <title level="a" type="main" coords="8,319.50,67.76,238.50,8.03;8,319.50,77.72,124.00,8.03">Dipole: Diagnosis prediction in healthcare via attention-based bidirectional recurrent neural networks</title>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">F</forename>
+                                    <surname>Ma</surname>
+                                </persName>
+                            </author>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">R</forename>
+                                    <surname>Chitta</surname>
+                                </persName>
+                            </author>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">J</forename>
+                                    <surname>Zhou</surname>
+                                </persName>
+                            </author>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">Q</forename>
+                                    <surname>You</surname>
+                                </persName>
+                            </author>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">T</forename>
+                                    <surname>Sun</surname>
+                                </persName>
+                            </author>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">J</forename>
+                                    <surname>Gao</surname>
+                                </persName>
+                            </author>
+                        </analytic>
+                        <monogr>
+                            <title level="m" coords="8,460.33,77.96,15.88,7.79">KDD</title>
+                            <imprint>
+                                <date type="published" when="1903">2017. 1903-1911</date>
+                            </imprint>
+                        </monogr>
+                    </biblStruct>
+                    <biblStruct coords="8,319.50,90.46,238.50,8.03;8,319.50,100.43,238.50,8.03;8,319.50,110.39,121.76,8.03" xml:id="b21">
+                        <analytic>
+                            <title level="a" type="main" coords="8,319.50,100.43,238.50,8.03;8,319.50,110.39,44.75,8.03">Kame: Knowledge-based attention model for diagnosis prediction in healthcare</title>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">F</forename>
+                                    <surname>Ma</surname>
+                                </persName>
+                            </author>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">Q</forename>
+                                    <surname>You</surname>
+                                </persName>
+                            </author>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">H</forename>
+                                    <surname>Xiao</surname>
+                                </persName>
+                            </author>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">R</forename>
+                                    <surname>Chitta</surname>
+                                </persName>
+                            </author>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">J</forename>
+                                    <surname>Zhou</surname>
+                                </persName>
+                            </author>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">J</forename>
+                                    <surname>Gao</surname>
+                                </persName>
+                            </author>
+                        </analytic>
+                        <monogr>
+                            <title level="m" coords="8,380.74,110.64,19.73,7.79">CIKM</title>
+                            <imprint>
+                                <date type="published" when="2018">2018</date>
+                                <biblScope unit="page" from="743" to="752"/>
+                            </imprint>
+                        </monogr>
+                    </biblStruct>
+                    <biblStruct coords="8,319.50,123.14,238.50,8.03;8,319.50,133.10,235.26,8.03" xml:id="b22">
+                        <analytic>
+                            <title level="a" type="main" coords="8,524.19,123.14,33.80,8.03;8,319.50,133.10,158.29,8.03">Deep rnn framework for visual sequential applications</title>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">B</forename>
+                                    <surname>Pang</surname>
+                                </persName>
+                            </author>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">K</forename>
+                                    <surname>Zha</surname>
+                                </persName>
+                            </author>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">H</forename>
+                                    <surname>Cao</surname>
+                                </persName>
+                            </author>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">C</forename>
+                                    <surname>Shi</surname>
+                                </persName>
+                            </author>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">C</forename>
+                                    <surname>Lu</surname>
+                                </persName>
+                            </author>
+                        </analytic>
+                        <monogr>
+                            <title level="m" coords="8,494.24,133.35,19.73,7.79">CVPR</title>
+                            <imprint>
+                                <date type="published" when="2019">2019</date>
+                                <biblScope unit="page" from="423" to="432"/>
+                            </imprint>
+                        </monogr>
+                    </biblStruct>
+                    <biblStruct coords="8,319.50,145.85,238.50,8.03;8,319.50,155.81,238.50,8.03;8,319.50,165.77,238.50,8.03;8,319.50,175.74,60.02,8.03" xml:id="b23">
+                        <analytic>
+                            <title level="a" type="main" coords="8,407.84,155.81,150.16,8.03;8,319.50,165.77,234.93,8.03">The eicu collaborative research database, a freely available multi-center database for critical care research</title>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">T</forename>
+                                    <forename type="middle">J</forename>
+                                    <surname>Pollard</surname>
+                                </persName>
+                            </author>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">A</forename>
+                                    <forename type="middle">E</forename>
+                                    <surname>Johnson</surname>
+                                </persName>
+                            </author>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">J</forename>
+                                    <forename type="middle">D</forename>
+                                    <surname>Raffa</surname>
+                                </persName>
+                            </author>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">L</forename>
+                                    <forename type="middle">A</forename>
+                                    <surname>Celi</surname>
+                                </persName>
+                            </author>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">R</forename>
+                                    <forename type="middle">G</forename>
+                                    <surname>Mark</surname>
+                                </persName>
+                            </author>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">O</forename>
+                                    <surname>Badawi</surname>
+                                </persName>
+                            </author>
+                        </analytic>
+                        <monogr>
+                            <title level="j" coords="8,319.50,175.98,51.06,7.79">Scientific data</title>
+                            <imprint>
+                                <biblScope unit="volume">5</biblScope>
+                                <date type="published" when="2018">2018</date>
+                            </imprint>
+                        </monogr>
+                    </biblStruct>
+                    <biblStruct coords="8,319.50,188.48,238.51,8.03;8,319.50,198.45,145.66,8.03" xml:id="b24">
+                        <analytic>
+                            <title level="a" type="main" coords="8,451.23,188.48,106.78,8.03;8,319.50,198.45,107.54,8.03">Posterior attention models for sequence to sequence learning</title>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">S</forename>
+                                    <surname>Shankar</surname>
+                                </persName>
+                            </author>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">S</forename>
+                                    <surname>Sarawagi</surname>
+                                </persName>
+                            </author>
+                        </analytic>
+                        <monogr>
+                            <title level="m" coords="8,443.49,198.69,17.34,7.79">ICLR</title>
+                            <imprint>
+                                <date type="published" when="2019">2019</date>
+                            </imprint>
+                        </monogr>
+                    </biblStruct>
+                    <biblStruct coords="8,319.50,211.19,238.50,8.03;8,319.50,221.16,238.50,8.03;8,319.50,231.12,238.50,8.03;8,319.50,241.08,20.17,8.03" xml:id="b25">
+                        <analytic>
+                            <title level="a" type="main" coords="8,539.08,211.19,18.92,8.03;8,319.50,221.16,238.50,8.03;8,319.50,231.12,138.77,8.03">Deep ehr: a survey of recent advances in deep learning techniques for electronic health record (ehr) analysis</title>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">B</forename>
+                                    <surname>Shickel</surname>
+                                </persName>
+                            </author>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">P</forename>
+                                    <forename type="middle">J</forename>
+                                    <surname>Tighe</surname>
+                                </persName>
+                            </author>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">A</forename>
+                                    <surname>Bihorac</surname>
+                                </persName>
+                            </author>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">P</forename>
+                                    <surname>Rashidi</surname>
+                                </persName>
+                            </author>
+                        </analytic>
+                        <monogr>
+                            <title level="j" coords="8,468.58,231.36,41.71,7.79">IEEE JBHI</title>
+                            <imprint>
+                                <biblScope unit="volume">22</biblScope>
+                                <biblScope unit="issue">5</biblScope>
+                                <biblScope unit="page" from="1589" to="1604"/>
+                                <date type="published" when="2017">2017</date>
+                            </imprint>
+                        </monogr>
+                    </biblStruct>
+                    <biblStruct coords="8,319.50,253.83,238.50,8.03;8,319.50,263.79,195.25,8.03" xml:id="b26">
+                        <analytic>
+                            <title level="a" type="main" coords="8,472.33,253.83,85.67,8.03;8,319.50,263.79,157.41,8.03">Interpolation-prediction networks for irregularly sampled time series</title>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">S</forename>
+                                    <forename type="middle">N</forename>
+                                    <surname>Shukla</surname>
+                                </persName>
+                            </author>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">Marlin</forename>
+                                </persName>
+                            </author>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">B</forename>
+                                    <forename type="middle">M</forename>
+                                </persName>
+                            </author>
+                        </analytic>
+                        <monogr>
+                            <title level="m" coords="8,493.08,264.03,17.34,7.79">ICLR</title>
+                            <imprint>
+                                <date type="published" when="2019">2019</date>
+                            </imprint>
+                        </monogr>
+                    </biblStruct>
+                    <biblStruct coords="8,319.50,276.54,238.51,8.03;8,319.50,286.50,238.51,8.03;8,319.50,296.46,238.51,8.03;8,319.50,306.42,94.63,8.03" xml:id="b27">
+                        <analytic>
+                            <title level="a" type="main" coords="8,502.50,276.54,55.50,8.03;8,319.50,286.50,238.51,8.03;8,319.50,296.46,138.01,8.03">Arterial carbon dioxide tension on admission as a marker of in-hospital mortality in community-acquired pneumonia</title>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">D</forename>
+                                    <forename type="middle">D</forename>
+                                    <surname>Sin</surname>
+                                </persName>
+                            </author>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">S</forename>
+                                    <forename type="middle">P</forename>
+                                    <surname>Man</surname>
+                                </persName>
+                            </author>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">T</forename>
+                                    <forename type="middle">J</forename>
+                                    <surname>Marrie</surname>
+                                </persName>
+                            </author>
+                        </analytic>
+                        <monogr>
+                            <title level="j" coords="8,467.34,296.70,90.67,7.79;8,319.50,306.67,32.37,7.79">The American journal of medicine</title>
+                            <imprint>
+                                <biblScope unit="volume">118</biblScope>
+                                <biblScope unit="issue">2</biblScope>
+                                <biblScope unit="page" from="145" to="150"/>
+                                <date type="published" when="2005">2005</date>
+                            </imprint>
+                        </monogr>
+                    </biblStruct>
+                    <biblStruct coords="8,319.50,319.17,238.51,8.03;8,319.50,329.13,238.50,8.03;8,319.50,339.10,62.75,8.03" xml:id="b28">
+                        <analytic>
+                            <title level="a" type="main" coords="8,319.50,329.13,238.50,8.03;8,319.50,339.10,24.12,8.03">Attend and diagnose: Clinical time series analysis using attention models</title>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">H</forename>
+                                    <surname>Song</surname>
+                                </persName>
+                            </author>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">D</forename>
+                                    <surname>Rajan</surname>
+                                </persName>
+                            </author>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">J</forename>
+                                    <forename type="middle">J</forename>
+                                    <surname>Thiagarajan</surname>
+                                </persName>
+                            </author>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">A</forename>
+                                    <surname>Spanias</surname>
+                                </persName>
+                            </author>
+                        </analytic>
+                        <monogr>
+                            <title level="m" coords="8,360.58,339.34,17.33,7.79">AAAI</title>
+                            <imprint>
+                                <date type="published" when="2018">2018</date>
+                            </imprint>
+                        </monogr>
+                    </biblStruct>
+                    <biblStruct coords="8,319.50,351.84,238.50,8.03;8,319.50,361.81,238.50,8.03;8,319.50,371.77,238.50,8.03;8,319.50,381.73,42.59,8.03" xml:id="b29">
+                        <analytic>
+                            <title level="a" type="main" coords="8,392.51,361.81,165.49,8.03;8,319.50,371.77,198.87,8.03">A multi-task framework for monitoring health conditions via attention-based recurrent neural networks</title>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">Q</forename>
+                                    <surname>Suo</surname>
+                                </persName>
+                            </author>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">F</forename>
+                                    <surname>Ma</surname>
+                                </persName>
+                            </author>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">G</forename>
+                                    <surname>Canino</surname>
+                                </persName>
+                            </author>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">J</forename>
+                                    <surname>Gao</surname>
+                                </persName>
+                            </author>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">A</forename>
+                                    <surname>Zhang</surname>
+                                </persName>
+                            </author>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">P</forename>
+                                    <surname>Veltri</surname>
+                                </persName>
+                            </author>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">G</forename>
+                                    <surname>Agostino</surname>
+                                </persName>
+                            </author>
+                        </analytic>
+                        <monogr>
+                            <title level="m" coords="8,534.35,372.01,18.92,7.79">AMIA</title>
+                            <imprint>
+                                <date type="published" when="2017">2017</date>
+                                <biblScope unit="page" from="1665" to="1674"/>
+                            </imprint>
+                        </monogr>
+                    </biblStruct>
+                    <biblStruct coords="8,319.50,394.48,238.50,8.03;8,319.50,404.44,238.50,8.03;8,319.50,414.40,238.50,8.03;8,319.50,424.36,238.50,8.03;8,319.50,434.33,38.11,8.03" xml:id="b30">
+                        <analytic>
+                            <title level="a" type="main" coords="8,356.41,414.40,201.58,8.03;8,319.50,424.36,194.73,8.03">A hybrid residual network and long short-term memory method for peptic ulcer bleeding mortality prediction</title>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">Q</forename>
+                                    <surname>Tan</surname>
+                                </persName>
+                            </author>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">A</forename>
+                                    <forename type="middle">J</forename>
+                                    <surname>Ma</surname>
+                                </persName>
+                            </author>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">H</forename>
+                                    <surname>Deng</surname>
+                                </persName>
+                            </author>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">V</forename>
+                                    <forename type="middle">W</forename>
+                                    <surname>Wong</surname>
+                                </persName>
+                            </author>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">-S</forename>
+                                    <surname>Tse</surname>
+                                </persName>
+                            </author>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">Y.-K</forename>
+                                    <surname>Yip</surname>
+                                </persName>
+                            </author>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">T</forename>
+                                    <forename type="middle">C</forename>
+                                </persName>
+                            </author>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">-F</forename>
+                                    <surname>Wong</surname>
+                                </persName>
+                            </author>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">G</forename>
+                                    <forename type="middle">L</forename>
+                                </persName>
+                            </author>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">-H</forename>
+                                    <surname>Ching</surname>
+                                </persName>
+                            </author>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">J</forename>
+                                    <forename type="middle">Y</forename>
+                                    <surname>-L.; Chan</surname>
+                                </persName>
+                            </author>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">F</forename>
+                                    <forename type="middle">K</forename>
+                                </persName>
+                            </author>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">L</forename>
+                                    <surname>Yuen</surname>
+                                </persName>
+                            </author>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">P.-C</forename>
+                                </persName>
+                            </author>
+                        </analytic>
+                        <monogr>
+                            <title level="m" coords="8,534.35,424.61,18.92,7.79">AMIA</title>
+                            <imprint>
+                                <date type="published" when="2018">2018</date>
+                                <biblScope unit="page" from="998" to="1007"/>
+                            </imprint>
+                        </monogr>
+                    </biblStruct>
+                    <biblStruct coords="8,319.50,447.07,238.50,8.03;8,319.50,457.04,238.50,8.03;8,319.50,467.00,238.51,8.03;8,319.50,476.96,207.10,8.03" xml:id="b31">
+                        <analytic>
+                            <title level="a" type="main" coords="8,344.78,467.00,213.22,8.03;8,319.50,476.96,130.14,8.03">Ua-crnn: Uncertainty-aware convolutional recurrent neural network for mortality risk prediction</title>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">Q</forename>
+                                    <surname>Tan</surname>
+                                </persName>
+                            </author>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">A</forename>
+                                    <forename type="middle">J</forename>
+                                    <surname>Ma</surname>
+                                </persName>
+                            </author>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">M</forename>
+                                    <surname>Ye</surname>
+                                </persName>
+                            </author>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">B</forename>
+                                    <surname>Yang</surname>
+                                </persName>
+                            </author>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">H</forename>
+                                    <surname>Deng</surname>
+                                </persName>
+                            </author>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">V</forename>
+                                    <forename type="middle">W</forename>
+                                    <surname>Wong</surname>
+                                </persName>
+                            </author>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">-S</forename>
+                                    <surname>Tse</surname>
+                                </persName>
+                            </author>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">Y.-K</forename>
+                                    <surname>Yip</surname>
+                                </persName>
+                            </author>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">T</forename>
+                                    <forename type="middle">C</forename>
+                                </persName>
+                            </author>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">-F</forename>
+                                    <surname>Wong</surname>
+                                </persName>
+                            </author>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">G</forename>
+                                    <forename type="middle">L</forename>
+                                </persName>
+                            </author>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">-H</forename>
+                                    <surname>Ching</surname>
+                                </persName>
+                            </author>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">J</forename>
+                                    <forename type="middle">Y</forename>
+                                </persName>
+                            </author>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">-L</forename>
+                                </persName>
+                            </author>
+                        </analytic>
+                        <monogr>
+                            <title level="m" coords="8,466.08,477.20,19.73,7.79">CIKM</title>
+                            <imprint>
+                                <date type="published" when="2019">2019</date>
+                                <biblScope unit="page" from="109" to="118"/>
+                            </imprint>
+                        </monogr>
+                    </biblStruct>
+                    <biblStruct coords="8,319.50,489.71,238.50,8.03;8,319.50,499.67,238.50,8.03;8,319.50,509.63,164.86,8.03" xml:id="b32">
+                        <analytic>
+                            <title level="a" type="main" coords="8,341.82,499.67,216.18,8.03;8,319.50,509.63,82.49,8.03">Raim: Recurrent attentive and intensive model of multimodal patient monitoring data</title>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">Y</forename>
+                                    <surname>Xu</surname>
+                                </persName>
+                            </author>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">S</forename>
+                                    <surname>Biswal</surname>
+                                </persName>
+                            </author>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">S</forename>
+                                    <forename type="middle">R</forename>
+                                    <surname>Deshpande</surname>
+                                </persName>
+                            </author>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">K</forename>
+                                    <forename type="middle">O</forename>
+                                    <surname>Maher</surname>
+                                </persName>
+                            </author>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">J</forename>
+                                    <surname>Sun</surname>
+                                </persName>
+                            </author>
+                        </analytic>
+                        <monogr>
+                            <title level="m" coords="8,418.36,509.87,15.88,7.79">KDD</title>
+                            <imprint>
+                                <date type="published" when="2018">2018</date>
+                                <biblScope unit="page" from="2565" to="2573"/>
+                            </imprint>
+                        </monogr>
+                    </biblStruct>
+                    <biblStruct coords="8,319.50,522.38,238.50,8.03;8,319.50,532.34,238.50,8.03;8,319.50,542.30,119.28,8.03" xml:id="b33">
+                        <analytic>
+                            <title level="a" type="main" coords="8,546.54,522.38,11.46,8.03;8,319.50,532.34,238.50,8.03;8,319.50,542.30,70.91,8.03">Bidirectional center-constrained top-ranking for visible thermal person re-identification</title>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">M</forename>
+                                    <surname>Ye</surname>
+                                </persName>
+                            </author>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">X</forename>
+                                    <surname>Lan</surname>
+                                </persName>
+                            </author>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">Z</forename>
+                                    <surname>Wang</surname>
+                                </persName>
+                            </author>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">P</forename>
+                                    <forename type="middle">C</forename>
+                                    <surname>Yuen</surname>
+                                </persName>
+                            </author>
+                        </analytic>
+                        <monogr>
+                            <title level="j" coords="8,396.94,542.54,37.80,7.79">IEEE TIFS</title>
+                            <imprint>
+                                <date type="published" when="2019">2019</date>
+                            </imprint>
+                        </monogr>
+                    </biblStruct>
+                    <biblStruct coords="8,319.50,555.05,238.50,8.03;8,319.50,565.01,238.50,8.03;8,319.50,574.98,154.65,8.03" xml:id="b34">
+                        <analytic>
+                            <title level="a" type="main" coords="8,544.05,555.05,13.94,8.03;8,319.50,565.01,238.50,8.03;8,319.50,574.98,46.26,8.03">Dynamic graph co-matching for unsupervised video-based person reidentification</title>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">M</forename>
+                                    <surname>Ye</surname>
+                                </persName>
+                            </author>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">J</forename>
+                                    <surname>Li</surname>
+                                </persName>
+                            </author>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">A</forename>
+                                    <forename type="middle">J</forename>
+                                    <surname>Ma</surname>
+                                </persName>
+                            </author>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">L</forename>
+                                    <surname>Zheng</surname>
+                                </persName>
+                            </author>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">P</forename>
+                                    <forename type="middle">C</forename>
+                                    <surname>Yuen</surname>
+                                </persName>
+                            </author>
+                        </analytic>
+                        <monogr>
+                            <title level="j" coords="8,372.29,575.22,35.11,7.79">IEEE TIP</title>
+                            <imprint>
+                                <biblScope unit="volume">28</biblScope>
+                                <biblScope unit="issue">6</biblScope>
+                                <biblScope unit="page" from="2976" to="2990"/>
+                                <date type="published" when="2019">2019</date>
+                            </imprint>
+                        </monogr>
+                    </biblStruct>
+                    <biblStruct coords="8,319.50,587.72,238.50,8.03;8,319.50,597.68,238.51,8.03;8,319.50,607.65,109.56,8.03" xml:id="b35">
+                        <analytic>
+                            <title level="a" type="main" coords="8,536.08,587.72,21.91,8.03;8,319.50,597.68,238.51,8.03;8,319.50,607.65,23.74,8.03">Unsupervised embedding learning via invariant and spreading instance feature</title>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">M</forename>
+                                    <surname>Ye</surname>
+                                </persName>
+                            </author>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">X</forename>
+                                    <surname>Zhang</surname>
+                                </persName>
+                            </author>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">P</forename>
+                                    <forename type="middle">C</forename>
+                                    <surname>Yuen</surname>
+                                </persName>
+                            </author>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">S.-F</forename>
+                                    <surname>Chang</surname>
+                                </persName>
+                            </author>
+                        </analytic>
+                        <monogr>
+                            <title level="m" coords="8,359.57,607.89,19.73,7.79">CVPR</title>
+                            <imprint>
+                                <date type="published" when="2019">2019</date>
+                                <biblScope unit="page" from="6210" to="6219"/>
+                            </imprint>
+                        </monogr>
+                    </biblStruct>
+                    <biblStruct coords="8,319.50,620.39,238.50,8.03;8,319.50,630.36,238.50,8.03;8,319.50,640.32,157.27,8.03" xml:id="b36">
+                        <analytic>
+                            <title level="a" type="main" coords="8,535.58,620.39,22.42,8.03;8,319.50,630.36,202.56,8.03">Shortterm wind power prediction based on lssvm-gsa model</title>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">X</forename>
+                                    <surname>Yuan</surname>
+                                </persName>
+                            </author>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">C</forename>
+                                    <surname>Chen</surname>
+                                </persName>
+                            </author>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">Y</forename>
+                                    <surname>Yuan</surname>
+                                </persName>
+                            </author>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">Y</forename>
+                                    <surname>Huang</surname>
+                                </persName>
+                            </author>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">Q</forename>
+                                    <surname>Tan</surname>
+                                </persName>
+                            </author>
+                        </analytic>
+                        <monogr>
+                            <title level="j" coords="8,532.44,630.60,25.56,7.79;8,319.50,640.56,105.46,7.79">Energy Conversion and Management</title>
+                            <imprint>
+                                <biblScope unit="volume">101</biblScope>
+                                <biblScope unit="page" from="393" to="401"/>
+                                <date type="published" when="2015">2015</date>
+                            </imprint>
+                        </monogr>
+                    </biblStruct>
+                    <biblStruct coords="8,319.50,653.07,238.50,8.03;8,319.50,663.03,238.50,8.03;8,319.50,672.99,238.50,8.03;8,319.50,682.95,49.57,8.03" xml:id="b37">
+                        <analytic>
+                            <title level="a" type="main" coords="8,514.37,653.07,43.62,8.03;8,319.50,663.03,238.50,8.03;8,319.50,672.99,199.23,8.03">Wind power prediction using hybrid autoregressive fractionally integrated moving average and least square support vector machine</title>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">X</forename>
+                                    <surname>Yuan</surname>
+                                </persName>
+                            </author>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">Q</forename>
+                                    <surname>Tan</surname>
+                                </persName>
+                            </author>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">X</forename>
+                                    <surname>Lei</surname>
+                                </persName>
+                            </author>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">Y</forename>
+                                    <surname>Yuan</surname>
+                                </persName>
+                            </author>
+                            <author>
+                                <persName coords="">
+                                    <forename type="first">X</forename>
+                                    <surname>Wu</surname>
+                                </persName>
+                            </author>
+                        </analytic>
+                        <monogr>
+                            <title level="j" coords="8,532.44,673.23,25.56,7.79">Energy</title>
+                            <imprint>
+                                <biblScope unit="volume">129</biblScope>
+                                <biblScope unit="page" from="122" to="137"/>
+                                <date type="published" when="2017">2017</date>
+                            </imprint>
+                        </monogr>
+                    </biblStruct>
+                </listBibl>
+            </div>
+        </back>
+    </text>
+</TEI>

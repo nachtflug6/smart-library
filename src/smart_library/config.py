@@ -33,3 +33,11 @@ class OllamaConfig:
     GENERATION_MODEL = "llama3.1:8b"
     EMBEDDING_MODEL = "nomic-embed-text"
 
+class Grobid:
+    HOST = os.getenv("GROBID_HOST", "grobid")
+    PORT = 8070
+    BASE_URL = f"http://{HOST}:{PORT}"
+    PROCESSING_TEXT_URL = f"{BASE_URL}/api/processFulltextDocument"
+    PROCESSING_HEADER_URL = f"{BASE_URL}/api/processHeaderDocument"
+
+

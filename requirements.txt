@@ -27,3 +27,6 @@ pytest-cov
 
 # Notebook support (minimal for VS Code)
 ipykernel
+
+# XML
+lxml
