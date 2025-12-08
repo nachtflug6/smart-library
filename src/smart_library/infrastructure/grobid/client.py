@@ -23,7 +23,12 @@ class GrobidClient:
         """
         with open(pdf_path, "rb") as pdf_file:
             files = {"input": pdf_file}
-            response = requests.post(self.fulltext_url, files=files)
+            response = requests.post(self.fulltext_url, files=files, data=[
+        ("generateCoordinates", "1"),
+        ("teiCoordinates", "p"),
+        ("teiCoordinates", "head"),
+        ("teiCoordinates", "div"),
+    ])
             response.raise_for_status()
             return response.text
 
