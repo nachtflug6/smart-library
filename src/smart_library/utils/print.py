@@ -28,8 +28,8 @@ def print_document(doc, indent=0):
             # Print paragraphs under this section, sorted by index
             section_paragraphs = [para for para in page_paragraphs if getattr(para, 'parent_id', None) == getattr(section, 'id', None)]
             for para in sorted(section_paragraphs, key=lambda x: getattr(x, 'index', -1)):
-                print(f"{prefix}      [Paragraph] {repr(para.content)[:120]}... (index={getattr(para, 'index', None)}, id={getattr(para, 'id', None)})")
+                print(f"{prefix}      [Paragraph] {repr(para.content)}... (index={getattr(para, 'index', None)}, id={getattr(para, 'id', None)})")
         # Print paragraphs not under any section
         unsectioned_paragraphs = [para for para in page_paragraphs if getattr(para, 'parent_id', None) not in [getattr(s, 'id', None) for s in page_sections]]
         for para in sorted(unsectioned_paragraphs, key=lambda x: getattr(x, 'index', -1)):
-            print(f"{prefix}    [Paragraph] {repr(para.content)[:120]}... (index={getattr(para, 'index', None)}, id={getattr(para, 'id', None)})")
+            print(f"{prefix}    [Paragraph] {repr(para.content)}... (index={getattr(para, 'index', None)}, id={getattr(para, 'id', None)})")

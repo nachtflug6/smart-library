@@ -21,6 +21,8 @@ CHUNKER_CONFIG = {
     "mode": "tokens",  # "tokens", "sentences", "paragraphs"
 }
 
+MIN_PARAGRAPH_LENGTH = 400  # Adjust as needed
+
 class OllamaConfig:
     # both services use the same container now
     HOST = os.getenv("OLLAMA_HOST", "ollama")
