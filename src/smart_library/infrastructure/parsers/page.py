@@ -1,14 +1,19 @@
-from smart_library.domain.entities.page import Page
+from smart_library.domain.services.page_service import PageService
 
-def parse_pages(struct):
+def parse_pages(struct, page_service=None):
     facsimile = struct.get("facsimile")
     pages = []
     page_map = {}
+
+    # Use default PageService if not provided
+    if page_service is None:
+        page_service = PageService()
+
     if facsimile and facsimile.surfaces:
         for surface in facsimile.surfaces:
-            page = Page(
+            page = page_service.create_page(
                 page_number=surface.page,
-                # ... other fields ...
+                # ... other fields from surface ...
                 texts=[],
             )
             pages.append(page)

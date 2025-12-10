@@ -24,6 +24,13 @@ class DocumentService(BaseService):
         self.touch(doc)
         return self.document_repo.add(doc)
 
+    @staticmethod
+    def create_document(**kwargs):
+        """
+        Factory for creating a Document object. Add validation/normalization here if needed.
+        """
+        return Document(**kwargs)
+
     # -------------------------------
     # READ
     # -------------------------------

@@ -51,6 +51,12 @@ class TextService(BaseService):
 
         return self.text_repo.add(text)
 
+    def create_text(self, **kwargs):
+        """
+        Factory for creating a Text object. Add validation/normalization here if needed.
+        """
+        return Text(**kwargs)
+
     # -------------------------------
     # READ
     # -------------------------------

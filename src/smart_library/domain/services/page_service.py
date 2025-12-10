@@ -25,6 +25,11 @@ class PageService(BaseService):
         self.touch(page)
         return self.page_repo.add(page)
 
+    @staticmethod
+    def create_page(**kwargs):
+        # Add validation/normalization here if needed
+        return Page(**kwargs)
+
     # READ
     def get_page(self, page_id: str) -> Optional[Page]:
         return self.page_repo.get(page_id)
