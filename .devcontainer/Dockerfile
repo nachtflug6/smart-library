@@ -19,6 +19,7 @@ WORKDIR /workspace
 # Install Python dependencies (cached)
 COPY requirements.txt /workspace/
 RUN pip install --user -r /workspace/requirements.txt
+RUN python3 -m nltk.downloader punkt
 
 # # Copy the entire project
 # COPY . /workspace/

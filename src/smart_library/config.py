@@ -15,13 +15,10 @@ JSONL_ROOT    = DATA_DIR / "jsonl"
 ENTITIES_JSONL  = JSONL_ROOT / "entities.jsonl"
 RELATIONS_JSONL = JSONL_ROOT / "relations.jsonl"
 
-CHUNKER_CONFIG = {
-    "max_tokens": 200,
-    "overlap": 30,
-    "mode": "tokens",  # "tokens", "sentences", "paragraphs"
-}
-
-MIN_PARAGRAPH_LENGTH = 400  # Adjust as needed
+class ChunkerConfig:
+    MAX_CHAR = 600
+    MIN_CHAR = 400
+    OVERLAP = 100
 
 class OllamaConfig:
     # both services use the same container now

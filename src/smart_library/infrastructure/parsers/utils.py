@@ -52,3 +52,4 @@ def extract_page_number_from_coords(coords):
             if hasattr(box, "page"):
                 return box.page
     return None
+

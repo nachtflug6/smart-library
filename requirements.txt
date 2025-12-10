@@ -17,6 +17,7 @@ pandas
 openai
 tiktoken
 ollama
+nltk
 
 # Fuzzy matching
 thefuzz
@@ -30,3 +31,4 @@ ipykernel
 
 # XML
 lxml
+

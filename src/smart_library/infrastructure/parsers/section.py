@@ -9,12 +9,10 @@ def parse_sections(struct, page_map):
     paragraph_texts = []
     if body and body.sections:
         for section_idx, section in enumerate(body.sections):
-            # Section title as Text
             section_title = getattr(section, "title", None)
             section_text_obj = None
             page_id = None
 
-            # Try to get page from section.coords
             page_number = extract_page_number_from_coords(getattr(section, "coords", None))
             if page_number is not None:
                 page_obj = page_map.get(page_number)
@@ -25,20 +23,15 @@ def parse_sections(struct, page_map):
                     title=section_title,
                     content=section_title,
                     text_type=TextType.SECTION,
-                    document_id=None,  # will set later
-                    page_id=page_id,   # set from coords if available
-                    parent_id=None,    # will set to doc_id later
+                    document_id=None,
+                    page_id=page_id,
+                    parent_id=None,
                     index=section_idx,
                 )
                 section_texts.append(section_text_obj)
 
-            # Paragraphs in section
+            # Paragraphs in section (already chunked in parse_paragraphs)
             paras = parse_paragraphs(section, section_text_obj, page_map)
             paragraph_texts.extend(paras)
-            # If no page_id from section.coords, set from first paragraph
-            if section_text_obj and not section_text_obj.page_id:
-                for para in paras:
-                    if getattr(para, "page_id", None):
-                        section_text_obj.page_id = para.page_id
-                        break
+
     return section_texts, paragraph_texts

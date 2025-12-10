@@ -8,6 +8,8 @@ from smart_library.domain.constants.text_types import TextType
 class Text(Entity):
     title: str = ""
     content: str = ""
+    display_content: str = ""      # For display purposes
+    embedding_content: str = ""    # For embedding/model input
     # Rename to avoid clashing with Entity.type property; maps to DB column "type"
     text_type: str = TextType.CHUNK      # "chunk", "summary", "caption", etc.
     index: Optional[int] = None          # for ordering inside a page or document
