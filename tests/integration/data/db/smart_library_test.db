@@ -1,0 +1,16 @@
+-- Temporary test database for integration tests
+-- This file is created for testing purposes only
+-- Schema for vector table
+
+PRAGMA foreign_keys = ON;
+
+DROP TABLE IF EXISTS vector;
+CREATE TABLE vector (
+    id TEXT NOT NULL,
+    idx INTEGER NOT NULL,
+    value REAL NOT NULL,
+    model TEXT NOT NULL,
+    dim INTEGER NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (id, idx)
+);

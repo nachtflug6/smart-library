@@ -32,3 +32,5 @@ ipykernel
 # XML
 lxml
 
+# SQLite vector database
+sqlite-vec

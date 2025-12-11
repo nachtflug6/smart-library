@@ -84,16 +84,19 @@ CREATE TABLE term (
     related_terms TEXT      -- JSON list
 );
 
+
 -- =========================================================
--- EMBEDDING table
+-- VECTOR table (split vector storage)
 -- =========================================================
-DROP TABLE IF EXISTS embedding;
-CREATE TABLE embedding (
-    id TEXT PRIMARY KEY REFERENCES entity(id) ON DELETE CASCADE,
-    vector BLOB NOT NULL,
+DROP TABLE IF EXISTS vector;
+CREATE TABLE vector (
+    id TEXT NOT NULL REFERENCES entity(id) ON DELETE CASCADE,
+    idx INTEGER NOT NULL,
+    value REAL NOT NULL,
     model TEXT NOT NULL,
     dim INTEGER NOT NULL,
-    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (id, idx)
 );
 
 -- =========================================================

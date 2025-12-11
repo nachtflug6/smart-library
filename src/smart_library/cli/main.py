@@ -10,6 +10,7 @@ from .list import list
 from .show import show
 from .initialize import initialize
 from .search import search
+from .test_sqlitevec import test_sqlitevec
 
 if __name__ == "__main__":
     try:

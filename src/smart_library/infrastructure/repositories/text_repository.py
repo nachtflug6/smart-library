@@ -1,8 +1,11 @@
 from typing import Optional, Dict, Any
 import json
 
+
 from smart_library.domain.entities.text import Text
 from smart_library.infrastructure.repositories.base_repository import BaseRepository, _from_json
+from smart_library.infrastructure.repositories.entity_repository import EntityRepository
+from datetime import datetime
 
 class TextRepository(BaseRepository[Text]):
     table = "text_entity"
@@ -13,7 +16,26 @@ class TextRepository(BaseRepository[Text]):
             txt.parent_id = txt.page_id or txt.document_id
         if not txt.parent_id:
             raise ValueError("Text.parent_id should reference Page or Document id")
-        self._insert_entity(txt)
+        # Ensure entity exists
+        entity_repo = EntityRepository()
+        if not entity_repo.exists(txt.id):
+            now = datetime.utcnow().isoformat()
+            entity_kind = "Text"
+            meta = txt.metadata if hasattr(txt, 'metadata') and txt.metadata is not None else {}
+            sql_entity = """
+            INSERT INTO entity (id, created_at, modified_at, created_by, updated_by, parent_id, entity_kind, metadata)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+            """
+            self.conn.execute(sql_entity, [
+                txt.id,
+                now,
+                now,
+                getattr(txt, 'created_by', None),
+                getattr(txt, 'updated_by', None),
+                txt.parent_id,
+                entity_kind,
+                json.dumps(meta) if meta else None
+            ])
         sql = "INSERT INTO text_entity (id, type, chunk_index, content) VALUES (?,?,?,?)"
         self.conn.execute(sql, [txt.id, txt.type, txt.index, txt.content])
         self.conn.commit()
