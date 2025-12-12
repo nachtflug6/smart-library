@@ -11,3 +11,4 @@ def add(
 
     doc_id = IngestionService.ingest(path, extract_metadata=metadata)
     echo(f"Document ingested successfully. Document ID: {doc_id}")
+

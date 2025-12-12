@@ -4,13 +4,16 @@ import sys
 app = Typer(no_args_is_help=True)
 
 # Import CLI modules to register commands
+
 from .add import add
 from .delete import delete
 from .list import list
 from .show import show
 from .initialize import initialize
 from .search import search
-from .test_sqlitevec import test_sqlitevec
+from .add_vector import app as add_vector_app
+
+app.add_typer(add_vector_app, name="add-vector")
 
 if __name__ == "__main__":
     try:

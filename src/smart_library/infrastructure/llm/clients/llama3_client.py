@@ -39,20 +39,3 @@ class Llama3Client:
                 if m.get("role") == "assistant":
                     return m.get("content", "")
         return ""
-
-# --- Smoketest ---
-if __name__ == "__main__":
-    MODEL = OllamaConfig.GENERATION_MODEL
-
-    prompt = {
-        "system": "You are a helpful assistant. Only answer with valid JSON.",
-        "user": "Return a JSON object with fields: title (string), authors (list of strings). Example: {\"title\": \"Test Title\", \"authors\": [\"Jane Doe\", \"John Smith\"]}"
-    }
-
-    client = Llama3Client(MODEL)
-    print("Sending prompt to Llama3...")
-    try:
-        response = client.chat(prompt)
-        print("LLM Response:\n", response)
-    except Exception as e:
-        print("Error:", e)

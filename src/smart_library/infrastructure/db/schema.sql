@@ -85,18 +85,15 @@ CREATE TABLE term (
 );
 
 
+
 -- =========================================================
--- VECTOR table (split vector storage)
+-- VECTOR table (sqlite-vec virtual table, 768 dimensions)
+-- rowid is used as the vector id and should match the entity id
 -- =========================================================
 DROP TABLE IF EXISTS vector;
-CREATE TABLE vector (
-    id TEXT NOT NULL REFERENCES entity(id) ON DELETE CASCADE,
-    idx INTEGER NOT NULL,
-    value REAL NOT NULL,
-    model TEXT NOT NULL,
-    dim INTEGER NOT NULL,
-    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    PRIMARY KEY (id, idx)
+CREATE VIRTUAL TABLE vector USING vec0(
+    id TEXT PRIMARY KEY PRIMARY KEY,
+    embedding FLOAT[768]
 );
 
 -- =========================================================

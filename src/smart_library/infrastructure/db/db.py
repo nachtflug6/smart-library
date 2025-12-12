@@ -19,8 +19,15 @@ def get_connection_with_sqlitevec(db_path: Path = DB_PATH, load_sqlitevec: bool 
     if load_sqlitevec or load_sqlitevec is None:
         try:
             load_sqlitevec_extension(conn)
+            # Verify that the vec module is loaded
+            modules = {row[0] for row in conn.execute("PRAGMA module_list;")}
+            if "vec0" not in modules:
+                raise RuntimeError("vec module not registered on this connection")
         except Exception as e:
-            raise RuntimeError(f"Failed to load sqlite-vec extension: {e}")
+            import traceback
+            tb = traceback.format_exc()
+            # Include the full traceback in the exception message so it is always visible
+            raise RuntimeError(f"Failed to load sqlite-vec extension. Traceback:\n{tb}") from e
     return conn
 
 def migrate_schema(schema_path: Path = None):

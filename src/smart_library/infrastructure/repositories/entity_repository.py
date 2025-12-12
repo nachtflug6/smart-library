@@ -19,6 +19,29 @@ class EntityRepository(BaseRepository[Entity]):
     def __init__(self):
         super().__init__()
 
+    def create(self, id: str, entity_kind: str, created_by: str = None, metadata: dict = None, parent_id: str = None):
+        """
+        Create a new entity record in the entity table.
+        """
+        import datetime, json
+        now = datetime.datetime.utcnow().isoformat()
+        sql = """
+        INSERT INTO entity (id, created_at, modified_at, created_by, updated_by, parent_id, entity_kind, metadata)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+        """
+        metadata_json = json.dumps(metadata) if metadata is not None else "{}"
+        self.conn.execute(sql, (
+            id,
+            now,
+            now,
+            created_by,
+            created_by,
+            parent_id,
+            entity_kind,
+            metadata_json
+        ))
+        self.conn.commit()
+
     def get(self, entity_id: str) -> Optional[Dict[str, Any]]:
         sql = "SELECT * FROM entity WHERE id=?"
         row = self.conn.execute(sql, (entity_id,)).fetchone()

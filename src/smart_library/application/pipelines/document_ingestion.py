@@ -10,8 +10,9 @@ from smart_library.application.pipelines.metadata_extraction import SimpleMetada
 from collections import defaultdict
 from typing import Dict, List, Tuple
 from smart_library.config import OllamaConfig
-from smart_library.infrastructure.llm.clients.ollama_client import OllamaClient, OllamaEmbeddingModel
-from smart_library.domain.services.embedding_service import EmbeddingService
+from smart_library.infrastructure.llm.clients.ollama_client import OllamaClient
+from smart_library.infrastructure.embeddings.embedding_client import OllamaEmbeddingModel
+from smart_library.infrastructure.embeddings.embedding_service import EmbeddingService
 
 class DocumentIngestionService:
     def __init__(self, 
