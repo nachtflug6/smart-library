@@ -1,4 +1,5 @@
 from smart_library.domain.entities.term import Term
+from smart_library.domain.constants.term_types import TermType
 from smart_library.domain.services.entity_validation import EntityValidation
 
 class TermService:
@@ -10,22 +11,15 @@ class TermService:
     def check_term(**kwargs):
         entity_keys = ["id", "created_by", "parent_id", "metadata"]
         entity_args = {k: kwargs.get(k) for k in entity_keys}
-        entity_checked = EntityService.check_entity(**entity_args)
+        entity_checked = EntityValidation.check_entity(**entity_args)
 
-        errors = []
         term_fields = {
-            "name": (str,),
+            "canonical_name": (str,),
+            "type": (TermType,),
+            "sense": (str, type(None)),
             "definition": (str, type(None)),
-            "aliases": (list, type(None)),
-            "category": (str, type(None)),
         }
-        for field, types in term_fields.items():
-            value = kwargs.get(field)
-            if value is not None and not isinstance(value, types):
-                errors.append(f"{field} must be {types[0].__name__} or None, got {type(value).__name__}")
-            if field == "aliases" and value is not None:
-                if not isinstance(value, list) or not all(isinstance(a, str) for a in value):
-                    errors.append("aliases must be a list of str or None")
+        errors = EntityValidation.check_fields_type(kwargs, term_fields, required_fields=["canonical_name"], context_name="Term")
         if errors:
             raise ValueError("Term creation failed due to type errors: " + "; ".join(errors))
         result = {**entity_checked}

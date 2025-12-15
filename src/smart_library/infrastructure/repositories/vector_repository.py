@@ -1,7 +1,6 @@
 from typing import Optional, Dict, Any, List
 from smart_library.infrastructure.repositories.base_repository import BaseRepository, _from_json
 
-from smart_library.domain.entities.embedding import Embedding
 import sqlite3
 import pickle
 from datetime import datetime
@@ -33,7 +32,7 @@ class VectorRepository(BaseRepository):
         Store one vector per row in the sqlite-vec virtual table. id is TEXT PRIMARY KEY.
         Vector is normalized so cosine similarity works.
         """
-        from smart_library.domain.services.entity_service import EntityService
+        from smart_library.domain.services.entity_validation import EntityService
         entity_service = EntityService(EntityRepository())
         if not entity_service.entity_exists(id):
             entity_service.create_entity(

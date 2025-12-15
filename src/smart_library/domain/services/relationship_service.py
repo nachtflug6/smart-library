@@ -14,16 +14,13 @@ class RelationshipService:
 		entity_args = {k: kwargs.get(k) for k in entity_keys}
 		entity_checked = EntityValidation.check_entity(**entity_args)
 
-		errors = []
 		rel_fields = {
 			"source_id": (str,),
 			"target_id": (str,),
 			"type": (RelationshipType,),
 		}
-		for field, types in rel_fields.items():
-			value = kwargs.get(field)
-			if value is not None and not isinstance(value, types):
-				errors.append(f"{field} must be {types[0].__name__}, got {type(value).__name__}")
+		# Validate relationship-specific fields; require all three
+		errors = EntityValidation.check_fields_type(kwargs, rel_fields, required_fields=["source_id", "target_id", "type"], context_name="Relationship")
 		if errors:
 			raise ValueError("Relationship creation failed due to type errors: " + "; ".join(errors))
 		result = {**entity_checked}

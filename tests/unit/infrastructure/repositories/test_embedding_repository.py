@@ -1,6 +1,6 @@
 import pytest
 from unittest.mock import Mock, patch
-from smart_library.infrastructure.repositories.embedding_repository import EmbeddingRepository
+from smart_library.infrastructure.repositories.vector_repository import EmbeddingRepository
 
 @pytest.fixture
 def mock_conn():

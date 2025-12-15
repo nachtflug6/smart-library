@@ -4,8 +4,6 @@ from smart_library.domain.entities.entity import Entity
 
 @dataclass
 class Heading(Entity):
-    document_id: str
-
-    title: str
+    title: str = None
     index: Optional[int] = None
     page_number: int = 0

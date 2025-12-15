@@ -6,7 +6,7 @@ from smart_library.domain.constants.relationship_types import RelationshipType
 @dataclass
 class Relationship(Entity):
 
-    source_id: str
-    target_id: str
-    type: RelationshipType
+    source_id: str = None
+    target_id: str = None
+    type: RelationshipType = RelationshipType.BELONGS_TO
 

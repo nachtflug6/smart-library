@@ -1,7 +1,7 @@
 import pytest
 from pathlib import Path
-from smart_library.infrastructure.grobid.service import GrobidService
-from smart_library.infrastructure.grobid.models import Header, Facsimile, DocumentBody
+from smart_library.infrastructure.grobid.grobid_service import GrobidService
+from smart_library.infrastructure.grobid.grobid_models import Header, Facsimile, DocumentBody
 
 @pytest.mark.integration
 def test_grobid_service_parse_fulltext():

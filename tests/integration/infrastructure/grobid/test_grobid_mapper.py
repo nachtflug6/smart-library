@@ -1,7 +1,7 @@
 import pytest
 from pathlib import Path
-from smart_library.infrastructure.grobid.client import GrobidClient
-from smart_library.infrastructure.grobid.mapper import GrobidMapper
+from smart_library.infrastructure.grobid.grobid_client import GrobidClient
+from smart_library.infrastructure.grobid.grobid_mapper import GrobidMapper
 
 
 @pytest.mark.integration

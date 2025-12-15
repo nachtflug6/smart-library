@@ -14,17 +14,12 @@ class HeadingService:
 		entity_args = {k: kwargs.get(k) for k in entity_keys}
 		entity_checked = EntityValidation.check_entity(**entity_args)
 
-		errors = []
 		heading_fields = {
-			"document_id": (str,),
 			"title": (str,),
 			"index": (int, type(None)),
 			"page_number": (int,),
 		}
-		for field, types in heading_fields.items():
-			value = kwargs.get(field)
-			if value is not None and not isinstance(value, types):
-				errors.append(f"{field} must be {types[0].__name__}{' or None' if len(types) > 1 else ''}, got {type(value).__name__}")
+		errors = EntityValidation.check_fields_type(kwargs, heading_fields, required_fields=["title"], context_name="Heading")
 		if errors:
 			raise ValueError("Heading creation failed due to type errors: " + "; ".join(errors))
 		result = {**entity_checked}

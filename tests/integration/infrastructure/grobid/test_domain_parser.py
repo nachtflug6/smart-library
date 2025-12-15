@@ -1,6 +1,6 @@
 import pytest
 from pathlib import Path
-from smart_library.infrastructure.grobid.service import GrobidService
+from smart_library.infrastructure.grobid.grobid_service import GrobidService
 from smart_library.infrastructure.parsers.document import parse_document
 from smart_library.domain.entities.document import Document
 from smart_library.domain.entities.page import Page
