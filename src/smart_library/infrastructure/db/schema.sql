@@ -88,7 +88,7 @@ CREATE TABLE term (
 
 -- =========================================================
 -- VECTOR table (sqlite-vec virtual table, 768 dimensions)
--- rowid is used as the vector id and should match the entity id
+-- rowid is used as the vector id and  should match the entity id
 -- =========================================================
 DROP TABLE IF EXISTS vector;
 CREATE VIRTUAL TABLE vector USING vec0(

@@ -1,24 +1,28 @@
-"""
-Integration scenarios: end-to-end behavior probes using the integration context.
-"""
-from .context import make_context
+import importlib
+import pkgutil
+import sys
+import os
 
+def run_all_scenarios():
+    """
+    Dynamically discover and run all scenario_* functions in scenarios/ directory.
+    """
+    scenarios_pkg = "smart_library.integration.scenarios"
+    scenarios_path = os.path.dirname(__file__) + "/scenarios"
+    sys.path.insert(0, os.path.dirname(__file__))
+    from smart_library.integration.context import make_context
+    for _, module_name, _ in pkgutil.iter_modules([scenarios_path]):
+        mod = importlib.import_module(f"{scenarios_pkg}.{module_name}")
+        for attr in dir(mod):
+            if attr.startswith("scenario_") and callable(getattr(mod, attr)):
+                print(f"\n[RUNNING] {module_name}.{attr}")
+                context = make_context()  # Create a new context (and DB) for each scenario
+                try:
+                    getattr(mod, attr)(context)
+                except Exception as e:
+                    print(f"[ERROR] {module_name}.{attr}: {e}")
+                finally:
+                    context.cleanup()
 
-def scenario_vector_similarity():
-    ctx = make_context()
-    # Add a few vectors
-    vectors = [
-        ("vec1", [0.1, 0.2, 0.3]),
-        ("vec2", [0.2, 0.1, 0.4]),
-        ("vec3", [0.9, 0.8, 0.7]),
-    ]
-    for vid, vec in vectors:
-        ctx.vector_service.add_vector(vid, vec)
-    # Query
-    query = [0.1, 0.2, 0.3]
-    results = ctx.vector_service.search_similar_vectors(query, top_k=2)
-    print("Scenario: Vector similarity search results:")
-    for res in results:
-        print(res)
-
-# Add more scenarios as needed
+if __name__ == "__main__":
+    run_all_scenarios()
