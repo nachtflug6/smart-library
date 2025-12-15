@@ -1,7 +1,7 @@
 from smart_library.domain.entities.text import Text
 from smart_library.domain.constants.text_types import TextType
 from .paragraph import parse_paragraphs
-from smart_library.infrastructure.parsers.utils import extract_page_number_from_coords
+from smart_library.domain.mappers.grobid_domain.utils import extract_page_number_from_coords
 from smart_library.domain.services.text_service import TextService
 
 def parse_sections(struct, page_map, text_service=None):

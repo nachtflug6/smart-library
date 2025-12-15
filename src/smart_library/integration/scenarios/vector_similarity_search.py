@@ -1,9 +1,11 @@
 """
 Integration test: add and search 768-dim float vectors using VectorService.
 """
+
 import numpy as np
 from smart_library.integration.context import make_context
 import traceback
+from .utils import print_scenario_header, print_scenario_footer, print_scenario_table_header, print_scenario_table_row
 
 def scenario_vector_similarity_search(context):
     """
@@ -27,25 +29,14 @@ def scenario_vector_similarity_search(context):
         top_k = 3
         results = vector_service.search_similar_vectors(query, top_k=top_k)
 
-
-        print(f"""
-============================================================
-                  VECTOR SIMILARITY SEARCH
-============================================================
-Goal: Find which stored 768-dim vectors are most similar to a random query vector.
-
-Query vector: shape=({dim}) [seed=123]
-Seeded vectors: {[vid for vid, _ in vectors]}
-
-------------------- Ranked Results -------------------------
-| Rank |      ID       | Cosine Sim. | Distance   |
-------------------------------------------------------------""")
+        print_scenario_header("Vector Similarity Search", goal=f"Find which stored 768-dim vectors are most similar to a random query vector.\n\nQuery vector: shape=({dim}) [seed=123]\nSeeded vectors: {[vid for vid, _ in vectors]}")
+        print_scenario_table_header(["Rank", "ID", "Cosine Sim.", "Distance"])
         for i, res in enumerate(results, 1):
             vid = res.get("id") if isinstance(res, dict) else res[0]
             score = res.get("cosine_similarity")
             distance = res.get("distance")
-            print(f"|  {i:<3} | {vid[:10]}... |   {score:.4f}   | {distance:.4f}   |")
-        print("============================================================\n")
+            print_scenario_table_row([f"{i:<3}", f"{vid[:10]}...", f"{score:.4f}", f"{distance:.4f}"])
+        print_scenario_footer()
 
         # Assertions: correct number of results, ids in seeded
         assert len(results) == top_k, f"Expected {top_k} results, got {len(results)}"

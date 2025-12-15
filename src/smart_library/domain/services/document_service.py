@@ -1,81 +1,75 @@
-# smart_library/application/services/document_service.py
-
-from typing import Optional, List
 from smart_library.domain.entities.document import Document
-from smart_library.domain.services.base_service import BaseService
-from smart_library.infrastructure.repositories.document_repository import DocumentRepository
-from smart_library.infrastructure.repositories.page_repository import PageRepository
+from smart_library.domain.services.entity_validation import EntityValidation
+from smart_library.domain.constants.document_types import DocumentType
 
-
-class DocumentService(BaseService):
-    def __init__(self, document_repo):
-        super().__init__(document_repo)
-        self.document_repo = document_repo
-
+class DocumentService:
     @classmethod
     def default_instance(cls):
-        repo = DocumentRepository()
-        return cls(repo)
+        return cls()
+    
+    @staticmethod
+    def check_document(**kwargs):
+        """
+        Checks types for both Entity and Document fields. Raises ValueError if any type is invalid.
+        Returns the validated params as a dict.
+        """
+        # First, check Entity fields using EntityService
+        entity_keys = ["id", "created_by", "parent_id", "metadata"]
+        entity_args = {k: kwargs.get(k) for k in entity_keys}
+        entity_checked = EntityValidation.check_entity(**entity_args)
 
-    # -------------------------------
-    # CREATE
-    # -------------------------------
-    def add_document(self, doc: Document) -> str:
-        self.touch(doc)
-        return self.document_repo.add(doc)
+        errors = []
+        # Document-specific fields and their types
+        doc_fields = {
+            "type": (str, type(None)),
+            "source_path": (str, type(None)),
+            "source_url": (str, type(None)),
+            "source_format": (str, type(None)),
+            "file_hash": (str, type(None)),
+            "version": (str, type(None)),
+            "page_count": (int, type(None)),
+            "title": (str, type(None)),
+            "authors": (list, type(None)),
+            "doi": (str, type(None)),
+            "publication_date": (str, type(None)),
+            "publisher": (str, type(None)),
+            "venue": (str, type(None)),
+            "year": (int, type(None)),
+            "abstract": (str, type(None)),
+        }
+        for field, types in doc_fields.items():
+            value = kwargs.get(field)
+            if field == "type" and value is not None:
+                # Accept DocumentType enum or valid string
+                if not (isinstance(value, DocumentType) or (isinstance(value, str) and value in DocumentType._value2member_map_)):
+                    errors.append(f"type must be a valid DocumentType or string value, got {value}")
+            elif value is not None and not isinstance(value, types):
+                errors.append(f"{field} must be {types[0].__name__} or None, got {type(value).__name__}")
+            # For authors, check list of str
+            if field == "authors" and value is not None:
+                if not isinstance(value, list) or not all(isinstance(a, str) for a in value):
+                    errors.append("authors must be a list of str or None")
+        if errors:
+            raise ValueError("Document creation failed due to type errors: " + "; ".join(errors))
+        # Merge entity_checked and doc fields
+        result = {**entity_checked}
+        for k in doc_fields:
+            if k in kwargs:
+                result[k] = kwargs[k]
+        return result
 
     @staticmethod
     def create_document(**kwargs):
         """
         Factory for creating a Document object. Add validation/normalization here if needed.
+        Performs type checking before instantiation.
         """
-        return Document(**kwargs)
+        # Validate fields first
+        validated = DocumentService.check_document(**kwargs)
 
-    # -------------------------------
-    # READ
-    # -------------------------------
-    def get_document(self, doc_id: str) -> Optional[Document]:
-        return self.document_repo.get(doc_id)
+        # Normalize `type`: convert valid string values to DocumentType
+        doc_type = validated.get("type")
+        if doc_type is not None and isinstance(doc_type, str):
+            validated["type"] = DocumentType(doc_type)
 
-    def list_documents(self) -> List[Document]:
-        return self.document_repo.list_all()
-
-    def find_by_doi(self, doi: str) -> Optional[Document]:
-        return self.document_repo.find_by_doi(doi)
-
-    def get_pages(self, doc_id: str):
-        """
-        Return all pages for the given document ID.
-        """
-        page_repo = PageRepository()
-        return page_repo.list(doc_id=doc_id)
-
-    # -------------------------------
-    # UPDATE
-    # -------------------------------
-    def update_document(self, doc: Document):
-        self.touch(doc)
-        return self.document_repo.update(doc)
-
-    def update_document_metadata(self, doc_id: str, metadata: dict):
-        doc = self.get_document(doc_id)
-        if doc is None:
-            raise ValueError(f"Document not found: {doc_id}")
-
-        # Update known fields if present in metadata
-        doc_fields = set(doc.__dataclass_fields__.keys())
-        for key, value in metadata.items():
-            if key in doc_fields:
-                setattr(doc, key, value)
-            else:
-                # Store unknown fields in doc.metadata
-                doc.metadata[key] = value
-
-        self.touch(doc)
-        return self.document_repo.update(doc)
-
-    # -------------------------------
-    # DELETE
-    # -------------------------------
-    def delete_document(self, doc_id: str):
-        return self.document_repo.delete(doc_id)
+        return Document(**validated)

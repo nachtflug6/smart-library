@@ -74,8 +74,18 @@
 				// Disable heavy chat history reconstruction
 				"copilot.chat.chatHistory": false,
 
+				// Disable Copilot chat refresh on focus
+				"copilot.chat.refreshOnFocus": false,
+
 				// Use iframe-based webviews → avoids renderer UI freezes
 				"workbench.editor.webview.experimental.useIframes": true,
+
+				// Prevent webview suspension on blur
+				"workbench.editor.webview.suspendOnBlur": false,
+
+				// Editor open/reveal behavior
+				"workbench.editor.openSideBySideDirection": "right",
+				"workbench.editor.revealIfOpen": true,
 
 				// ----------------------------------------------------------
 				// Reduce file watcher load inside WSL/devcontainer

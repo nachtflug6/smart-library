@@ -1,10 +1,10 @@
 from lxml import etree
-from smart_library.infrastructure.grobid.models import (
+from smart_library.infrastructure.grobid.grobid_models import (
     Header, Author, Affiliation, Facsimile, Surface,
     DocumentBody, Section, Paragraph, InlineRef, Coordinates, CoordinateBox
 )
 from smart_library.infrastructure.grobid.utils import (
-    parse_coords, parse_affiliation, parse_surface, parse_section, parse_author
+    parse_coords, parse_affiliation, parse_surface, parse_section, parse_author, XMLParser
 )
 
 class GrobidMapper:
@@ -21,66 +21,64 @@ class GrobidMapper:
         Returns: {"header": Header, "facsimile": Facsimile, "body": DocumentBody}
         """
         root = etree.fromstring(xml_str.encode("utf-8"))
-        header_el = root.find(".//tei:teiHeader", self.NS)
+        parser = XMLParser(root, self.NS)
+        header_el = parser.find(".//tei:teiHeader")
         if header_el is None:
             raise ValueError("No <teiHeader> found in XML.")
-        facsimile_el = root.find(".//tei:facsimile", self.NS)
-        body_el = root.find(".//tei:text/tei:body", self.NS)
+        facsimile_el = parser.find(".//tei:facsimile")
+        body_el = parser.find(".//tei:text/tei:body")
 
-        header = self.parse_tei_header(header_el)
-        facsimile = self.parse_facsimile(facsimile_el) if facsimile_el is not None else Facsimile()
-        body = self.parse_body(body_el) if body_el is not None else DocumentBody()
+        header = self.parse_tei_header(XMLParser(header_el, self.NS))
+        facsimile = self.parse_facsimile(XMLParser(facsimile_el, self.NS)) if facsimile_el is not None else Facsimile()
+        body = self.parse_body(XMLParser(body_el, self.NS)) if body_el is not None else DocumentBody()
 
         return {"header": header, "facsimile": facsimile, "body": body}
 
     # ------------------------------------------------------------
     # MAPPER: convert <teiHeader> → Header dataclass
     # ------------------------------------------------------------
-    def parse_tei_header(self, header) -> Header:
-        def text_or_none(el):
-            return el.text.strip() if el is not None and el.text else None
-
+    def parse_tei_header(self, header_parser: XMLParser) -> Header:
         # TITLE
-        title_el = header.find(".//tei:fileDesc/tei:titleStmt/tei:title", self.NS)
-        title = text_or_none(title_el)
+        title_el = header_parser.find(".//tei:fileDesc/tei:titleStmt/tei:title")
+        title = header_parser.text_or_none(title_el)
 
         # PUBLICATION INFO
-        publisher = text_or_none(header.find(".//tei:publicationStmt/tei:publisher", self.NS))
-        pub_date_el = header.find(".//tei:publicationStmt/tei:date", self.NS)
-        published_date = pub_date_el.get("when") if pub_date_el is not None else None
+        publisher = header_parser.text_or_none(header_parser.find(".//tei:publicationStmt/tei:publisher"))
+        pub_date_el = header_parser.find(".//tei:publicationStmt/tei:date")
+        published_date = header_parser.get_attr(pub_date_el, "when")
 
         # IDENTIFIERS (DOI, MD5)
         doi = None
         md5 = None
-        for idno in header.findall(".//tei:idno", self.NS):
-            t = idno.get("type")
+        for idno in header_parser.findall(".//tei:idno"):
+            t = header_parser.get_attr(idno, "type")
             if t == "DOI":
-                doi = text_or_none(idno)
+                doi = header_parser.text_or_none(idno)
             elif t == "MD5":
-                md5 = text_or_none(idno)
+                md5 = header_parser.text_or_none(idno)
 
         # AFFILIATIONS
         affiliations = {}
-        for aff in header.findall(".//tei:analytic/tei:author/tei:affiliation", self.NS):
-            aff_obj = parse_affiliation(aff, self.NS)
+        for aff in header_parser.findall(".//tei:analytic/tei:author/tei:affiliation"):
+            aff_obj = parse_affiliation(aff, header_parser.ns)
             affiliations[aff_obj.key] = aff_obj
 
         # AUTHORS
         authors = []
-        for author in header.findall(".//tei:analytic/tei:author", self.NS):
-            author_obj = parse_author(author, self.NS, affiliations)
+        for author in header_parser.findall(".//tei:analytic/tei:author"):
+            author_obj = parse_author(author, header_parser.ns, affiliations)
             if author_obj:
                 authors.append(author_obj)
 
         # KEYWORDS
         keywords = [
-            text_or_none(term)
-            for term in header.findall(".//tei:textClass/tei:keywords/tei:term", self.NS)
+            header_parser.text_or_none(term)
+            for term in header_parser.findall(".//tei:textClass/tei:keywords/tei:term")
         ]
 
         # ABSTRACT
-        abstract_el = header.find(".//tei:abstract//tei:p", self.NS)
-        abstract = " ".join(abstract_el.itertext()).strip() if abstract_el is not None else None
+        abstract_el = header_parser.find(".//tei:abstract//tei:p")
+        abstract = header_parser.itertext(abstract_el) if abstract_el is not None else None
 
         return Header(
             title=title,
@@ -97,13 +95,13 @@ class GrobidMapper:
     # ------------------------------------------------------------
     # MAPPER: convert <facsimile> → Facsimile dataclass
     # ------------------------------------------------------------
-    def parse_facsimile(self, facsimile_el) -> Facsimile:
-        surfaces = [parse_surface(surf) for surf in facsimile_el.findall("tei:surface", self.NS)]
+    def parse_facsimile(self, facsimile_parser: XMLParser) -> Facsimile:
+        surfaces = [parse_surface(surf) for surf in facsimile_parser.findall("tei:surface")]
         return Facsimile(surfaces=surfaces)
 
     # ------------------------------------------------------------
     # MAPPER: convert <body> → DocumentBody dataclass
     # ------------------------------------------------------------
-    def parse_body(self, body_el) -> DocumentBody:
-        sections = [parse_section(div, self.NS) for div in body_el.findall(".//tei:div", self.NS)]
+    def parse_body(self, body_parser: XMLParser) -> DocumentBody:
+        sections = [parse_section(div, body_parser.ns) for div in body_parser.findall(".//tei:div")]
         return DocumentBody(sections=sections)

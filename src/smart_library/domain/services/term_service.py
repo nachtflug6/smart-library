@@ -1,43 +1,40 @@
-from typing import Optional, List
 from smart_library.domain.entities.term import Term
-from smart_library.domain.services.base_service import BaseService
-from smart_library.infrastructure.repositories.term_repository import TermRepository
+from smart_library.domain.services.entity_validation import EntityValidation
 
-class TermService(BaseService):
-    def __init__(self, term_repo):
-        super().__init__(term_repo)
-        self.term_repo = term_repo
-
+class TermService:
     @classmethod
     def default_instance(cls):
-        repo = TermRepository()
-        return cls(repo)
+        return cls()
 
-    # CREATE
-    def add_term(self, term: Term) -> str:
-        self.touch(term)
-        return self.term_repo.add(term)
+    @staticmethod
+    def check_term(**kwargs):
+        entity_keys = ["id", "created_by", "parent_id", "metadata"]
+        entity_args = {k: kwargs.get(k) for k in entity_keys}
+        entity_checked = EntityService.check_entity(**entity_args)
 
-    # READ
-    def get_term(self, term_id: str) -> Optional[Term]:
-        return self.term_repo.get(term_id)
+        errors = []
+        term_fields = {
+            "name": (str,),
+            "definition": (str, type(None)),
+            "aliases": (list, type(None)),
+            "category": (str, type(None)),
+        }
+        for field, types in term_fields.items():
+            value = kwargs.get(field)
+            if value is not None and not isinstance(value, types):
+                errors.append(f"{field} must be {types[0].__name__} or None, got {type(value).__name__}")
+            if field == "aliases" and value is not None:
+                if not isinstance(value, list) or not all(isinstance(a, str) for a in value):
+                    errors.append("aliases must be a list of str or None")
+        if errors:
+            raise ValueError("Term creation failed due to type errors: " + "; ".join(errors))
+        result = {**entity_checked}
+        for k in term_fields:
+            if k in kwargs:
+                result[k] = kwargs[k]
+        return result
 
-    def list_terms(self) -> List[Term]:
-        return self.term_repo.list_all()
-
-    # UPDATE
-    def update_term(self, term: Term):
-        self.touch(term)
-        return self.term_repo.update(term)
-
-    def update_term_metadata(self, term_id: str, metadata: dict):
-        term = self.get_term(term_id)
-        if term is None:
-            raise ValueError(f"Term not found: {term_id}")
-        self.update_metadata(term, metadata)
-        self.touch(term)
-        return self.term_repo.update(term)
-
-    # DELETE
-    def delete_term(self, term_id: str):
-        return self.term_repo.delete(term_id)
+    @staticmethod
+    def create_term(**kwargs):
+        TermService.check_term(**kwargs)
+        return Term(**kwargs)

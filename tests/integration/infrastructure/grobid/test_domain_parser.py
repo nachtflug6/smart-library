@@ -9,7 +9,7 @@ from smart_library.utils.print import print_document
 
 @pytest.mark.integration
 def test_tei_domain_parser_from_grobid_struct():
-    pdf_path = Path(__file__).parent.parent / "data" / "Ma2022.pdf"
+    pdf_path = Path(__file__).parent.parent / ".." / "data" / "pdf" / "Ma2022.pdf"
     assert pdf_path.exists(), f"Test PDF not found: {pdf_path}"
 
     service = GrobidService()

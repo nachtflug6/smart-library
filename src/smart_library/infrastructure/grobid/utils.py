@@ -1,6 +1,32 @@
-from smart_library.infrastructure.grobid.models import (
+
+from smart_library.infrastructure.grobid.grobid_models import (
     Affiliation, Author, Surface, InlineRef, Paragraph, Section, Coordinates, CoordinateBox
 )
+
+# Namespace-aware XML parser utility
+class XMLParser:
+    def __init__(self, element, ns=None):
+        self.element = element
+        self.ns = ns or {"tei": "http://www.tei-c.org/ns/1.0"}
+
+    def find(self, path):
+        return self.element.find(path, self.ns)
+
+    def findall(self, path):
+        return self.element.findall(path, self.ns)
+
+    def get(self, attr, default=None):
+        return self.element.get(attr, default)
+
+    def text_or_none(self, el):
+        return el.text.strip() if el is not None and el.text else None
+
+    def itertext(self, el=None):
+        el = el or self.element
+        return "".join(el.itertext()).strip() if el is not None else None
+
+    def get_attr(self, el, attr, default=None):
+        return el.get(attr, default) if el is not None else default
 
 def parse_coords(coords_str):
     if not coords_str:
