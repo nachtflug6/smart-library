@@ -2,14 +2,13 @@
 from smart_library.domain.aggregates.document_snapshot import DocumentSnapshot
 from smart_library.domain.mappers.grobid_domain.document_mapper import parse_document
 from smart_library.domain.mappers.grobid_domain.heading_mapper import parse_headings
-from smart_library.domain.mappers.grobid_domain.text_mapper import parse_texts
 from smart_library.domain.services.document_service import DocumentService
 from smart_library.domain.services.heading_service import HeadingService
 from smart_library.domain.services.text_service import TextService
 from smart_library.domain.services.relationship_service import RelationshipService
 from smart_library.domain.services.term_service import TermService
-from smart_library.domain.constants.relationship_types import RelationshipType
-from smart_library.domain.constants.text_types import TextType
+# No direct constant imports required here; relationship types are created by
+# the relationship service within lower-level mappers (heading/text mappers).
 
 
 def build_snapshot(struct, source_path=None, source_url=None, file_hash=None,
@@ -41,70 +40,18 @@ def build_snapshot(struct, source_path=None, source_url=None, file_hash=None,
 	if not body:
 		return DocumentSnapshot(document=document, texts=texts, headings=headings, relationships=relationships, terms=terms)
 
-	# Iterate sections -> headings + texts
-	for section_idx, section in enumerate(getattr(body, "sections", []) or []):
-		title = getattr(section, "title", None)
-		page_number = None
-		# try coords if available
-		coords = getattr(section, "coords", None)
-		if coords is not None and hasattr(coords, "page"):
-			page_number = getattr(coords, "page")
-
-		heading_kwargs = {
-			"title": title,
-			"index": section_idx,
-			"page_number": page_number if page_number is not None else 0,
-			"parent_id": document.id,
-			"metadata": {"document_id": document.id},
-		}
-		if title:
-			heading = heading_service.create_heading(**heading_kwargs)
-			headings.append(heading)
-		else:
-			heading = None
-
-		# paragraphs -> texts
-		for para_idx, para in enumerate(getattr(section, "paragraphs", []) or []):
-			content = getattr(para, "text", None) or getattr(para, "content", "")
-			text_kwargs = {
-				"content": content,
-				"display_content": content,
-				"embedding_content": content,
-				"text_type": TextType.PARAGRAPH,
-				"index": para_idx,
-				"parent_id": document.id,
-				"metadata": {"document_id": document.id},
-			}
-			text = text_service.create_text(**text_kwargs)
-			texts.append(text)
-
-			# Relationships: text -> heading (UNDER_HEADING) and text -> document (BELONGS_TO)
-			if heading is not None:
-				rel1 = relationship_service.create_relationship(
-					source_id=text.id,
-					target_id=heading.id,
-					type=RelationshipType.UNDER_HEADING,
-					metadata={"document_id": document.id},
-				)
-				relationships.append(rel1)
-
-			rel2 = relationship_service.create_relationship(
-				source_id=text.id,
-				target_id=document.id,
-				type=RelationshipType.BELONGS_TO,
-				metadata={"document_id": document.id},
-			)
-			relationships.append(rel2)
-
-		# Heading -> document relationship (if heading created)
-		if heading is not None:
-			rel_h = relationship_service.create_relationship(
-				source_id=heading.id,
-				target_id=document.id,
-				type=RelationshipType.BELONGS_TO,
-				metadata={"document_id": document.id},
-			)
-			relationships.append(rel_h)
+	# Delegate parsing of headings and texts (and relationships) to mapper helpers
+	# `parse_headings` will create headings, texts and relationships using the
+	# provided services and return them for inclusion in the snapshot.
+	headings, texts, heading_index, text_index, rels = parse_headings(
+		struct,
+		document.id,
+		text_service=text_service,
+		relationship_service=relationship_service,
+		start_heading_index=0,
+		start_text_index=0,
+	)
+	relationships.extend(rels or [])
 
 	# (Terms extraction is out of scope here) — keep empty list or extend if available
 

@@ -32,15 +32,11 @@ class VectorRepository(BaseRepository):
         Store one vector per row in the sqlite-vec virtual table. id is TEXT PRIMARY KEY.
         Vector is normalized so cosine similarity works.
         """
-        from smart_library.domain.services.entity_validation import EntityService
-        entity_service = EntityService(EntityRepository())
-        if not entity_service.entity_exists(id):
-            entity_service.create_entity(
-                id=id,
-                entity_kind="Vector",
-                created_by=created_by,
-                metadata={},
-            )
+        # Ensure a base `entity` row exists for this vector id.
+        # Use the `EntityRepository` directly (validation utilities are in `entity_validation`).
+        entity_repo = EntityRepository()
+        if not entity_repo.exists(id):
+            entity_repo.create(id=id, entity_kind="Vector", created_by=created_by, metadata={}, parent_id=None)
 
         vec_norm = self.normalize(vector)
 

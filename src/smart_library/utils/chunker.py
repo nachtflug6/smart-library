@@ -55,11 +55,19 @@ class TextChunker:
             prev = non_overlap_chunks[i - 1]
             curr = non_overlap_chunks[i]
             prev_sentences = self._split_into_sentences(prev)
-            overlap_sents = (
-                prev_sentences[-self.overlap:]
-                if len(prev_sentences) >= self.overlap
-                else prev_sentences
-            )
+            # Treat `self.overlap` as a character-length overlap (config value in chars).
+            # Collect sentences from the end of the previous chunk until we reach
+            # approximately `self.overlap` characters, or include all sentences.
+            if self.overlap <= 0:
+                overlap_sents = []
+            else:
+                overlap_sents = []
+                total = 0
+                for s in reversed(prev_sentences):
+                    overlap_sents.insert(0, s)
+                    total += len(s) + 1
+                    if total >= self.overlap:
+                        break
             overlap_text = " ".join(overlap_sents).strip()
             if overlap_text:
                 overlap_chunks.append(overlap_text + " " + curr)

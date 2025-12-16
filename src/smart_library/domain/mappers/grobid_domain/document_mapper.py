@@ -1,9 +1,10 @@
 from smart_library.domain.services.document_service import DocumentService
 from smart_library.domain.mappers.grobid_domain.page_mapper import parse_pages
+from types import SimpleNamespace
 
 def parse_document(struct, source_path=None, source_url=None, file_hash=None,
                    document_service=None):
-    header = struct.get("header")
+    header = struct.get("header") or SimpleNamespace()
 
     # Use default DocumentService if not provided
     document_service = document_service or DocumentService.default_instance()

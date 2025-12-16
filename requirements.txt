@@ -34,3 +34,6 @@ lxml
 
 # SQLite vector database
 sqlite-vec
+
+# Command line output
+tabulate
