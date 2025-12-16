@@ -22,8 +22,11 @@ class XMLParser:
         return el.text.strip() if el is not None and el.text else None
 
     def itertext(self, el=None):
-        el = el or self.element
-        return "".join(el.itertext()).strip() if el is not None else None
+        if el is None:
+            el = self.element
+        if el is None:
+            return None
+        return "".join(el.itertext()).strip()
 
     def get_attr(self, el, attr, default=None):
         return el.get(attr, default) if el is not None else default
