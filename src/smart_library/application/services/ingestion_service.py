@@ -8,6 +8,6 @@ class IngestionService:
     """
 
     @staticmethod
-    def ingest(path: str, extract_metadata: bool = False):
+    def ingest(path: str, extract_metadata: bool = False, create_embeddings: bool = True):
         """Ingest a document end-to-end."""
-        return ingest_document(path, extract_metadata=extract_metadata)
+        return ingest_document(path, extract_metadata=extract_metadata, create_embeddings=create_embeddings)

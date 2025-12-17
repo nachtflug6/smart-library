@@ -21,12 +21,12 @@ from smart_library.integration.scenarios.utils import (
     print_scenario_table_row,
 )
 
-from smart_library.infrastructure.repositories.document_repository import DocumentRepository
-from smart_library.infrastructure.repositories.heading_repository import HeadingRepository
-from smart_library.infrastructure.repositories.text_repository import TextRepository
-from smart_library.infrastructure.repositories.vector_repository import VectorRepository
-from smart_library.infrastructure.repositories.entity_repository import EntityRepository
-from smart_library.infrastructure.embeddings.embedding_service import EmbeddingService
+from smart_library.application.services.document_app_service import DocumentAppService
+from smart_library.application.services.heading_app_service import HeadingAppService
+from smart_library.application.services.text_app_service import TextAppService
+from smart_library.application.services.vector_service import VectorService
+from smart_library.application.services.entity_app_service import EntityAppService
+from smart_library.application.services.embedding_app_service import EmbeddingAppService
 from smart_library.application.services.search_service import SearchService
 from smart_library.config import DATA_DIR
 
@@ -119,21 +119,28 @@ def scenario_pdf_search_rank(context=None, pdf_path=None, query=None, top_k=5, r
         except Exception:
             pass
 
-    # Repos / services (create after optional reset so connections target the correct DB)
-    repo_doc = DocumentRepository()
-    repo_head = HeadingRepository()
-    repo_text = TextRepository()
-    embed_svc = EmbeddingService()
-    vec_repo = VectorRepository.default_instance()
+    # App services (create after optional reset so connections target the correct DB)
+    doc_svc = DocumentAppService()
+    head_svc = HeadingAppService()
+    text_svc = TextAppService()
+    embed_svc = EmbeddingAppService()
+    vec_svc = VectorService()
+    entity_svc = EntityAppService()
+    ingestion_svc = None
+    try:
+        from smart_library.application.services.ingestion_app_service import IngestionAppService
+        ingestion_svc = IngestionAppService(doc_svc, head_svc, None, text_svc, entity_svc, embed_svc, vec_svc)
+    except Exception:
+        ingestion_svc = None
     search_svc = SearchService()
-    logger.info("Repositories and services initialized. DB: %s", getattr(_config_module, 'DB_PATH', '<unknown>'))
+    logger.info("App services initialized. DB: %s", getattr(_config_module, 'DB_PATH', '<unknown>'))
 
     # Persist document if missing
     doc = snapshot.document
     logger.info("Persisting document %s", getattr(doc, 'id', None))
     try:
-        if not repo_doc.get(doc.id):
-            repo_doc.add(doc)
+        if not doc_svc.get_document(doc.id):
+            doc_svc.add_document(doc)
             logger.debug("Document persisted: %s", doc.id)
         else:
             logger.debug("Document already exists: %s", doc.id)
@@ -143,38 +150,44 @@ def scenario_pdf_search_rank(context=None, pdf_path=None, query=None, top_k=5, r
 
     # Persist headings
     for h in (snapshot.headings or []):
-        if not repo_head.get(h.id):
-            repo_head.add(h)
+        if ingestion_svc:
+            ingestion_svc.persist_heading(h)
+        else:
+            if not head_svc.get_heading(h.id):
+                head_svc.add_heading(h)
 
     # Persist pages (if present in snapshot) and texts + vectors
     for t in (snapshot.texts or []):
-        # Persist text entity (and underlying entity) if missing
-        try:
-            if not repo_text.get(t.id):
-                repo_text.add(t)
-                logger.debug("Text persisted: %s (chars=%s)", t.id, len(getattr(t, 'content', '') or ''))
-            else:
-                logger.debug("Text already exists: %s", t.id)
-        except Exception:
-            logger.exception("Failed to persist text %s", t.id)
-            raise
+        if ingestion_svc:
+            ingestion_svc.persist_text_with_vector(t, embed=True)
+        else:
+            # Persist text entity (and underlying entity) if missing
+            try:
+                if not text_svc.get_text(t.id):
+                    text_svc.add_text(t)
+                    logger.debug("Text persisted: %s (chars=%s)", t.id, len(getattr(t, 'content', '') or ''))
+                else:
+                    logger.debug("Text already exists: %s", t.id)
+            except Exception:
+                logger.exception("Failed to persist text %s", t.id)
+                raise
 
-        # Create embedding and add vector (vector repo will ensure base entity exists)
-        txt_for_embed = getattr(t, "embedding_content", None) or getattr(t, "display_content", None) or getattr(t, "content", "")
-        try:
-            logger.debug("Embedding text id=%s len=%d", t.id, len(txt_for_embed))
-            emb = embed_svc.embed(txt_for_embed)
-            logger.debug("Embedding produced length=%d", len(emb) if hasattr(emb, '__len__') else 0)
-        except Exception:
-            logger.exception("Embedding failed for text %s, using zero vector", t.id)
-            emb = [0.0] * 768
-        try:
-            vec_repo.add_vector(t.id, emb, created_by=getattr(t, "created_by", None))
-            logger.debug("Vector added for text %s", t.id)
-        except Exception:
-            logger.exception("Failed to add vector for text %s", t.id)
-            # Some environments may not have sqlite-vec; ignore vector insertion failures here
-            pass
+            # Create embedding and add vector (vector repo will ensure base entity exists)
+            txt_for_embed = getattr(t, "embedding_content", None) or getattr(t, "display_content", None) or getattr(t, "content", "")
+            try:
+                logger.debug("Embedding text id=%s len=%d", t.id, len(txt_for_embed))
+                emb = embed_svc.embed(txt_for_embed)
+                logger.debug("Embedding produced length=%d", len(emb) if hasattr(emb, '__len__') else 0)
+            except Exception:
+                logger.exception("Embedding failed for text %s, using zero vector", t.id)
+                emb = [0.0] * 768
+            try:
+                vec_svc.add_vector(t.id, emb, created_by=getattr(t, "created_by", None))
+                logger.debug("Vector added for text %s", t.id)
+            except Exception:
+                logger.exception("Failed to add vector for text %s", t.id)
+                # Some environments may not have sqlite-vec; ignore vector insertion failures here
+                pass
 
     # If no query provided, use a short text from the document for demonstration
     if not query:
@@ -197,11 +210,11 @@ def scenario_pdf_search_rank(context=None, pdf_path=None, query=None, top_k=5, r
     # Collapse duplicates by parent document so the scenario displays one hit per document
     seen_docs = set()
     unique_rows = []
-    entity_repo = EntityRepository()
+    entity_repo = entity_svc
     for r in results:
         tid = r.get("id")
         score = r.get("cosine_similarity") or r.get("cosine") or 0.0
-        txt = repo_text.get(tid)
+        txt = text_svc.get_text(tid)
         if not txt:
             continue
 
@@ -240,7 +253,7 @@ def scenario_pdf_search_rank(context=None, pdf_path=None, query=None, top_k=5, r
         # gather display fields
         snippet = (content.strip().replace("\n", " ")[:120] + ("..." if len(content) > 120 else ""))
         page_num = meta.get("page_number") or meta.get("page") or ""
-        doc_row = repo_doc.get(document_id) if document_id else None
+        doc_row = doc_svc.get_document(document_id) if document_id else None
         doc_title = ""
         authors = ""
         year = ""
@@ -268,10 +281,10 @@ def scenario_pdf_search_rank(context=None, pdf_path=None, query=None, top_k=5, r
     # Cleanup temporary DB if requested. If `keep_temp` was set the temp dir is preserved.
     if tempdir is not None:
         try:
-            # close open connections held by repos
-            for repo in (repo_doc, repo_head, repo_text):
+            # close open connections held by app services
+            for svc in (doc_svc, head_svc, text_svc):
                 try:
-                    repo.conn.close()
+                    svc.close()
                 except Exception:
                     pass
         finally:

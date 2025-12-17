@@ -69,6 +69,7 @@ CREATE TABLE text_entity (
     text_type TEXT,
     chunk_index INTEGER,
     "index" INTEGER,
+    page_number INTEGER,
     content TEXT NOT NULL,
     display_content TEXT,
     embedding_content TEXT,

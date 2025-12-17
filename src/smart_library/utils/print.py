@@ -33,3 +33,77 @@ def print_document(doc, indent=0):
         unsectioned_paragraphs = [para for para in page_paragraphs if getattr(para, 'parent_id', None) not in [getattr(s, 'id', None) for s in page_sections]]
         for para in sorted(unsectioned_paragraphs, key=lambda x: getattr(x, 'index', -1)):
             print(f"{prefix}    [Paragraph] {repr(para.content)}... (index={getattr(para, 'index', None)}, id={getattr(para, 'id', None)})")
+
+
+def print_search_results_boxed(results, text_service, doc_service=None, entity_service=None, max_chars=None):
+    """Print each search result in its own boxed table.
+
+    results: iterable of dict-like objects with keys `id` and `cosine_similarity` (or `cosine`)
+    services: service objects that expose `.get_text(id)` and `.get_document(id)`.
+    The `max_chars` defaults to `ChunkerConfig.MAX_CHAR` from config.
+    """
+    from smart_library.config import ChunkerConfig
+    from tabulate import tabulate
+
+    max_chars = max_chars or ChunkerConfig.MAX_CHAR
+
+    def _truncate_text(text: str, max_c: int) -> str:
+        if text is None:
+            return ""
+        text = str(text).strip().replace("\n", " ")
+        if len(text) <= max_c:
+            return text
+        return text[: max_c - 3].rstrip() + "..."
+
+    def _get_attr(obj, name, default=None):
+        if obj is None:
+            return default
+        if isinstance(obj, dict):
+            return obj.get(name, default)
+        return getattr(obj, name, default)
+
+    import textwrap
+
+    # Compact mode: single-line metadata header + wrapped snippet
+    for r in results or []:
+        tid = r.get("id") if isinstance(r, dict) else getattr(r, "id", None)
+        score = (r.get("cosine_similarity") or r.get("cosine")) if isinstance(r, dict) else getattr(r, "cosine_similarity", None) or getattr(r, "cosine", 0.0)
+        score = float(score or 0.0)
+
+        txt = text_service.get_text(tid) if text_service else None
+        content = _get_attr(txt, "content", None) or _get_attr(txt, "display_content", "")
+        metadata = _get_attr(txt, "metadata", {}) or {}
+        page = _get_attr(txt, "page_number", None) or metadata.get("page_number") or metadata.get("page") or metadata.get("page_num") or ""
+        parent_id = _get_attr(txt, "parent_id", None) or metadata.get("parent_id")
+
+        # Resolve document title/author/year
+        doc = None
+        if entity_service and parent_id:
+            try:
+                parent = entity_service.get(parent_id)
+                if parent:
+                    p_parent = parent.get("parent_id") if isinstance(parent, dict) else getattr(parent, "parent_id", None)
+                    doc_id = p_parent or (parent.get("id") if isinstance(parent, dict) else getattr(parent, "id", None))
+                    doc = doc_service.get_document(doc_id) if doc_service and doc_id else None
+            except Exception:
+                doc = None
+        elif doc_service and parent_id:
+            try:
+                doc = doc_service.get_document(parent_id)
+            except Exception:
+                doc = None
+
+        title = _get_attr(doc, "title", "")
+        authors = _get_attr(doc, "authors", []) or []
+        first_author = authors[0] if isinstance(authors, (list, tuple)) and authors else (authors if isinstance(authors, str) else "")
+        year = _get_attr(doc, "year", "")
+
+        # Compact header
+        short_title = title if len(title) <= 60 else title[:57].rstrip() + "..."
+        header = f"{short_title} — {first_author + ' et al.' if first_author else ''} — {year} — p{page} — score={score:.4f}"
+        # Very compact: single-line header + single-line truncated snippet
+        snippet = _truncate_text(content or "", max_chars or 140)
+        print(header)
+        print("  " + snippet)
+        # separator between results
+        print("\n" + ("-" * 80) + "\n")

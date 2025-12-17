@@ -37,8 +37,8 @@ class TextRepository(BaseRepository[Text]):
                 json.dumps(meta) if meta else None
             ])
         sql = (
-            "INSERT INTO text_entity (id, type, text_type, chunk_index, \"index\", content, display_content, embedding_content, character_count, token_count)"
-            " VALUES (?,?,?,?,?,?,?,?,?,?)"
+            "INSERT INTO text_entity (id, type, text_type, chunk_index, \"index\", page_number, content, display_content, embedding_content, character_count, token_count)"
+            " VALUES (?,?,?,?,?,?,?,?,?,?,?)"
         )
         self.conn.execute(sql, [
             txt.id,
@@ -46,6 +46,7 @@ class TextRepository(BaseRepository[Text]):
             getattr(txt, "text_type", None),
             getattr(txt, "chunk_index", None) or getattr(txt, "index", None),
             getattr(txt, "index", None),
+            getattr(txt, "page_number", None),
             getattr(txt, "content", None),
             getattr(txt, "display_content", None),
             getattr(txt, "embedding_content", None),
@@ -76,18 +77,20 @@ class TextRepository(BaseRepository[Text]):
             embedding_content=r.get("embedding_content"),
             text_type=r.get("text_type") or r.get("type"),
             index=r.get("index") or r.get("chunk_index"),
+            page_number=r.get("page_number"),
             character_count=r.get("character_count"),
             token_count=r.get("token_count"),
         )
 
     def update(self, txt: Text):
         self._update_entity_meta(txt)
-        sql = "UPDATE text_entity SET type=?, text_type=?, chunk_index=?, \"index\"=?, content=?, display_content=?, embedding_content=?, character_count=?, token_count=? WHERE id=?"
+        sql = "UPDATE text_entity SET type=?, text_type=?, chunk_index=?, \"index\"=?, page_number=?, content=?, display_content=?, embedding_content=?, character_count=?, token_count=? WHERE id=?"
         self.conn.execute(sql, [
             txt.type,
             getattr(txt, "text_type", None),
             getattr(txt, "chunk_index", None) or getattr(txt, "index", None),
             getattr(txt, "index", None),
+            getattr(txt, "page_number", None),
             getattr(txt, "content", None),
             getattr(txt, "display_content", None),
             getattr(txt, "embedding_content", None),

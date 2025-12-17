@@ -16,3 +16,12 @@ class TextAppService:
 
     def update_text(self, txt: Text) -> None:
         return self.repo.update(txt)
+
+    def exists(self, text_id: str) -> bool:
+        return self.get_text(text_id) is not None
+
+    def close(self):
+        try:
+            self.repo.conn.close()
+        except Exception:
+            pass

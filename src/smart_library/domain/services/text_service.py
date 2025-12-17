@@ -18,6 +18,7 @@ class TextService:
             "index": (int, type(None)),
             "character_count": (int, type(None)),
             "token_count": (int, type(None)),
+            "page_number": (int, type(None)),
         }
         errors = EntityValidation.check_fields_type(kwargs, text_fields, required_fields=["content"], context_name="Text")
         if errors:

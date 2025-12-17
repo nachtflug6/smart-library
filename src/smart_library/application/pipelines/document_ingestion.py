@@ -114,8 +114,15 @@ def ingest_document(pdf_path: str, extract_metadata: bool = False, create_embedd
         ollama_url=OllamaConfig.GENERATE_URL,
         ollama_model=OllamaConfig.GENERATION_MODEL
     )
-    # Instantiate embedding service (you may need to wire up the repos/llm_client as in your project)
-    embedding_service = EmbeddingService.default_instance()
+    # Instantiate embedding service only if requested. Some environments may not
+    # have the external embedding service available; allow disabling embeddings
+    # via `create_embeddings=False`.
+    embedding_service = None
+    if create_embeddings:
+        try:
+            embedding_service = EmbeddingService()
+        except Exception:
+            embedding_service = None
 
     ingestion_service = DocumentIngestionService(
         document_service=document_service,

@@ -80,6 +80,7 @@ def _main(argv=None):
                 print(f"  - {f}")
         return
 
+
     if args.module and args.module not in scenarios:
         print(f"Module not found: {args.module}")
         return

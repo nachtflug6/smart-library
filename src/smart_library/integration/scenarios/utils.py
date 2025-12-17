@@ -48,3 +48,24 @@ def print_scenario_table_row(row):
 		return
 	# Buffer the row; don't reprint the entire table each time.
 	_current_table_rows.append(row)
+
+
+try:
+    from smart_library.utils.print import print_search_results_boxed as _boxed_printer
+except Exception:
+    _boxed_printer = None
+
+
+def print_search_results_boxed(results, text_service, doc_service=None, entity_service=None, max_chars=None):
+    """Thin wrapper to the general `utils.print.print_search_results_boxed`.
+
+    Falls back to a compact listing if the general printer isn't available.
+    """
+    if _boxed_printer:
+        return _boxed_printer(results, text_service, doc_service=doc_service, entity_service=entity_service, max_chars=max_chars)
+
+    # Fallback simple print
+    for r in results or []:
+        tid = r.get("id") if isinstance(r, dict) else getattr(r, "id", None)
+        score = (r.get("cosine_similarity") or r.get("cosine")) if isinstance(r, dict) else getattr(r, "cosine_similarity", None) or getattr(r, "cosine", 0.0)
+        print(f"{tid} | score={float(score or 0.0):.4f}")

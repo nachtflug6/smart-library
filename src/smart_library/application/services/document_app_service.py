@@ -16,3 +16,12 @@ class DocumentAppService:
 
     def get_document(self, doc_id: str) -> Optional[Document]:
         return self.repo.get(doc_id)
+
+    def exists(self, doc_id: str) -> bool:
+        return self.get_document(doc_id) is not None
+
+    def close(self):
+        try:
+            self.repo.conn.close()
+        except Exception:
+            pass

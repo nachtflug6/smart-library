@@ -65,6 +65,12 @@ def parse_texts(section, section_text_obj, document_id, text_service=None, relat
 
         for idx, (non_overlap, overlap) in enumerate(zip(non_overlap_chunks, overlap_chunks)):
             global_idx = start_index + idx
+            # Attach document and page number to text metadata so downstream
+            # presentation code can show page information.
+            meta = {"document_id": document_id}
+            if page_number is not None:
+                meta["page_number"] = page_number
+
             text_obj = text_service.create_text(
                 content=non_overlap,
                 display_content=non_overlap,
@@ -73,7 +79,8 @@ def parse_texts(section, section_text_obj, document_id, text_service=None, relat
                 parent_id=document_id,
                 index=global_idx,
                 character_count=len(non_overlap) if non_overlap is not None else 0,
-                metadata={} ,
+                page_number=page_number,
+                metadata=meta,
             )
             paragraph_texts.append(text_obj)
             # Create relationships: text -> heading (UNDER_HEADING) and text -> document (BELONGS_TO)

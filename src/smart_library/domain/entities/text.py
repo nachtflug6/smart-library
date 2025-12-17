@@ -14,3 +14,4 @@ class Text(Entity):
     index: Optional[int] = None # for ordering inside a page or document
     character_count: Optional[int] = None
     token_count: Optional[int] = None
+    page_number: Optional[int] = None
