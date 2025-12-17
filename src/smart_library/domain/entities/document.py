@@ -19,6 +19,7 @@ class Document(Entity):
     source_format: Optional[str] = field(default=None)
     file_hash: Optional[str] = field(default=None)
     version: Optional[str] = field(default=None)
+    citation_key: Optional[str] = field(default=None)
 
     # -----------------------------
     # Structure

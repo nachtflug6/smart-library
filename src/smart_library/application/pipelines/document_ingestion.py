@@ -5,6 +5,9 @@ from smart_library.utils.pdf_reader import PDFReader
 from smart_library.domain.services.document_service import DocumentService
 from smart_library.domain.services.page_service import PageService
 from smart_library.domain.services.text_service import TextService
+from smart_library.application.services.document_app_service import DocumentAppService
+from smart_library.application.services.page_app_service import PageAppService
+from smart_library.application.services.text_app_service import TextAppService
 from smart_library.utils.chunker import TextChunker
 from smart_library.application.pipelines.metadata_extraction import SimpleMetadataExtractor
 from collections import defaultdict
@@ -23,10 +26,14 @@ class DocumentIngestionService:
                  chunker,
                  metadata_extractor=None,
                  embedding_service=None):
-
+                 
         self.document_service = document_service
         self.page_service = page_service
         self.text_service = text_service
+        # Application-level persistence services (optional)
+        self.document_app = None
+        self.page_app = None
+        self.text_app = None
         self.pdf_reader = pdf_reader
         self.chunker = chunker
         self.metadata_extractor = metadata_extractor
@@ -38,7 +45,11 @@ class DocumentIngestionService:
 
         # 2. Create document
         doc = Document(source_path=pdf_path)
-        doc_id = self.document_service.add_document(doc)
+        # Persist document via application-level service if available, else try domain service
+        if getattr(self, 'document_app', None):
+            doc_id = self.document_app.add_document(doc)
+        else:
+            doc_id = self.document_service.add_document(doc)
 
         # 3. Create pages + chunks
         first_page_id = None
@@ -46,7 +57,10 @@ class DocumentIngestionService:
         page_ids = []
         for i, page_text in enumerate(raw_pages):
             page = Page(parent_id=doc_id, page_number=i+1, full_text=page_text)
-            page_id = self.page_service.add_page(page)
+            if getattr(self, 'page_app', None):
+                page_id = self.page_app.add_page(page)
+            else:
+                page_id = self.page_service.add_page(page)
             page_ids.append(page_id)
             if i == 0:
                 first_page_id = page_id
@@ -56,7 +70,10 @@ class DocumentIngestionService:
             chunk_ids = []
             for idx, chunk in enumerate(chunks):
                 text = Text(parent_id=page_id, content=chunk, text_type="chunk", index=idx)
-                text_id = self.text_service.add_text(text)
+                if getattr(self, 'text_app', None):
+                    text_id = self.text_app.add_text(text)
+                else:
+                    text_id = self.text_service.add_text(text)
                 chunk_ids.append(text_id)
 
                 # Create embedding for each chunk
@@ -87,6 +104,10 @@ def ingest_document(pdf_path: str, extract_metadata: bool = False, create_embedd
     document_service = DocumentService.default_instance()
     page_service = PageService.default_instance()
     text_service = TextService.default_instance()
+    # Application persistence services
+    document_app = DocumentAppService()
+    page_app = PageAppService()
+    text_app = TextAppService()
     pdf_reader = PDFReader()
     chunker = TextChunker()
     metadata_extractor = SimpleMetadataExtractor(
@@ -105,7 +126,13 @@ def ingest_document(pdf_path: str, extract_metadata: bool = False, create_embedd
         metadata_extractor=metadata_extractor,
         embedding_service=embedding_service,
     )
-    return ingestion_service.ingest(pdf_path, extract_metadata=extract_metadata, create_embeddings=create_embeddings)
+    # attach application persistence services so ingestion uses them
+    ingestion_service.document_app = document_app
+    ingestion_service.page_app = page_app
+    ingestion_service.text_app = text_app
+    # Use app services to persist created entities in the pipeline
+    doc_id = ingestion_service.ingest(pdf_path, extract_metadata=extract_metadata, create_embeddings=create_embeddings)
+    return doc_id
 
 ollama_client = OllamaClient(
     url=OllamaConfig.GENERATE_URL,

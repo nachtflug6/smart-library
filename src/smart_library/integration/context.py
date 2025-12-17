@@ -5,6 +5,7 @@ import tempfile
 import os
 from smart_library.application.services.vector_service import VectorService
 # Import other services as needed
+from smart_library import config as _config_module
 
 
 class IntegrationContext:
@@ -22,6 +23,14 @@ class IntegrationContext:
         # Initialize schema for the new DB
         from pathlib import Path
         from smart_library.infrastructure.db.db import migrate_schema
+        # Override global config DB path for the lifetime of this context so
+        # services created here use the temporary DB. Preserve the old value
+        # to restore on cleanup.
+        self._previous_db_path = getattr(_config_module, 'DB_PATH', None)
+        # Ensure DB_PATH is a Path object
+        self.db_path = db_path or self.db_path
+        _config_module.DB_PATH = Path(self.db_path)
+
         schema_path = Path(__file__).parent.parent / "infrastructure" / "db" / "schema.sql"
         migrate_schema(schema_path=schema_path)
 
@@ -34,6 +43,12 @@ class IntegrationContext:
         # Remove the temp DB file if it was created
         if self._temp_db_file and os.path.exists(self._temp_db_file):
             os.remove(self._temp_db_file)
+        # Restore previous global DB_PATH if present
+        try:
+            if hasattr(self, '_previous_db_path') and self._previous_db_path is not None:
+                _config_module.DB_PATH = self._previous_db_path
+        except Exception:
+            pass
 
 
 def make_context(db_path=None):

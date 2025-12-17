@@ -4,14 +4,24 @@ from pathlib import Path
 
 
 
-from smart_library.config import DB_PATH
 from smart_library.infrastructure.db.sqlite_vec import load_sqlitevec_extension
 
-def get_connection(db_path: Path = DB_PATH) -> sqlite3.Connection:
-    """Get a SQLite connection with foreign keys enabled. Always load sqlite-vec extension."""
+def get_connection(db_path: Path = None) -> sqlite3.Connection:
+    """Get a SQLite connection with foreign keys enabled. Always load sqlite-vec extension.
+
+    If `db_path` is not provided, resolve it at call-time from the current
+    `smart_library.config.DB_PATH`. This allows callers to override the global
+    config (for tests/scenarios) and have the change take effect.
+    """
+    if db_path is None:
+        from smart_library.config import DB_PATH
+        db_path = DB_PATH
     return get_connection_with_sqlitevec(db_path, load_sqlitevec=True)
 
-def get_connection_with_sqlitevec(db_path: Path = DB_PATH, load_sqlitevec: bool = False, sqlitevec_path: str = None) -> sqlite3.Connection:
+def get_connection_with_sqlitevec(db_path: Path = None, load_sqlitevec: bool = False, sqlitevec_path: str = None) -> sqlite3.Connection:
+    if db_path is None:
+        from smart_library.config import DB_PATH
+        db_path = DB_PATH
     conn = sqlite3.connect(str(db_path))
     conn.row_factory = sqlite3.Row
     conn.execute("PRAGMA foreign_keys = ON;")
@@ -42,7 +52,7 @@ def migrate_schema(schema_path: Path = None):
     finally:
         conn.close()
 
-def check_tables(expected_tables=None, db_path: Path = DB_PATH, check_sqlitevec: bool = False):
+def check_tables(expected_tables=None, db_path: Path = None, check_sqlitevec: bool = False):
     """Check that expected tables exist in the database. Optionally check sqlite-vec vector tables."""
     # These match the CREATE TABLE statements in schema.sql
     if expected_tables is None:
@@ -53,6 +63,9 @@ def check_tables(expected_tables=None, db_path: Path = DB_PATH, check_sqlitevec:
             "text_entity",
             "term"
         }
+    if db_path is None:
+        from smart_library.config import DB_PATH
+        db_path = DB_PATH
     if not os.path.exists(db_path):
         return f"Database file not found: {db_path}"
     conn = get_connection_with_sqlitevec(db_path, load_sqlitevec=check_sqlitevec)
@@ -79,8 +92,11 @@ def check_tables(expected_tables=None, db_path: Path = DB_PATH, check_sqlitevec:
         return "\n".join(result)
     finally:
         conn.close()
-def check_sqlitevec_index(db_path: Path = DB_PATH, table_name: str = "document_vec"):
+def check_sqlitevec_index(db_path: Path = None, table_name: str = "document_vec"):
     """Check sqlite-vec index health for a given vector table."""
+    if db_path is None:
+        from smart_library.config import DB_PATH
+        db_path = DB_PATH
     if not os.path.exists(db_path):
         return f"Database file not found: {db_path}"
     conn = get_connection_with_sqlitevec(db_path, load_sqlitevec=True)

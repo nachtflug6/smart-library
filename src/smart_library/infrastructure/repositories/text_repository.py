@@ -36,8 +36,22 @@ class TextRepository(BaseRepository[Text]):
                 entity_kind,
                 json.dumps(meta) if meta else None
             ])
-        sql = "INSERT INTO text_entity (id, type, chunk_index, content) VALUES (?,?,?,?)"
-        self.conn.execute(sql, [txt.id, txt.type, txt.index, txt.content])
+        sql = (
+            "INSERT INTO text_entity (id, type, text_type, chunk_index, \"index\", content, display_content, embedding_content, character_count, token_count)"
+            " VALUES (?,?,?,?,?,?,?,?,?,?)"
+        )
+        self.conn.execute(sql, [
+            txt.id,
+            txt.type,
+            getattr(txt, "text_type", None),
+            getattr(txt, "chunk_index", None) or getattr(txt, "index", None),
+            getattr(txt, "index", None),
+            getattr(txt, "content", None),
+            getattr(txt, "display_content", None),
+            getattr(txt, "embedding_content", None),
+            getattr(txt, "character_count", None),
+            getattr(txt, "token_count", None),
+        ])
         self.conn.commit()
         return txt.id
 
@@ -57,15 +71,30 @@ class TextRepository(BaseRepository[Text]):
             updated_by=es.get("updated_by"),
             parent_id=es.get("parent_id"),
             metadata=_from_json(es.get("metadata"), {}),
-            content=r["content"],
-            text_type=r.get("type"),  # <-- FIXED: use text_type instead of type
-            index=r.get("chunk_index"),
+            content=r.get("content"),
+            display_content=r.get("display_content"),
+            embedding_content=r.get("embedding_content"),
+            text_type=r.get("text_type") or r.get("type"),
+            index=r.get("index") or r.get("chunk_index"),
+            character_count=r.get("character_count"),
+            token_count=r.get("token_count"),
         )
 
     def update(self, txt: Text):
         self._update_entity_meta(txt)
-        sql = "UPDATE text_entity SET type=?, chunk_index=?, content=? WHERE id=?"
-        self.conn.execute(sql, [txt.type, txt.index, txt.content, txt.id])
+        sql = "UPDATE text_entity SET type=?, text_type=?, chunk_index=?, \"index\"=?, content=?, display_content=?, embedding_content=?, character_count=?, token_count=? WHERE id=?"
+        self.conn.execute(sql, [
+            txt.type,
+            getattr(txt, "text_type", None),
+            getattr(txt, "chunk_index", None) or getattr(txt, "index", None),
+            getattr(txt, "index", None),
+            getattr(txt, "content", None),
+            getattr(txt, "display_content", None),
+            getattr(txt, "embedding_content", None),
+            getattr(txt, "character_count", None),
+            getattr(txt, "token_count", None),
+            txt.id,
+        ])
         self.conn.commit()
 
     def delete(self, text_id: str):

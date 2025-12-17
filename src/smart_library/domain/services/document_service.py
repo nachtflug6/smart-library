@@ -2,11 +2,12 @@ from smart_library.domain.entities.document import Document
 from smart_library.domain.services.entity_validation import EntityValidation
 from smart_library.domain.constants.document_types import DocumentType
 
+
 class DocumentService:
     @classmethod
     def default_instance(cls):
         return cls()
-    
+
     @staticmethod
     def check_document(**kwargs):
         """

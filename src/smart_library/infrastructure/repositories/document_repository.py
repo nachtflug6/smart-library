@@ -1,5 +1,6 @@
 from typing import Optional, Dict, Any
 import json
+import sqlite3
 
 from smart_library.domain.entities.document import Document
 from smart_library.infrastructure.repositories.base_repository import BaseRepository, _to_json, _from_json
@@ -40,11 +41,6 @@ class DocumentRepository(BaseRepository[Document]):
                 authors = json.loads(authors)
             except Exception:
                 authors = None
-        if isinstance(keywords, str) and keywords:
-            try:
-                keywords = json.loads(keywords)
-            except Exception:
-                keywords = None
 
         # Map DB -> dataclass args
         return Document(
@@ -65,7 +61,6 @@ class DocumentRepository(BaseRepository[Document]):
             version=data.get("version"),
             title=data.get("title"),
             authors=authors,
-            keywords=keywords,
             doi=data.get("doi"),
             publication_date=data.get("publication_date"),
             publisher=data.get("publisher"),
@@ -85,32 +80,62 @@ class DocumentRepository(BaseRepository[Document]):
         sql = """
         INSERT INTO document (id, type, source_path, source_url, source_format, file_hash,
                               version, page_count, title, authors, keywords, doi,
-                              publication_date, publisher, venue, year, reference_list, citations)
+                              publication_date, publisher, venue, year, abstract, citation_key)
         VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
         """
-        self.conn.execute(
-            sql,
-            [
-                doc.id,
-                doc.type,
-                doc.source_path,
-                doc.source_url,
-                doc.source_format,
-                doc.file_hash,
-                doc.version,
-                doc.page_count,
-                doc.title,
-                _to_json(doc.authors),
-                _to_json(doc.keywords),
-                doc.doi,
-                doc.publication_date,
-                doc.publisher,
-                doc.venue,
-                doc.year,
-                _to_json(doc.reference_list),
-                _to_json(doc.citations),
-            ],
-        )
+        try:
+            self.conn.execute(
+                sql,
+                [
+                    doc.id,
+                    doc.type,
+                    doc.source_path,
+                    doc.source_url,
+                    doc.source_format,
+                    doc.file_hash,
+                    doc.version,
+                    doc.page_count,
+                    doc.title,
+                    _to_json(getattr(doc, "authors", None)),
+                    _to_json(getattr(doc, "keywords", None)),
+                    doc.doi,
+                    doc.publication_date,
+                    doc.publisher,
+                    doc.venue,
+                    doc.year,
+                    getattr(doc, "abstract", None),
+                    getattr(doc, "citation_key", None),
+                ],
+            )
+        except sqlite3.OperationalError:
+            # Fallback for older schemas that don't have abstract/citation_key
+            sql_fallback = """
+            INSERT INTO document (id, type, source_path, source_url, source_format, file_hash,
+                                  version, page_count, title, authors, keywords, doi,
+                                  publication_date, publisher, venue, year)
+            VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+            """
+            self.conn.execute(
+                sql_fallback,
+                [
+                    doc.id,
+                    doc.type,
+                    doc.source_path,
+                    doc.source_url,
+                    doc.source_format,
+                    doc.file_hash,
+                    doc.version,
+                    doc.page_count,
+                    doc.title,
+                    _to_json(getattr(doc, "authors", None)),
+                    _to_json(getattr(doc, "keywords", None)),
+                    doc.doi,
+                    doc.publication_date,
+                    doc.publisher,
+                    doc.venue,
+                    doc.year,
+                ],
+            )
         self.conn.commit()
         return doc.id
 
@@ -139,14 +164,13 @@ class DocumentRepository(BaseRepository[Document]):
             page_count=r.get("page_count"),
             title=r.get("title"),
             authors=_from_json(r.get("authors"), None),
-            keywords=_from_json(r.get("keywords"), None),
             doi=r.get("doi"),
             publication_date=r.get("publication_date"),
             publisher=r.get("publisher"),
             venue=r.get("venue"),
             year=r.get("year"),
-            reference_list=_from_json(r.get("reference_list"), []),
-            citations=_from_json(r.get("citations"), []),
+            abstract=r.get("abstract"),
+            citation_key=r.get("citation_key"),
         )
 
     def update(self, doc: Document):
@@ -155,7 +179,7 @@ class DocumentRepository(BaseRepository[Document]):
         UPDATE document SET
             type=?, source_path=?, source_url=?, source_format=?, file_hash=?,
             version=?, page_count=?, title=?, authors=?, keywords=?, doi=?,
-            publication_date=?, publisher=?, venue=?, year=?, reference_list=?, citations=?
+            publication_date=?, publisher=?, venue=?, year=?, abstract=?, citation_key=?
         WHERE id=?
         """
         self.conn.execute(
@@ -176,8 +200,8 @@ class DocumentRepository(BaseRepository[Document]):
                 doc.publisher,
                 doc.venue,
                 doc.year,
-                _to_json(doc.reference_list),
-                _to_json(doc.citations),
+                getattr(doc, "abstract", None),
+                getattr(doc, "citation_key", None),
                 doc.id,
             ],
         )

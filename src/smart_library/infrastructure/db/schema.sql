@@ -66,8 +66,14 @@ DROP TABLE IF EXISTS text_entity;
 CREATE TABLE text_entity (
     id TEXT PRIMARY KEY REFERENCES entity(id) ON DELETE CASCADE,
     type TEXT,              -- classification (chunk, summary, etc.)
+    text_type TEXT,
     chunk_index INTEGER,
-    content TEXT NOT NULL
+    "index" INTEGER,
+    content TEXT NOT NULL,
+    display_content TEXT,
+    embedding_content TEXT,
+    character_count INTEGER,
+    token_count INTEGER
 );
 
 -- =========================================================
@@ -91,9 +97,20 @@ CREATE TABLE term (
 -- rowid is used as the vector id and  should match the entity id
 -- =========================================================
 DROP TABLE IF EXISTS vector;
-CREATE VIRTUAL TABLE vector USING vec0(
-    id TEXT PRIMARY KEY PRIMARY KEY,
+CREATE VIRTUAL TABLE IF NOT EXISTS vector USING vec0(
+    id TEXT,
     embedding FLOAT[768]
+);
+
+-- =========================================================
+-- HEADING table (matches Heading dataclass)
+-- =========================================================
+DROP TABLE IF EXISTS heading;
+CREATE TABLE heading (
+    id TEXT PRIMARY KEY REFERENCES entity(id) ON DELETE CASCADE,
+    title TEXT,
+    "index" INTEGER,
+    page_number INTEGER
 );
 
 -- =========================================================
