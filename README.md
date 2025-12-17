@@ -21,6 +21,8 @@ Recommended approach: run the supporting services (Grobid, Ollama embeddings) vi
 
 ```bash
 docker-compose up -d
+docker ps                       # confirm the dev container name (e.g., smartlib_dev)
+docker exec -it smartlib_dev bash
 ```
 
 2. Install package (editable) and Python deps:
@@ -133,3 +135,17 @@ Notes:
 
 If you prefer to run services manually (or use a cloud provider), ensure the host/port values in
 `smart_library.config` match where Grobid and your embedding service are reachable.
+
+Development inside Docker
+-------------------------
+
+For development inside the Docker container:
+
+```bash
+docker ps                       # confirm container name (e.g., smartlib_dev)
+docker exec -it smartlib_dev bash
+# then inside container:
+python -m pip install -e .
+python -m pip install -r requirements.txt
+smartlib init
+```
