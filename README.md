@@ -1,21 +1,51 @@
 # smart-library
 
-Minimal quickstart
-------------------
+Project Goal & Use Cases
+------------------------
 
-Installation (editable / development):
+smart-library is focused on finding relevant, citable passages inside scholarly PDFs — not just matching whole documents. It extracts canonical domain objects (documents, pages, headings, and text chunks) so you can search and retrieve the exact page and paragraph that support a claim. Key use cases:
+
+- Rapid discovery: locate the most relevant paragraph(s) for a query and jump directly to the source page and context.
+- Verifiable citations: return the original text snippet + page number so results are directly citable and avoid hallucination when used in downstream summaries.
+- Reproducible ingestion: a Grobid-powered pipeline produces normalized snapshots (documents, headings, pages, texts) that can be re-run and audited.
+- Semantic search over text chunks: embeddings are computed per chunk and stored in a vector index so similarity search returns focused text hits rather than whole-document matches.
+
+The stack is designed for research and developer workflows where provenance, snippet-level precision, and low hallucination risk matter.
+
+Getting started — dependencies & services
+----------------------------------------
+
+Recommended approach: run the supporting services (Grobid, Ollama embeddings) via Docker Compose included in the repository, then install the package in editable mode.
+
+1. Start services (Grobid + Ollama):
+
+```bash
+docker-compose up -d
+```
+
+2. Install package (editable) and Python deps:
 
 ```bash
 python -m pip install -e .
 python -m pip install -r requirements.txt
 ```
 
-This installs the package in editable mode so the `smartlib` console entry point becomes available locally.
+3. Verify services are healthy (tail logs as they start):
 
-Basic CLI usage
+```bash
+docker-compose logs -f grobid
+docker-compose logs -f ollama
+```
+
+Notes:
+- Grobid REST API: port `8070` (config: `smart_library.config.Grobid`).
+- Ollama embedding endpoints: port `11434` (config: `smart_library.config.OllamaConfig`).
+- The provided `docker-compose.yml` may include GPU/runtime options (e.g., `runtime: nvidia`) — remove or adjust if you don't have an NVIDIA runtime.
+
+Quick CLI usage
 ---------------
 
-Initialize the database schema:
+Initialize the database schema (creates tables including `page_number` on text entities):
 
 ```bash
 smartlib init
@@ -25,6 +55,15 @@ Ingest a PDF (creates document, pages, texts, and embeddings/vectors if configur
 
 ```bash
 smartlib add /path/to/your/file.pdf
+```
+
+Batch ingestion (optional)
+--------------------------
+
+If you want to ingest a whole folder of PDFs at once, run a simple shell loop from the repository root:
+
+```bash
+for f in data_dev/pdf/*.pdf; do smartlib add "$f"; done
 ```
 
 Run a similarity search (top N results):
@@ -65,3 +104,32 @@ Notes
 
 - Embeddings and Grobid extraction require the appropriate external services/configuration; if those are unavailable the pipeline will run partially and log errors.
 - To preserve a temporary DB for inspection when running scenarios, use the `--keep-temp` flag on the scenario scripts.
+
+Docker / Compose
+-----------------
+
+This repo includes a `docker-compose.yml` that brings up supporting services used by the ingestion
+pipeline (Grobid for PDF extraction, Ollama for embeddings). For local development you can start
+the required services with:
+
+```bash
+docker-compose up -d
+```
+
+Check logs while services start:
+
+```bash
+docker-compose logs -f grobid
+docker-compose logs -f ollama
+```
+
+Notes:
+- `grobid` exposes its REST API on port `8070` (configured in `smart_library.config.Grobid`).
+- `ollama` exposes embedding and generation endpoints on port `11434` (configured in `smart_library.config.OllamaConfig`).
+- The `docker-compose.yml` may reference GPU/runtime options (e.g., `runtime: nvidia`) — remove or
+	adjust those if you do not have an NVIDIA runtime available on your machine.
+- After the services are running, run `smartlib init` then `smartlib add /path/to/file.pdf` to ingest
+	and create embeddings.
+
+If you prefer to run services manually (or use a cloud provider), ensure the host/port values in
+`smart_library.config` match where Grobid and your embedding service are reachable.
