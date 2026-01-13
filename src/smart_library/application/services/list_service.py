@@ -16,7 +16,7 @@ class ListingService:
         self.repo_rel = RelationshipRepository()
         self.repo_ent = EntityRepository()
 
-    def list_documents(self, limit=50):
+    def list_documents(self, limit=None):
         return self.repo_doc.list(limit)
 
     def list_pages(self, doc_id=None, limit=100):

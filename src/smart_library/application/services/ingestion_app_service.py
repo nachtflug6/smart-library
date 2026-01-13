@@ -30,6 +30,13 @@ class IngestionAppService:
                  vec_svc: Optional[VectorService] = None,
                  logger: Optional[logging.Logger] = None):
         self.log = logger or logging.getLogger("IngestionAppService")
+        # Ensure logger outputs to console at DEBUG level for CLI troubleshooting
+        if not self.log.handlers:
+            handler = logging.StreamHandler()
+            fmt = logging.Formatter("%(asctime)s [%(levelname)s] %(name)s: %(message)s")
+            handler.setFormatter(fmt)
+            self.log.addHandler(handler)
+        self.log.setLevel(logging.DEBUG)
         self.doc = doc_svc or DocumentAppService()
         self.head = head_svc or HeadingAppService()
         self.page = page_svc or PageAppService()
@@ -52,19 +59,23 @@ class IngestionAppService:
 
         # Ensure base entity exists
         try:
-            self.ensure_entity(tid, "Text", parent_id=getattr(text_obj, "parent_id", None), metadata=getattr(text_obj, "metadata", None), created_by=getattr(text_obj, "created_by", None))
+            created = self.ensure_entity(tid, "Text", parent_id=getattr(text_obj, "parent_id", None), metadata=getattr(text_obj, "metadata", None), created_by=getattr(text_obj, "created_by", None))
+            if created:
+                self.log.debug("Created base entity for text %s", tid)
         except Exception:
             self.log.exception("Failed to ensure entity for text %s", tid)
 
         # Persist text if missing
         try:
             if not self.text.exists(tid):
+                self.log.debug("Persisting text %s (len=%d)", tid, len(getattr(text_obj, 'content', '') or ''))
                 self.text.add_text(text_obj)
-                self.log.debug("Text persisted: %s", tid)
+                self.log.info("Text persisted: %s", tid)
             else:
                 self.log.debug("Text already exists: %s", tid)
         except Exception:
             self.log.exception("Failed to persist text %s", tid)
+            # Re-raise so callers can decide how to handle persistence failure
             raise
 
         # Create embedding and add vector
@@ -113,9 +124,10 @@ class IngestionAppService:
 
         # Persist document
         try:
+            self.log.debug("Persisting snapshot: doc_id=%s title=%s", getattr(doc, "id", None), getattr(doc, "title", None))
             if not self.doc.exists(getattr(doc, "id", None)):
                 self.doc.add_document(doc)
-                self.log.debug("Document persisted: %s", getattr(doc, "id", None))
+                self.log.info("Document persisted: %s", getattr(doc, "id", None))
             else:
                 self.log.debug("Document already exists: %s", getattr(doc, "id", None))
         except Exception:
@@ -123,12 +135,28 @@ class IngestionAppService:
             raise
 
         # Headings
-        for h in (getattr(snapshot, "headings", None) or []):
-            self.persist_heading(h)
+        headings = (getattr(snapshot, "headings", None) or [])
+        self.log.debug("Snapshot has %d headings", len(headings))
+        for h in headings:
+            try:
+                self.persist_heading(h)
+            except Exception:
+                self.log.exception("Failed to persist heading %s", getattr(h, 'id', None))
 
         # Pages/texts
-        for t in (getattr(snapshot, "texts", None) or []):
-            self.persist_text_with_vector(t, embed=embed)
+        texts = (getattr(snapshot, "texts", None) or [])
+        self.log.debug("Snapshot has %d text objects", len(texts))
+        failed_texts = []
+        for t in texts:
+            try:
+                self.persist_text_with_vector(t, embed=embed)
+            except Exception:
+                tid = getattr(t, 'id', None)
+                failed_texts.append(tid)
+                self.log.exception("Failed to persist text in snapshot: %s", tid)
+
+        if failed_texts:
+            self.log.warning("Some texts failed to persist for document %s: %s", getattr(doc, 'id', None), failed_texts)
 
         return getattr(doc, "id", None)
 

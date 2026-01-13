@@ -20,6 +20,7 @@ class Document(Entity):
     file_hash: Optional[str] = field(default=None)
     version: Optional[str] = field(default=None)
     citation_key: Optional[str] = field(default=None)
+    human_id: Optional[str] = field(default=None)
 
     # -----------------------------
     # Structure

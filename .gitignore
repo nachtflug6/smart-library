@@ -139,3 +139,6 @@ build/
 *.exe
 *.dll
 *.class
+
+# Local search session cache
+.search_session.json

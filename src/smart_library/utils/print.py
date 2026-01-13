@@ -107,3 +107,152 @@ def print_search_results_boxed(results, text_service, doc_service=None, entity_s
         print("  " + snippet)
         # separator between results
         print("\n" + ("-" * 80) + "\n")
+
+
+def print_search_response(response, text_service, doc_service=None, entity_service=None, max_chars=None):
+    """Print a SearchResponse object in a readable format.
+
+    response: object with attributes `query`, `created_at`, `results` (iterable of objects with
+    `rank`, `id`, `score`, `is_positive`, `is_negative`).
+    """
+    from smart_library.config import ChunkerConfig
+
+    max_chars = max_chars or ChunkerConfig.MAX_CHAR
+
+    def _truncate_text(text: str, max_c: int) -> str:
+        if text is None:
+            return ""
+        text = str(text).strip().replace("\n", " ")
+        if len(text) <= max_c:
+            return text
+        return text[: max_c - 3].rstrip() + "..."
+
+    def _get_attr(obj, name, default=None):
+        if obj is None:
+            return default
+        if isinstance(obj, dict):
+            return obj.get(name, default)
+        return getattr(obj, name, default)
+
+    print(f"Search: {getattr(response, 'query', '')} — {getattr(response, 'created_at', '')}")
+    print(f"Results: {len(getattr(response, 'results', []) or [])}\n")
+
+    summary_rows = []
+    # Build a compact table: rank, id, title, author(year), page, score, snippet
+    table_rows = []
+    for r in getattr(response, "results", []) or []:
+        tid = r.id if not isinstance(r, dict) else r.get("id")
+        score = (getattr(r, "score", None) if not isinstance(r, dict) else r.get("score")) or 0.0
+
+        txt = text_service.get_text(tid) if text_service else None
+        content = _get_attr(txt, "content", None) or _get_attr(txt, "display_content", "")
+        metadata = _get_attr(txt, "metadata", {}) or {}
+        page = _get_attr(txt, "page_number", None) or metadata.get("page_number") or metadata.get("page") or metadata.get("page_num") or ""
+        parent_id = _get_attr(txt, "parent_id", None) or metadata.get("parent_id")
+
+        # Resolve document title/author/year
+        doc = None
+        if entity_service and parent_id:
+            try:
+                parent = entity_service.get(parent_id)
+                if parent:
+                    p_parent = parent.get("parent_id") if isinstance(parent, dict) else getattr(parent, "parent_id", None)
+                    doc_id = p_parent or (parent.get("id") if isinstance(parent, dict) else getattr(parent, "id", None))
+                    doc = doc_service.get_document(doc_id) if doc_service and doc_id else None
+            except Exception:
+                doc = None
+        elif doc_service and parent_id:
+            try:
+                doc = doc_service.get_document(parent_id)
+            except Exception:
+                doc = None
+
+        title = _get_attr(doc, "title", "")
+        authors = _get_attr(doc, "authors", []) or []
+        first_author = authors[0] if isinstance(authors, (list, tuple)) and authors else (authors if isinstance(authors, str) else "")
+        year = _get_attr(doc, "year", "")
+
+        display_id = None
+        if doc is not None:
+            display_id = _get_attr(doc, "human_id") or _get_attr(doc, "citation_key") or _get_attr(doc, "id")
+        display_id = display_id or tid
+
+        # Use full title and snippet; wrapping will handle long text when printing
+        snippet_full = content or ""
+        author_year = f"{first_author} ({year})" if first_author or year else ""
+        title_full = title or ""
+
+        table_rows.append((r.rank, display_id, title_full, author_year, page, f"{float(score):.4f}", snippet_full))
+
+    # Print results in a 2-3 row wrapped layout: header (rank, id), title line, meta line, then wrapped snippet
+    try:
+        import shutil
+        term_w = shutil.get_terminal_size((120, 20)).columns
+    except Exception:
+        term_w = 120
+
+    import textwrap
+    indent = "  "
+    for row in table_rows:
+        rank = row[0]
+        display_id = row[1]
+        title = row[2]
+        author_year = row[3]
+        page = row[4]
+        score = row[5]
+        snippet = row[6]
+
+        # Prepare width and separators
+        sep = " | "
+        prefix = f"{rank}."
+        id_repr = f"[{display_id}]"
+        avail = max(40, term_w - len(indent))
+
+        # Build suffix pieces (author, page)
+        suffix_parts = []
+        if author_year:
+            suffix_parts.append(author_year)
+        if page:
+            suffix_parts.append(f"p{page}")
+        suffix = sep.join(suffix_parts) if suffix_parts else ""
+
+        # Format score (3 significant digits) and place it after rank
+        try:
+            score_val = float(score)
+        except Exception:
+            score_val = 0.0
+        score_fmt = f"{score_val:.3g}"
+
+        # Lead: rank, score, id; Trail: optional author/page parts
+        lead = f"{prefix} {score_fmt}{sep}{id_repr}{sep}"
+        trail = f"{sep}{suffix}" if suffix else ""
+
+        # Compute allowed title width
+        title_display = str(title) if title else ""
+        allowed_for_title = avail - (len(lead) + len(trail))
+        if allowed_for_title <= 0:
+            # no room for title, show lead only
+            meta_line = lead.rstrip(sep)
+        else:
+            if len(title_display) > allowed_for_title:
+                title_display = title_display[: max(0, allowed_for_title - 3)].rstrip() + "..."
+            meta_line = lead + title_display + trail
+
+        # Final safety: ensure meta_line not longer than avail
+        if len(meta_line) > avail:
+            meta_line = meta_line[: max(0, avail - 3)].rstrip() + "..."
+
+        print(indent + meta_line)
+
+        # Dashed separator after metadata line (exact terminal width)
+        print("=" * term_w)
+
+        # Snippet: wrapped text on following lines (no truncation)
+        snippet_wrapped = textwrap.fill(str(snippet), width=term_w - len(indent), subsequent_indent=indent)
+        print(indent + snippet_wrapped)
+
+        # Equals separator between results (exact terminal width)
+        print("=" * term_w)
+
+        # Blank line after equals separator
+        print()

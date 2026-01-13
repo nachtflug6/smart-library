@@ -43,8 +43,8 @@ class DocumentIngestionService:
         # 1. Extract pages from PDF
         raw_pages = self.pdf_reader.read(pdf_path)
 
-        # 2. Create document
-        doc = Document(source_path=pdf_path)
+        # 2. Create document (use domain service factory to ensure citation_key/human id)
+        doc = self.document_service.create_document(source_path=pdf_path)
         # Persist document via application-level service if available, else try domain service
         if getattr(self, 'document_app', None):
             doc_id = self.document_app.add_document(doc)

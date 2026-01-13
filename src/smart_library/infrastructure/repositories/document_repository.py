@@ -67,6 +67,8 @@ class DocumentRepository(BaseRepository[Document]):
             venue=data.get("venue"),
             year=data.get("year"),
             page_count=data.get("page_count"),
+            citation_key=data.get("citation_key"),
+            human_id=data.get("human_id"),
         )
 
     def get_entity(self, entity_id: str) -> Optional[Document]:
@@ -79,9 +81,9 @@ class DocumentRepository(BaseRepository[Document]):
         self._insert_entity(doc)
         sql = """
         INSERT INTO document (id, type, source_path, source_url, source_format, file_hash,
-                              version, page_count, title, authors, keywords, doi,
-                              publication_date, publisher, venue, year, abstract, citation_key)
-        VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+                      version, page_count, title, authors, keywords, doi,
+                      publication_date, publisher, venue, year, abstract, citation_key, human_id)
+        VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
         """
         try:
             self.conn.execute(
@@ -105,6 +107,7 @@ class DocumentRepository(BaseRepository[Document]):
                     doc.year,
                     getattr(doc, "abstract", None),
                     getattr(doc, "citation_key", None),
+                    getattr(doc, "human_id", None),
                 ],
             )
         except sqlite3.OperationalError:
@@ -171,6 +174,7 @@ class DocumentRepository(BaseRepository[Document]):
             year=r.get("year"),
             abstract=r.get("abstract"),
             citation_key=r.get("citation_key"),
+            human_id=r.get("human_id"),
         )
 
     def update(self, doc: Document):
@@ -179,7 +183,7 @@ class DocumentRepository(BaseRepository[Document]):
         UPDATE document SET
             type=?, source_path=?, source_url=?, source_format=?, file_hash=?,
             version=?, page_count=?, title=?, authors=?, keywords=?, doi=?,
-            publication_date=?, publisher=?, venue=?, year=?, abstract=?, citation_key=?
+            publication_date=?, publisher=?, venue=?, year=?, abstract=?, citation_key=?, human_id=?
         WHERE id=?
         """
         self.conn.execute(
@@ -202,6 +206,7 @@ class DocumentRepository(BaseRepository[Document]):
                 doc.year,
                 getattr(doc, "abstract", None),
                 getattr(doc, "citation_key", None),
+                getattr(doc, "human_id", None),
                 doc.id,
             ],
         )
@@ -215,6 +220,10 @@ class DocumentRepository(BaseRepository[Document]):
         """
         List documents, limited to `limit` results.
         """
-        sql = "SELECT * FROM document LIMIT ?"
-        rows = self.conn.execute(sql, (limit,)).fetchall()
+        if limit is None:
+            sql = "SELECT * FROM document"
+            rows = self.conn.execute(sql).fetchall()
+        else:
+            sql = "SELECT * FROM document LIMIT ?"
+            rows = self.conn.execute(sql, (limit,)).fetchall()
         return [self.row_to_entity(row) for row in rows]

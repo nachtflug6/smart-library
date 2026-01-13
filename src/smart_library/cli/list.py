@@ -25,7 +25,8 @@ def list(
         docs = service.list_documents()
         for doc in docs:
             if not parent_id or getattr(doc, "parent_id", None) == parent_id:
-                echo(f"  {doc.id} | {getattr(doc, 'title', '')} | {getattr(doc, 'doi', '')}")
+                display_id = getattr(doc, "human_id", None) or getattr(doc, "citation_key", None) or doc.id
+                echo(f"  {display_id} | {getattr(doc, 'title', '')} | {getattr(doc, 'doi', '')}")
 
         echo("\nPages:")
         pages = service.list_pages(parent_id) if parent_id else service.repo_page.list()
@@ -44,7 +45,8 @@ def list(
             echo("No documents found.")
             return
         for doc in docs:
-            echo(f"{doc.id} | {getattr(doc, 'title', '')} | {getattr(doc, 'doi', '')}")
+            display_id = getattr(doc, "human_id", None) or getattr(doc, "citation_key", None) or doc.id
+            echo(f"{display_id} | {getattr(doc, 'title', '')} | {getattr(doc, 'doi', '')}")
     elif what == "page":
         if not parent_id:
             echo("Please provide a document ID for listing pages.")

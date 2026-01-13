@@ -36,6 +36,8 @@ CREATE TABLE document (
     publisher TEXT,
     venue TEXT,
     year INTEGER,
+    citation_key TEXT,
+    human_id TEXT,
     reference_list TEXT,                -- JSON list
     citations TEXT                      -- JSON list
 );

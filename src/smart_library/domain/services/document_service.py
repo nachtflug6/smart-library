@@ -1,6 +1,8 @@
 from smart_library.domain.entities.document import Document
 from smart_library.domain.services.entity_validation import EntityValidation
 from smart_library.domain.constants.document_types import DocumentType
+import os
+from smart_library.utils.id_utils import generate_human_id
 
 
 class DocumentService:
@@ -72,5 +74,18 @@ class DocumentService:
         doc_type = validated.get("type")
         if doc_type is not None and isinstance(doc_type, str):
             validated["type"] = DocumentType(doc_type)
+
+        # If a source_path is provided and no citation_key was passed, derive one
+        source_path = validated.get("source_path")
+        if source_path and not validated.get("citation_key"):
+            validated["citation_key"] = os.path.basename(source_path)
+
+        # Ensure a human-readable id for documents when id not explicitly provided
+        if not validated.get("id"):
+            try:
+                validated["id"] = generate_human_id(validated.get("citation_key") or validated.get("title") or "doc")
+            except Exception:
+                # fallback to default Document id behavior
+                pass
 
         return Document(**validated)
