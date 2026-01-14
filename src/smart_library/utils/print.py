@@ -223,16 +223,23 @@ def print_search_response(response, text_service, doc_service=None, entity_servi
             score_val = 0.0
         score_fmt = f"{score_val:.3g}"
 
-        # Lead: rank, score, id; Trail: optional author/page parts
-        lead = f"{prefix} {score_fmt}{sep}{id_repr}{sep}"
-        trail = f"{sep}{suffix}" if suffix else ""
+        # Lead: rank, score, id, page; Trail: author_year
+        page_part = f"p{page}" if page else ""
+        # Build lead dynamically including page if present
+        if page_part:
+            lead = f"{prefix} {score_fmt}{sep}{id_repr}{sep}{page_part}{sep}"
+        else:
+            lead = f"{prefix} {score_fmt}{sep}{id_repr}{sep}"
+        trail = f"{sep}{author_year}" if author_year else ""
 
-        # Compute allowed title width
+        # Compute allowed title width and truncate if necessary
         title_display = str(title) if title else ""
         allowed_for_title = avail - (len(lead) + len(trail))
         if allowed_for_title <= 0:
-            # no room for title, show lead only
+            # no room for title, show lead only (and trail if fits)
             meta_line = lead.rstrip(sep)
+            if trail and len(meta_line) + len(trail) <= avail:
+                meta_line = meta_line + trail
         else:
             if len(title_display) > allowed_for_title:
                 title_display = title_display[: max(0, allowed_for_title - 3)].rstrip() + "..."

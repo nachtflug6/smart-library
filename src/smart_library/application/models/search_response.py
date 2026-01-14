@@ -1,6 +1,36 @@
 from dataclasses import dataclass, asdict, field
-from typing import List, Dict, Any, Optional
+from typing import List, Dict, Any, Optional, Set
 from datetime import datetime
+
+
+@dataclass
+class SearchSession:
+    """Lightweight session object persisted to cache.
+    
+    Contains only the search query and labeled text IDs (positive/negative).
+    Used to preserve user feedback across search sessions.
+    """
+    query: str
+    positive_ids: Set[str] = field(default_factory=set)
+    negative_ids: Set[str] = field(default_factory=set)
+    created_at: str = field(default_factory=lambda: datetime.utcnow().isoformat())
+
+    def to_dict(self) -> Dict[str, Any]:
+        return {
+            "query": self.query,
+            "positive_ids": list(self.positive_ids),
+            "negative_ids": list(self.negative_ids),
+            "created_at": self.created_at,
+        }
+
+    @staticmethod
+    def from_dict(d: Dict[str, Any]) -> "SearchSession":
+        return SearchSession(
+            query=d.get("query", ""),
+            positive_ids=set(d.get("positive_ids", [])),
+            negative_ids=set(d.get("negative_ids", [])),
+            created_at=d.get("created_at", datetime.utcnow().isoformat()),
+        )
 
 
 @dataclass
