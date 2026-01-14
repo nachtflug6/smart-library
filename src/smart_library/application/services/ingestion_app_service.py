@@ -28,15 +28,17 @@ class IngestionAppService:
                  entity_svc: Optional[EntityAppService] = None,
                  embed_svc: Optional[EmbeddingAppService] = None,
                  vec_svc: Optional[VectorService] = None,
-                 logger: Optional[logging.Logger] = None):
+                 logger: Optional[logging.Logger] = None,
+                 debug: bool = False):
         self.log = logger or logging.getLogger("IngestionAppService")
-        # Ensure logger outputs to console at DEBUG level for CLI troubleshooting
+        # Ensure logger outputs to console at appropriate level
         if not self.log.handlers:
             handler = logging.StreamHandler()
             fmt = logging.Formatter("%(asctime)s [%(levelname)s] %(name)s: %(message)s")
             handler.setFormatter(fmt)
             self.log.addHandler(handler)
-        self.log.setLevel(logging.DEBUG)
+        # Set log level based on debug flag
+        self.log.setLevel(logging.DEBUG if debug else logging.WARNING)
         self.doc = doc_svc or DocumentAppService()
         self.head = head_svc or HeadingAppService()
         self.page = page_svc or PageAppService()

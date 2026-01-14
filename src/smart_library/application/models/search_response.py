@@ -7,12 +7,15 @@ from datetime import datetime
 class SearchSession:
     """Lightweight session object persisted to cache.
     
-    Contains only the search query and labeled text IDs (positive/negative).
-    Used to preserve user feedback across search sessions.
+    Contains the search query, labeled text IDs (positive/negative),
+    cached results, and pagination offset.
+    Used to preserve user feedback and pagination state across search sessions.
     """
     query: str
     positive_ids: Set[str] = field(default_factory=set)
     negative_ids: Set[str] = field(default_factory=set)
+    results: List[Dict[str, Any]] = field(default_factory=list)
+    offset: int = 0
     created_at: str = field(default_factory=lambda: datetime.utcnow().isoformat())
 
     def to_dict(self) -> Dict[str, Any]:
@@ -20,6 +23,8 @@ class SearchSession:
             "query": self.query,
             "positive_ids": list(self.positive_ids),
             "negative_ids": list(self.negative_ids),
+            "results": self.results,
+            "offset": self.offset,
             "created_at": self.created_at,
         }
 
@@ -29,6 +34,8 @@ class SearchSession:
             query=d.get("query", ""),
             positive_ids=set(d.get("positive_ids", [])),
             negative_ids=set(d.get("negative_ids", [])),
+            results=d.get("results", []),
+            offset=d.get("offset", 0),
             created_at=d.get("created_at", datetime.utcnow().isoformat()),
         )
 

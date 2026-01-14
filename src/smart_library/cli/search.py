@@ -36,20 +36,25 @@ def _load_session() -> SearchSession:
 @app.command(name="search")
 def search(
     query: str = Argument(..., help="Text to search for"),
-    top_k: int = Argument(20, help="Maximum number of results to show"),
+    batch_size: int = Argument(10, help="Number of results to show"),
 ):
     """
     Run a similarity search for `query` and show matching text ids and scores.
+    
+    Examples:
+        smartlib search "xr is useful"    - Search, show first 10 results
+        smartlib search "xr is useful" 20 - Search, show first 20 results
     """
-    # Load existing session
     session = _load_session()
     
-    # If the query changed, reset labels but keep the new query
+    # If the query changed, reset labels, offset, and results but keep the new query
     if session.query != query:
         session.query = query
         session.positive_ids.clear()
         session.negative_ids.clear()
-    # If same query, preserve labels (allows continued refinement)
+        session.offset = 0
+        session.results = []
+    # If same query, preserve labels and results (allows continued refinement)
 
     try:
         ranker = RankingService()
@@ -58,16 +63,20 @@ def search(
             embedding_service=SearchService().embedding_service,
             text_service=TextAppService(),
             vector_service=SearchService().vector_service,
-            top_k=top_k,
+            top_k=batch_size,
         )
     except Exception as e:
         # fallback to basic similarity search if ranking fails
         try:
             svc = SearchService()
-            results = svc.similarity_search(query, top_k=top_k)
+            results = svc.similarity_search(query, top_k=batch_size)
             if not results:
                 echo("No results found.")
                 return []
+            
+            # Cache results in session
+            session.results = results
+            session.offset = 0
             
             # Build response from basic search results
             response = SearchResponse(query=query)
@@ -85,7 +94,11 @@ def search(
         echo("No results found.")
         return []
 
-    # Save the lightweight session (query + labels)
+    # Cache results in session
+    session.results = [{"id": r.id, "score": r.score} for r in response.results]
+    session.offset = 0
+    
+    # Save the session with cached results
     _save_session(session)
 
     # Display results using pretty printer if available
@@ -148,8 +161,11 @@ def label(args: List[str] = Argument(..., help="Identifiers and labels, e.g., '1
             rid = None
             try:
                 rank = int(identifier)
-                # Lazy load base results only when needed
-                if base_results is None:
+                # Use cached results from session
+                if session.results:
+                    base_results = session.results
+                else:
+                    # Fallback: lazy load base results if not cached
                     try:
                         svc = SearchService()
                         base_results = svc.similarity_search(session.query, top_k=50) or []
@@ -188,7 +204,6 @@ def label(args: List[str] = Argument(..., help="Identifiers and labels, e.g., '1
             pass
     else:
         echo("No results were labeled.")
-
 
 def _apply_rerank_and_update_session(alpha: float = 1.0, beta: float = 0.75, gamma: float = 0.15, top_k: int = 20, echo_results: bool = False):
     """Apply Rocchio reranking using labels from the cached session.

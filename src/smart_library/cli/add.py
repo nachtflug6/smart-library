@@ -5,7 +5,7 @@ from smart_library.cli.main import app
 @app.command(name="add")
 def add(
     path: str = Argument(..., help="Path to the PDF file to ingest"),
-    metadata: bool = Option(False, "--metadata", help="Extract metadata during ingestion"),
+    debug: bool = Option(False, "--debug", help="Enable debug output"),
 ):
     """Ingest a PDF file using Grobid and persist canonical objects (always embed)."""
     # Use the high-level IngestionAppService which runs Grobid -> snapshot -> persist
@@ -15,7 +15,7 @@ def add(
         echo(f"Failed to import ingestion service: {e}")
         raise
 
-    svc = IngestionAppService()
+    svc = IngestionAppService(debug=debug)
     try:
         # Always create embeddings/vectors for every text entity
         doc_id = svc.ingest_from_grobid(path, embed=True, source_path=path)
