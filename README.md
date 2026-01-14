@@ -71,8 +71,54 @@ for f in data_dev/pdf/*.pdf; do smartlib add "$f"; done
 Run a similarity search (top N results):
 
 ```bash
-smartlib search "your query text" 5
+smartlib search "your query text" 20
 ```
+
+Interactive relevance feedback with labeling
+--------------------------------------------
+
+The search functionality supports iterative refinement through positive/negative labeling. After running a search, you can label results as relevant (positive) or irrelevant (negative), and the system automatically reruns the search using Rocchio reranking to adjust results based on your feedback.
+
+**Basic workflow:**
+
+1. Run an initial search:
+```bash
+smartlib search "neural ordinary differential equations"
+```
+
+2. Label results by rank number (or entity ID):
+```bash
+# Label result 1 as positive (relevant)
+smartlib label 1 pos
+
+# Label multiple results with the same label
+smartlib label 2 3 4 pos
+
+# Label with different labels in one command
+smartlib label 1 2 pos 5 6 neg
+
+# Mix of positive and negative examples
+smartlib label 1 2 3 pos 4 5 6 neg
+```
+
+3. After each label command, the system automatically:
+   - Saves your labels to the session (`.search_session.json`)
+   - Computes a Rocchio-adjusted query vector using your labeled examples
+   - Reruns the search and displays updated results with new similarity scores
+
+**Label persistence:**
+
+- Labels are preserved across repeated searches with the **same query**
+- Starting a new search with a **different query** clears previous labels
+- This allows iterative refinement: search → label → review → label more → review, etc.
+
+**How it works:**
+
+The system uses Rocchio relevance feedback algorithm:
+- Embeddings from positive examples are added to boost the query vector
+- Embeddings from negative examples are subtracted to move away from irrelevant content
+- Results are reranked based on similarity to the adjusted query vector
+- Scores change to reflect the refined search intent
 
 List and inspect entities:
 
