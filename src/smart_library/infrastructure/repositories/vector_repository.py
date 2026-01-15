@@ -157,3 +157,31 @@ class VectorRepository(BaseRepository):
             for vid, cosine in candidates[:top_k]:
                 results.append({"id": vid, "cosine_similarity": float(cosine)})
             return results
+
+    def delete_vector(self, id: str):
+        """Delete a vector from both the sqlite-vec table and fallback table."""
+        try:
+            # Try deleting from sqlite-vec table
+            self.conn.execute("DELETE FROM vector WHERE id=?", (id,))
+            self.conn.commit()
+        except Exception as e:
+            pass
+        
+        try:
+            # Also try deleting from fallback table
+            self.conn.execute("DELETE FROM vector_fallback WHERE id=?", (id,))
+            self.conn.commit()
+        except Exception as e:
+            pass
+    
+    def list_vectors(self):
+        """List all vectors in the vector database."""
+        try:
+            rows = self.conn.execute("SELECT id FROM vector").fetchall()
+            return [row["id"] for row in rows]
+        except Exception:
+            try:
+                rows = self.conn.execute("SELECT id FROM vector_fallback").fetchall()
+                return [row["id"] for row in rows]
+            except Exception:
+                return []

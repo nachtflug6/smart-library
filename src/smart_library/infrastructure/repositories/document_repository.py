@@ -213,6 +213,36 @@ class DocumentRepository(BaseRepository[Document]):
         self.conn.commit()
 
     def delete(self, doc_id: str):
+        """Delete a document and all its associated texts and vectors."""
+        # First, find all text entities associated with this document
+        # Navigate: document -> pages -> texts
+        page_sql = "SELECT page.id FROM page JOIN entity ON page.id = entity.id WHERE entity.parent_id = ?"
+        page_rows = self.conn.execute(page_sql, (doc_id,)).fetchall()
+        
+        # Delete all vectors for texts in this document
+        if page_rows:
+            from smart_library.application.services.vector_service import VectorService
+            vector_service = VectorService()
+            
+            page_ids = [row["id"] for row in page_rows]
+            
+            # Get all text entities for these pages
+            placeholders = ",".join("?" for _ in page_ids)
+            text_sql = f"""
+                SELECT text_entity.id FROM text_entity
+                JOIN entity ON text_entity.id = entity.id
+                WHERE entity.parent_id IN ({placeholders})
+            """
+            text_rows = self.conn.execute(text_sql, tuple(page_ids)).fetchall()
+            
+            # Delete vectors for each text
+            for text_row in text_rows:
+                try:
+                    vector_service.delete_vector(text_row["id"])
+                except Exception as e:
+                    print(f"Warning: Failed to delete vector {text_row['id']}: {e}")
+        
+        # Then delete the document and cascade to related tables
         self._delete_entity(doc_id)
         self.conn.commit()
 

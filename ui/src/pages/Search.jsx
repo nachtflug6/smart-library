@@ -93,7 +93,9 @@ function Search() {
             </p>
           </div>
           
-          <SearchBar onSearch={handleSearch} isLoading={isLoading} />
+          <div className="search-bar-sticky">
+            <SearchBar onSearch={handleSearch} isLoading={isLoading} />
+          </div>
           
           {error && (
             <div className="error-message">

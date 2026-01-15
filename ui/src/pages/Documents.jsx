@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react'
-import DocumentCard from '../components/DocumentCard'
 import { documentAPI } from '../services/api'
 import './Documents.css'
 
@@ -10,6 +9,8 @@ function Documents() {
   const [uploadProgress, setUploadProgress] = useState(0)
   const [isUploading, setIsUploading] = useState(false)
   const [uploadMessage, setUploadMessage] = useState(null)
+  const [sortField, setSortField] = useState('title')
+  const [sortOrder, setSortOrder] = useState('asc')
 
   useEffect(() => {
     loadDocuments()
@@ -28,6 +29,51 @@ function Documents() {
     } finally {
       setIsLoading(false)
     }
+  }
+
+  const handleSort = (field) => {
+    if (sortField === field) {
+      // Toggle sort order if clicking the same field
+      setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')
+    } else {
+      // New field, default to ascending
+      setSortField(field)
+      setSortOrder('asc')
+    }
+  }
+
+  const getSortedDocuments = () => {
+    const sorted = [...documents].sort((a, b) => {
+      let aVal, bVal
+
+      switch (sortField) {
+        case 'title':
+          aVal = (a.title || '').toLowerCase()
+          bVal = (b.title || '').toLowerCase()
+          break
+        case 'year':
+          aVal = a.year || 0
+          bVal = b.year || 0
+          break
+        case 'authors':
+          aVal = a.authors?.[0]?.toLowerCase() || ''
+          bVal = b.authors?.[0]?.toLowerCase() || ''
+          break
+        case 'created':
+          aVal = a.created_at || ''
+          bVal = b.created_at || ''
+          break
+        default:
+          aVal = a.id
+          bVal = b.id
+      }
+
+      if (aVal < bVal) return sortOrder === 'asc' ? -1 : 1
+      if (aVal > bVal) return sortOrder === 'asc' ? 1 : -1
+      return 0
+    })
+
+    return sorted
   }
 
   const handleFileUpload = async (event) => {
@@ -89,6 +135,11 @@ function Documents() {
     }
   }
 
+  const getSortIndicator = (field) => {
+    if (sortField !== field) return ''
+    return sortOrder === 'asc' ? ' ▲' : ' ▼'
+  }
+
   if (isLoading) {
     return (
       <div className="documents-page">
@@ -108,12 +159,14 @@ function Documents() {
     )
   }
 
+  const sortedDocuments = getSortedDocuments()
+
   return (
     <div className="documents-page">
       <div className="documents-header">
         <h1>Document Library</h1>
         <p className="subtitle">
-          Browse all documents in your library ({documents.length} total)
+          {documents.length} document{documents.length !== 1 ? 's' : ''} in your library
         </p>
       </div>
 
@@ -155,10 +208,64 @@ function Documents() {
           <code>smartlib add /path/to/document.pdf</code>
         </div>
       ) : (
-        <div className="documents-grid">
-          {documents.map((doc) => (
-            <DocumentCard key={doc.id} document={doc} />
-          ))}
+        <div className="documents-list-container">
+          <table className="documents-table">
+            <thead>
+              <tr>
+                <th onClick={() => handleSort('title')} className="sortable">
+                  Title {getSortIndicator('title')}
+                </th>
+                <th onClick={() => handleSort('authors')} className="sortable">
+                  Author {getSortIndicator('authors')}
+                </th>
+                <th onClick={() => handleSort('year')} className="sortable year-col">
+                  Year {getSortIndicator('year')}
+                </th>
+                <th className="id-col">ID</th>
+                <th className="actions-col">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {sortedDocuments.map((doc) => (
+                <tr key={doc.id} className="document-row">
+                  <td className="title-cell">
+                    <div className="title-content">
+                      <strong>{doc.title || 'Untitled'}</strong>
+                      {doc.doi && (
+                        <a 
+                          href={`https://doi.org/${doc.doi}`} 
+                          target="_blank" 
+                          rel="noopener noreferrer"
+                          className="doi-link"
+                        >
+                          {doc.doi}
+                        </a>
+                      )}
+                    </div>
+                  </td>
+                  <td className="author-cell">
+                    {doc.authors && doc.authors.length > 0 
+                      ? doc.authors.slice(0, 2).join(', ') + (doc.authors.length > 2 ? ' et al.' : '')
+                      : '-'
+                    }
+                  </td>
+                  <td className="year-cell">{doc.year || '-'}</td>
+                  <td className="id-cell" title={doc.id}>
+                    <code>{doc.id.slice(0, 12)}...</code>
+                  </td>
+                  <td className="action-cell">
+                    <button
+                      className="delete-btn"
+                      onClick={() => handleDelete(doc.id)}
+                      title="Delete"
+                    >
+                      🗑️
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       )}
     </div>

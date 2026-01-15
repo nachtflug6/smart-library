@@ -9,23 +9,6 @@ function PDFViewer({ docId, textId, initialPage, textContent, onClose }) {
 
   return (
     <div className="pdf-viewer-panel">
-      {/* Header */}
-      <div className="pdf-viewer-header">
-        <div className="pdf-viewer-title">
-          <span>Document Viewer - Page {initialPage || 1}</span>
-        </div>
-        
-        <div className="pdf-viewer-controls">
-          <button
-            className="pdf-close-btn"
-            onClick={onClose}
-            title="Close"
-          >
-            ✕
-          </button>
-        </div>
-      </div>
-      
       {/* PDF Content */}
       <div className="pdf-viewer-content">
         {error && (

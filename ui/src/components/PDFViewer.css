@@ -5,57 +5,27 @@
   background: white;
   border-radius: 8px;
   overflow: hidden;
+  position: relative;
 }
 
 .pdf-viewer-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 1rem;
-  border-bottom: 1px solid #e0e0e0;
-  background: #fafafa;
-  flex-wrap: wrap;
-  gap: 1rem;
-  flex-shrink: 0;
+  display: none;
 }
 
 .pdf-viewer-title {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  font-weight: 600;
-  font-size: 0.95rem;
-  flex: 1;
-  min-width: 0;
-}
-
-.pdf-viewer-title span {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  display: none;
 }
 
 .pdf-viewer-controls {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  flex-shrink: 0;
+  display: none;
 }
 
 .pdf-close-btn {
-  padding: 0.4rem 0.8rem;
-  background: #fee;
-  border: 1px solid #f88;
-  border-radius: 4px;
-  color: #d00;
-  cursor: pointer;
-  font-size: 1rem;
-  transition: all 0.2s;
+  display: none;
 }
 
-.pdf-close-btn:hover {
-  background: #fdd;
-  border-color: #d00;
+.pdf-close-btn-floating {
+  display: none;
 }
 
 .pdf-viewer-content {

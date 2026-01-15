@@ -42,10 +42,21 @@ async def search(
         # Convert to response format
         search_results = []
         for i, r in enumerate(results, start=1):
+            # Validate that the text entity still exists (not deleted)
+            text_id = r.get("id")
+            try:
+                text = text_service.get_text(text_id)
+                if not text:
+                    # Skip deleted texts
+                    continue
+            except Exception:
+                # Skip if entity doesn't exist
+                continue
+            
             search_results.append(
                 SearchResult(
                     rank=i,
-                    id=r.get("id"),
+                    id=text_id,
                     score=r.get("cosine_similarity") or r.get("score") or 0.0,
                     is_positive=False,
                     is_negative=False
@@ -156,3 +167,25 @@ async def rerank_search(
     
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Rerank failed: {str(e)}")
+
+
+@router.post("/cleanup/")
+async def cleanup_orphaned_vectors(
+    search_service: SearchService = Depends(get_search_service)
+):
+    """
+    Clean up orphaned vectors in the vector database.
+    This removes vectors that have no corresponding text entity.
+    Useful for cleaning up after bulk deletions.
+    
+    Returns:
+        Number of orphaned vectors removed
+    """
+    try:
+        deleted_count = search_service.cleanup_orphaned_vectors()
+        return {
+            "success": True,
+            "message": f"Cleaned up {deleted_count} orphaned vectors"
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Cleanup failed: {str(e)}")
