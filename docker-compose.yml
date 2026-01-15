@@ -52,6 +52,9 @@ services:
     depends_on:
       - grobid
       - ollama
+    ports:
+      - "8000:8000"  # API
+      - "5173:5173"  # UI
 
 networks:
   smartlib-net:

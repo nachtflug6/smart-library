@@ -37,3 +37,7 @@ sqlite-vec
 
 # Command line output
 tabulate
+
+# api
+fastapi
+

@@ -22,7 +22,8 @@ def get_connection_with_sqlitevec(db_path: Path = None, load_sqlitevec: bool = F
     if db_path is None:
         from smart_library.config import DB_PATH
         db_path = DB_PATH
-    conn = sqlite3.connect(str(db_path))
+    # Allow SQLite connections to be used across threads (needed for FastAPI async workers)
+    conn = sqlite3.connect(str(db_path), check_same_thread=False)
     conn.row_factory = sqlite3.Row
     conn.execute("PRAGMA foreign_keys = ON;")
     # Always load sqlite-vec extension unless explicitly disabled

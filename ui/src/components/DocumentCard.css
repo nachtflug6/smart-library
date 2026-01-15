@@ -1,0 +1,61 @@
+.document-card {
+  display: block;
+  background: white;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 1.5rem;
+  text-decoration: none;
+  color: inherit;
+  transition: all 0.2s;
+}
+
+.document-card:hover {
+  border-color: #4CAF50;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  transform: translateY(-2px);
+}
+
+.document-header {
+  margin-bottom: 1rem;
+}
+
+.document-title {
+  margin: 0;
+  font-size: 1.25rem;
+  color: #333;
+  line-height: 1.4;
+}
+
+.document-metadata {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.metadata-row {
+  display: flex;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.metadata-label {
+  font-weight: 600;
+  color: #666;
+  min-width: 70px;
+}
+
+.metadata-value {
+  color: #333;
+}
+
+.document-footer {
+  padding-top: 0.75rem;
+  border-top: 1px solid #e0e0e0;
+}
+
+.document-id {
+  font-size: 0.8rem;
+  color: #999;
+  font-family: monospace;
+}
