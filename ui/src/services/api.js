@@ -38,7 +38,7 @@ export const documentAPI = {
   },
   
   get: async (docId) => {
-    const response = await api.get(`/api/documents/${docId}/`)
+    const response = await api.get(`/api/documents/${docId}`)
     return response.data
   },
   
@@ -71,8 +71,13 @@ export const documentAPI = {
   },
   
   getText: async (textId) => {
-    const response = await api.get(`/api/documents/text/${textId}/`)
+    const response = await api.get(`/api/documents/text/${textId}`)
     return response.data
+  },
+  
+  getPdf: (docId) => {
+    // Returns the URL to the PDF - can be used in iframe or download
+    return `/api/documents/pdf/${docId}`
   },
 }
 

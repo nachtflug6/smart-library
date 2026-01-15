@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { documentAPI } from '../services/api'
 import LabelingWidget from './LabelingWidget'
+import PDFViewer from './PDFViewer'
 import './SearchResults.css'
 
 function SearchResults({ results, query, onRerank }) {
@@ -8,7 +9,7 @@ function SearchResults({ results, query, onRerank }) {
   const [textCache, setTextCache] = useState({})
   const [documentCache, setDocumentCache] = useState({})
   const [loadingStates, setLoadingStates] = useState({})
-
+  const [selectedPdf, setSelectedPdf] = useState(null)
   // Pre-load text metadata for all results on mount
   useEffect(() => {
     const loadTextMetadata = async () => {
@@ -155,6 +156,15 @@ function SearchResults({ results, query, onRerank }) {
                   isNegative={result.is_negative}
                   onLabelChange={onRerank}
                 />
+                {doc && (
+                  <button
+                    className="pdf-button"
+                    onClick={() => setSelectedPdf({ docId: doc.id, textId: result.id, page: text?.page_number || 1, content: text?.content || '' })}
+                    title="View PDF"
+                  >
+                    📄 View PDF
+                  </button>
+                )}
                 <button
                   className="expand-button"
                   onClick={() => toggleExpand(result.id)}
@@ -206,6 +216,17 @@ function SearchResults({ results, query, onRerank }) {
           )
         })}
       </div>
+      
+      {/* PDF Viewer Modal */}
+      {selectedPdf && (
+        <PDFViewer
+          docId={selectedPdf.docId}
+          textId={selectedPdf.textId}
+          initialPage={selectedPdf.page}
+          textContent={selectedPdf.content}
+          onClose={() => setSelectedPdf(null)}
+        />
+      )}
     </div>
   )
 }

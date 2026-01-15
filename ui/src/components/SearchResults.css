@@ -167,6 +167,23 @@
   border-color: #ccc;
 }
 
+.pdf-button {
+  padding: 0.5rem 1rem;
+  background-color: #fff3cd;
+  border: 1px solid #ffc107;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 0.9rem;
+  color: #856404;
+  font-weight: 500;
+}
+
+.pdf-button:hover {
+  background-color: #ffe69c;
+  border-color: #ffb300;
+}
+
 /* Expanded metadata */
 .result-metadata {
   margin-top: 1rem;
@@ -206,7 +223,6 @@
 
 .metadata-value a:hover {
   text-decoration: underline;
-}
   background-color: #e0e0e0;
 }
 
