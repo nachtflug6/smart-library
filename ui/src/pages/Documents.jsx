@@ -9,6 +9,7 @@ function Documents() {
   const [uploadProgress, setUploadProgress] = useState(0)
   const [isUploading, setIsUploading] = useState(false)
   const [uploadMessage, setUploadMessage] = useState(null)
+  const [uploadStats, setUploadStats] = useState({ total: 0, completed: 0, failed: 0 })
   const [sortField, setSortField] = useState('title')
   const [sortOrder, setSortOrder] = useState('asc')
 
@@ -77,45 +78,86 @@ function Documents() {
   }
 
   const handleFileUpload = async (event) => {
-    const file = event.target.files?.[0]
-    if (!file) return
+    const files = Array.from(event.target.files || [])
+    if (files.length === 0) return
 
-    if (!file.name.endsWith('.pdf')) {
-      setUploadMessage({ type: 'error', text: 'Please select a PDF file' })
+    // Validate all files are PDFs
+    const invalidFiles = files.filter(f => !f.name.endsWith('.pdf'))
+    if (invalidFiles.length > 0) {
+      setUploadMessage({ 
+        type: 'error', 
+        text: `${invalidFiles.length} file(s) are not PDFs. Please select only PDF files.` 
+      })
+      event.target.value = ''
       return
     }
 
     setIsUploading(true)
     setUploadProgress(0)
     setUploadMessage(null)
+    setUploadStats({ total: files.length, completed: 0, failed: 0 })
 
+    const results = []
+    
     try {
-      const result = await documentAPI.upload(file, (progress) => {
-        setUploadProgress(progress)
-      })
+      // Upload files sequentially
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i]
+        try {
+          const result = await documentAPI.upload(file, (progress) => {
+            // Show overall progress
+            const overallProgress = Math.round(
+              ((i + progress / 100) / files.length) * 100
+            )
+            setUploadProgress(overallProgress)
+          })
 
-      if (result.success) {
-        setUploadMessage({ 
-          type: 'success', 
-          text: `Successfully uploaded: ${file.name}` 
+          if (result.success) {
+            results.push({ name: file.name, success: true })
+            setUploadStats(prev => ({ ...prev, completed: prev.completed + 1 }))
+          } else {
+            results.push({ name: file.name, success: false, error: result.message })
+            setUploadStats(prev => ({ ...prev, failed: prev.failed + 1 }))
+          }
+        } catch (err) {
+          results.push({ name: file.name, success: false, error: err.message })
+          setUploadStats(prev => ({ ...prev, failed: prev.failed + 1 }))
+        }
+      }
+
+      // Generate summary message
+      const successful = results.filter(r => r.success).length
+      const failed = results.filter(r => !r.success).length
+
+      if (failed === 0) {
+        setUploadMessage({
+          type: 'success',
+          text: `Successfully uploaded ${successful} file${successful !== 1 ? 's' : ''}`
         })
-        // Reload documents list
-        await loadDocuments()
+      } else if (successful === 0) {
+        setUploadMessage({
+          type: 'error',
+          text: `Failed to upload ${failed} file${failed !== 1 ? 's' : ''}`
+        })
       } else {
-        setUploadMessage({ 
-          type: 'error', 
-          text: result.message || 'Upload failed' 
+        setUploadMessage({
+          type: 'warning',
+          text: `Uploaded ${successful} file${successful !== 1 ? 's' : ''}, ${failed} failed`
         })
       }
+
+      // Reload documents list
+      await loadDocuments()
     } catch (err) {
-      setUploadMessage({ 
-        type: 'error', 
-        text: 'Upload failed. Please try again.' 
+      setUploadMessage({
+        type: 'error',
+        text: 'Upload process failed. Please try again.'
       })
       console.error('Upload error:', err)
     } finally {
       setIsUploading(false)
       setUploadProgress(0)
+      setUploadStats({ total: 0, completed: 0, failed: 0 })
       // Reset file input
       event.target.value = ''
     }
@@ -173,12 +215,13 @@ function Documents() {
       <div className="upload-section">
         <div className="upload-container">
           <label htmlFor="file-upload" className="upload-button">
-            {isUploading ? 'Uploading...' : '📄 Upload PDF'}
+            {isUploading ? `Uploading (${uploadStats.completed}/${uploadStats.total})...` : '📄 Upload PDF(s)'}
           </label>
           <input
             id="file-upload"
             type="file"
             accept=".pdf"
+            multiple
             onChange={handleFileUpload}
             disabled={isUploading}
             style={{ display: 'none' }}

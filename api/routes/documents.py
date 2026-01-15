@@ -253,10 +253,27 @@ async def delete_document(
     """
     try:
         from smart_library.infrastructure.repositories.document_repository import DocumentRepository
-        repo = DocumentRepository()
-        repo.delete(doc_id)
+        from smart_library.infrastructure.db.db import get_connection
         
-        return {"success": True, "message": f"Document deleted: {doc_id}"}
+        # Use a single connection for the entire operation
+        conn = get_connection()
+        
+        # Delete the document (this will remove vectors for descendants via _delete_entity)
+        repo = DocumentRepository(conn)
+        repo.delete(doc_id)
+        # Commit after delete
+        conn.commit()
+        
+        # Then run cleanup to catch any edge cases
+        from smart_library.infrastructure.repositories.vector_repository import VectorRepository
+        vector_repo = VectorRepository(conn)
+        orphans_removed = vector_repo.cleanup_orphaned_vectors()
+        
+        message = f"Document deleted: {doc_id}"
+        if orphans_removed > 0:
+            message += f" ({orphans_removed} orphaned vectors cleaned up)"
+        
+        return {"success": True, "message": message}
     
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to delete document: {str(e)}")

@@ -66,7 +66,7 @@ export const documentAPI = {
   },
   
   delete: async (docId) => {
-    const response = await api.delete(`/api/documents/${docId}/`)
+    const response = await api.delete(`/api/documents/${docId}`)
     return response.data
   },
   

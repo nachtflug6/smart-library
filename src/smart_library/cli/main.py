@@ -13,6 +13,7 @@ importlib.import_module("smart_library.cli.list")
 importlib.import_module("smart_library.cli.show")
 importlib.import_module("smart_library.cli.initialize")
 importlib.import_module("smart_library.cli.search")
+importlib.import_module("smart_library.cli.cleanup")
 
 if __name__ == "__main__":
     try:

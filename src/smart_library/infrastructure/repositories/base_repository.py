@@ -63,7 +63,41 @@ class BaseRepository(Generic[E]):
         )
 
     def _delete_entity(self, entity_id: str):
+        # First delete vectors for this entity and all its descendants
+        # (vector table is virtual and doesn't have foreign key cascades)
+        # Find all descendant entity IDs (transitive closure of parent_id relationships)
+        descendant_ids = self._get_descendant_ids(entity_id)
+        all_ids = [entity_id] + descendant_ids
+        
+        if all_ids:
+            placeholders = ",".join("?" * len(all_ids))
+            try:
+                self.conn.execute(f"DELETE FROM vector WHERE id IN ({placeholders})", all_ids)
+            except Exception:
+                pass  # vector table might not exist or might be different type
+            
+            try:
+                self.conn.execute(f"DELETE FROM vector_fallback WHERE id IN ({placeholders})", all_ids)
+            except Exception:
+                pass  # fallback table might not exist
+        
+        # Now delete the entity (which cascades to child tables like text_entity, document, etc)
         self.conn.execute("DELETE FROM entity WHERE id=?", (entity_id,))
+
+    def _get_descendant_ids(self, entity_id: str):
+        """Get all descendant entity IDs (recursive children)."""
+        descendants = []
+        children = self.conn.execute(
+            "SELECT id FROM entity WHERE parent_id=?", (entity_id,)
+        ).fetchall()
+        
+        for child in children:
+            child_id = child["id"]
+            descendants.append(child_id)
+            # Recursively get descendants of this child
+            descendants.extend(self._get_descendant_ids(child_id))
+        
+        return descendants
 
     def _fetch_entity_row(self, entity_id: str) -> Optional[Dict[str, Any]]:
         row = self.conn.execute("SELECT * FROM entity WHERE id=?", (entity_id,)).fetchone()

@@ -22,20 +22,8 @@ class SearchService:
 		"""
 		Remove vectors that have no corresponding text entity.
 		Useful for cleaning up after document deletions.
+		Uses the efficient batch cleanup method from VectorRepository.
 		"""
-		vector_ids = self.vector_service.repo.list_vectors()
-		deleted_count = 0
-		
-		for vector_id in vector_ids:
-			try:
-				text = self.text_service.get_text(vector_id)
-				if not text:
-					# Vector has no corresponding text, delete it
-					self.vector_service.delete_vector(vector_id)
-					deleted_count += 1
-			except Exception:
-				# Entity doesn't exist, delete the vector
-				self.vector_service.delete_vector(vector_id)
-				deleted_count += 1
+		return self.vector_service.cleanup_orphaned_vectors()
 		
 		return deleted_count

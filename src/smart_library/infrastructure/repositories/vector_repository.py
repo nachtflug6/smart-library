@@ -185,3 +185,33 @@ class VectorRepository(BaseRepository):
                 return [row["id"] for row in rows]
             except Exception:
                 return []
+
+    def cleanup_orphaned_vectors(self):
+        """Delete all vectors that don't have corresponding text entities."""
+        deleted_count = 0
+        
+        try:
+            # Delete orphaned vectors from vec0 table
+            result = self.conn.execute("""
+                DELETE FROM vector WHERE id NOT IN (
+                    SELECT id FROM text_entity
+                )
+            """)
+            deleted_count += result.rowcount
+            self.conn.commit()
+        except Exception as e:
+            print(f"Warning: Failed to clean vec0 table: {e}")
+        
+        try:
+            # Delete orphaned vectors from fallback table
+            result = self.conn.execute("""
+                DELETE FROM vector_fallback WHERE id NOT IN (
+                    SELECT id FROM text_entity
+                )
+            """)
+            deleted_count += result.rowcount
+            self.conn.commit()
+        except Exception as e:
+            print(f"Warning: Failed to clean fallback table: {e}")
+        
+        return deleted_count

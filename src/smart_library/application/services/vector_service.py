@@ -23,3 +23,6 @@ class VectorService:
 
     def list_vectors(self):
         return self.repo.list_vectors()
+
+    def cleanup_orphaned_vectors(self):
+        return self.repo.cleanup_orphaned_vectors()

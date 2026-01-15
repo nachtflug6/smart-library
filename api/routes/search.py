@@ -15,7 +15,8 @@ router = APIRouter()
 @router.post("/", response_model=SearchResponse)
 async def search(
     request: SearchRequest,
-    search_service: SearchService = Depends(get_search_service)
+    search_service: SearchService = Depends(get_search_service),
+    text_service: TextAppService = Depends(get_text_service)
 ):
     """
     Perform similarity search.

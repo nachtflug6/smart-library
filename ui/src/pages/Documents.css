@@ -110,6 +110,12 @@
   border: 1px solid #f5c6cb;
 }
 
+.upload-message.warning {
+  background-color: #fff3cd;
+  color: #856404;
+  border: 1px solid #ffeeba;
+}
+
 .no-documents {
   text-align: center;
   padding: 2rem;
