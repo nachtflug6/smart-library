@@ -2,7 +2,8 @@ import { useState } from 'react'
 import SearchBar from '../components/SearchBar'
 import SearchResults from '../components/SearchResults'
 import Pagination from '../components/Pagination'
-import { searchAPI, labelAPI } from '../services/api'
+import PDFViewer from '../components/PDFViewer'
+import { searchAPI, labelAPI, documentAPI } from '../services/api'
 import './Search.css'
 
 function Search() {
@@ -12,6 +13,8 @@ function Search() {
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState(null)
   const [currentPage, setCurrentPage] = useState(1)
+  const [selectedPdf, setSelectedPdf] = useState(null)
+  const [pdfContent, setPdfContent] = useState('')
   const RESULTS_PER_PAGE = 10
 
   const handleSearch = async (searchQuery, topK) => {
@@ -74,43 +77,70 @@ function Search() {
     }
   }
 
+  const handleSelectPdf = (docId, textId, initialPage, textContent) => {
+    setSelectedPdf({ docId, textId, initialPage, textContent })
+  }
+
   return (
     <div className="search-page">
-      <div className="search-header">
-        <h1>Search Documents</h1>
-        <p className="subtitle">
-          Find relevant papers and text chunks using semantic search
-        </p>
+      <div className="search-layout">
+        {/* Left Column: Search and Results */}
+        <div className="search-column">
+          <div className="search-header">
+            <h1>Search Documents</h1>
+            <p className="subtitle">
+              Find relevant papers and text chunks using semantic search
+            </p>
+          </div>
+          
+          <SearchBar onSearch={handleSearch} isLoading={isLoading} />
+          
+          {error && (
+            <div className="error-message">
+              {error}
+            </div>
+          )}
+          
+          {isLoading && results.length === 0 && (
+            <div className="loading-message">
+              Searching...
+            </div>
+          )}
+          
+          {!isLoading && results.length > 0 && (
+            <>
+              <SearchResults
+                results={results}
+                query={query}
+                onRerank={handleRerank}
+                onSelectPdf={handleSelectPdf}
+              />
+              <Pagination
+                currentPage={currentPage}
+                totalPages={Math.ceil(allResults.length / RESULTS_PER_PAGE)}
+                onPageChange={handlePageChange}
+              />
+            </>
+          )}
+        </div>
+
+        {/* Right Column: PDF Viewer */}
+        <div className="pdf-column">
+          {selectedPdf ? (
+            <PDFViewer
+              docId={selectedPdf.docId}
+              textId={selectedPdf.textId}
+              initialPage={selectedPdf.initialPage}
+              textContent={selectedPdf.textContent}
+              onClose={() => setSelectedPdf(null)}
+            />
+          ) : (
+            <div className="pdf-placeholder">
+              <p>Select a document to view PDF</p>
+            </div>
+          )}
+        </div>
       </div>
-      
-      <SearchBar onSearch={handleSearch} isLoading={isLoading} />
-      
-      {error && (
-        <div className="error-message">
-          {error}
-        </div>
-      )}
-      
-      {isLoading && results.length === 0 && (
-        <div className="loading-message">
-          Searching...
-        </div>
-      )}
-      
-      {!isLoading && results.length > 0 && (
-        <>
-          <SearchResults
-            results={results}
-            query={query}
-            onRerank={handleRerank}
-          />
-          <Pagination
-            currentPage={currentPage}
-            totalPages={Math.ceil(allResults.length / RESULTS_PER_PAGE)}
-            onPageChange={handlePageChange}
-          />
-        </>
-      )}
     </div>
   )
 }

@@ -5,6 +5,7 @@
 # Dev data (ignore everything under data_dev/)
 data_dev/
 data_dev/**
+test_data/
 
 # SQLite database files
 db/*.db

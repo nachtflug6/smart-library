@@ -1,9 +1,11 @@
 """Document API routes."""
 from fastapi import APIRouter, Depends, HTTPException, UploadFile, File
+from fastapi.responses import FileResponse
 from pathlib import Path
 from typing import Optional
 import tempfile
 import os
+import shutil
 from api.schemas import (
     DocumentAddRequest,
     DocumentAddResponse,
@@ -57,6 +59,17 @@ async def upload_document(
         # Ingest the document
         svc = IngestionAppService(debug=debug)
         doc_id = svc.ingest_from_grobid(temp_path, embed=True, source_path=file.filename)
+        
+        # Store PDF in document storage directory
+        try:
+            from smart_library.config import DOC_PDF_DIR
+            DOC_PDF_DIR.mkdir(parents=True, exist_ok=True)
+            # Store with document ID as filename
+            pdf_storage_path = DOC_PDF_DIR / f"{doc_id}.pdf"
+            shutil.copy(temp_path, pdf_storage_path)
+        except Exception as e:
+            # Log but don't fail if PDF storage fails
+            print(f"Warning: Failed to store PDF: {e}")
         
         return DocumentAddResponse(
             success=True,
@@ -115,6 +128,38 @@ async def add_document(
             document_id=None,
             message=f"Ingestion failed: {str(e)}"
         )
+
+
+@router.get("/pdf/{doc_id}")
+async def get_pdf(
+    doc_id: str
+):
+    """
+    Get PDF file by document ID.
+    
+    Args:
+        doc_id: Document ID
+        
+    Returns:
+        PDF file
+    """
+    try:
+        from smart_library.config import DOC_PDF_DIR
+        pdf_path = DOC_PDF_DIR / f"{doc_id}.pdf"
+        
+        if not pdf_path.exists():
+            raise HTTPException(status_code=404, detail=f"PDF not found for document: {doc_id}")
+        
+        return FileResponse(
+            path=pdf_path,
+            media_type="application/pdf",
+            headers={"Content-Disposition": "inline"}
+        )
+    
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to serve PDF: {str(e)}")
 
 
 @router.get("/", response_model=DocumentListResponse)
