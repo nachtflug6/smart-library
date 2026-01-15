@@ -254,6 +254,7 @@ async def delete_document(
     try:
         from smart_library.infrastructure.repositories.document_repository import DocumentRepository
         from smart_library.infrastructure.db.db import get_connection
+        from smart_library.config import DOC_PDF_DIR
         
         # Use a single connection for the entire operation
         conn = get_connection()
@@ -268,6 +269,14 @@ async def delete_document(
         from smart_library.infrastructure.repositories.vector_repository import VectorRepository
         vector_repo = VectorRepository(conn)
         orphans_removed = vector_repo.cleanup_orphaned_vectors()
+        
+        # Delete associated PDF file
+        try:
+            pdf_path = DOC_PDF_DIR / f"{doc_id}.pdf"
+            if pdf_path.exists():
+                pdf_path.unlink()
+        except Exception as e:
+            print(f"Warning: Failed to delete PDF file for {doc_id}: {e}")
         
         message = f"Document deleted: {doc_id}"
         if orphans_removed > 0:

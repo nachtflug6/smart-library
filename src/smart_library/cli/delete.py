@@ -1,4 +1,5 @@
 from typer import Argument, echo
+from pathlib import Path
 from smart_library.application.services.list_service import ListingService
 from smart_library.cli.main import app
 
@@ -12,7 +13,17 @@ def delete(
     service = ListingService()
     if service.repo_doc.get(entity_id):
         service.repo_doc.delete(entity_id)
-        echo(f"Document {entity_id} deleted.")
+        # Also delete the associated PDF file if it exists
+        try:
+            from smart_library.config import DOC_PDF_DIR
+            pdf_path = DOC_PDF_DIR / f"{entity_id}.pdf"
+            if pdf_path.exists():
+                pdf_path.unlink()
+                echo(f"Document {entity_id} deleted (including PDF).")
+            else:
+                echo(f"Document {entity_id} deleted.")
+        except Exception as e:
+            echo(f"Document {entity_id} deleted, but failed to delete PDF: {e}")
         return
     if service.repo_page.get(entity_id):
         service.repo_page.delete(entity_id)

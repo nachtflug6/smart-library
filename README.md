@@ -15,24 +15,68 @@ The stack is designed for research and developer workflows where provenance, sni
 Getting started — dependencies & services
 ----------------------------------------
 
-Recommended approach: run the supporting services (Grobid, Ollama embeddings) via Docker Compose included in the repository, then install the package in editable mode.
+### Prerequisites
 
-1. Start services (Grobid + Ollama):
+This project runs in a dev container that includes all required services (Grobid for PDF processing, Ollama for embeddings). The setup includes:
+- **Grobid** (PDF extraction): port `8070`
+- **Ollama** (embeddings/LLM): port `11434`
+- **FastAPI** (REST API): port `8000`
+- **React/Vite** (Web UI): port `5173`
+
+### Quick Start
+
+1. **Start the dev container** (from host machine):
 
 ```bash
 docker-compose up -d
-docker ps                       # confirm the dev container name (e.g., smartlib_dev)
+```
+
+This starts Grobid, Ollama, and the dev container. All development happens inside the container.
+
+2. **Access the dev container**:
+
+```bash
+docker ps                       # confirm container name (e.g., smartlib_dev)
 docker exec -it smartlib_dev bash
 ```
 
-2. Install package (editable) and Python deps:
+Or open the project in VS Code with the Dev Containers extension (recommended).
+
+3. **First-time setup** (inside the container):
 
 ```bash
-python -m pip install -e .
-python -m pip install -r requirements.txt
+# Initialize database
+make init
+
+# Verify setup
+make check
 ```
 
-3. Verify services are healthy (tail logs as they start):
+4. **Start the development servers**:
+
+**Option A: Start both API and UI together** (in separate terminals):
+```bash
+# Terminal 1: Start API
+make api
+
+# Terminal 2: Start UI
+make ui
+```
+
+**Option B: Use make targets** (view all commands):
+```bash
+make help
+```
+
+5. **Access the application**:
+
+- **Web UI**: http://localhost:5173
+- **API**: http://localhost:8000
+- **API Docs**: http://localhost:8000/docs
+
+### Verify Services
+
+Check that external services are running:
 
 ```bash
 docker-compose logs -f grobid
@@ -40,17 +84,23 @@ docker-compose logs -f ollama
 ```
 
 Notes:
-- Grobid REST API: port `8070` (config: `smart_library.config.Grobid`).
-- Ollama embedding endpoints: port `11434` (config: `smart_library.config.OllamaConfig`).
-- The provided `docker-compose.yml` may include GPU/runtime options (e.g., `runtime: nvidia`) — remove or adjust if you don't have an NVIDIA runtime.
+- The `docker-compose.yml` may include GPU/runtime options (e.g., `runtime: nvidia`) — remove or adjust if you don't have an NVIDIA runtime.
+- Dependencies are pre-installed in the dev container. If you need to reinstall:
+  ```bash
+  pip install -r requirements.txt
+  cd ui && npm install
+  ```
 
 Quick CLI usage
 ---------------
+
+The CLI provides commands for managing documents, searching, and labeling results.
 
 Initialize the database schema (creates tables including `page_number` on text entities):
 
 ```bash
 smartlib init
+# or: make init
 ```
 
 Ingest a PDF (creates document, pages, texts, and embeddings/vectors if configured):
@@ -58,6 +108,8 @@ Ingest a PDF (creates document, pages, texts, and embeddings/vectors if configur
 ```bash
 smartlib add /path/to/your/file.pdf
 ```
+
+Alternatively, use the **Web UI** at http://localhost:5173 to upload PDFs through a graphical interface.
 
 Batch ingestion (optional)
 --------------------------
@@ -122,6 +174,22 @@ The system uses Rocchio relevance feedback algorithm:
 
 List and inspect entities:
 
+Web UI Features
+---------------
+
+The React-based web interface (http://localhost:5173) provides:
+
+- **Document Management**: Upload PDFs, view all documents, delete documents
+- **Semantic Search**: Search across document text chunks with similarity-based ranking
+- **PDF Viewer**: View PDFs inline in the browser
+- **Relevance Feedback**: Label search results as relevant/irrelevant to refine searches
+- **Interactive Results**: Click on results to view source text and navigate to the corresponding PDF page
+
+To start the UI:
+```bash
+make ui                # or: cd ui && npm run dev
+```
+
 ```bash
 smartlib list doc
 smartlib show <entity_id>
@@ -137,48 +205,55 @@ PYTHONPATH=src python3 -m smart_library.cli.main init
 PYTHONPATH=src python3 -m smart_library.cli.main add /path/to/your/file.pdf
 PYTHONPATH=src python3 -m smart_library.cli.main search "your query" 5
 ```
+evelopment Commands (Makefile)
+-------------------------------
 
-Programmatic scenario
----------------------
-
-There is a programmatic scenario that exercises the CLI handlers (uses a temporary DB by default):
+The project includes a Makefile with helpful commands:
 
 ```bash
-PYTHONPATH=src python3 src/smart_library/integration/scenarios/cli_workflow.py /path/to/your/file.pdf
+make help       # Show all available commands
+make init       # Initialize database (first-time setup)
+make check      # Verify all dependencies and setup
+make api        # Start API server (port 8000)
+make ui         # Start UI development server (port 5173)
 ```
 
-Notes
------
+Docker / Compose Services
+-------------------------
 
-- Embeddings and Grobid extraction require the appropriate external services/configuration; if those are unavailable the pipeline will run partially and log errors.
-- To preserve a temporary DB for inspection when running scenarios, use the `--keep-temp` flag on the scenario scripts.
+The `docker-compose.yml` manages all services:
 
-Docker / Compose
------------------
-
-This repo includes a `docker-compose.yml` that brings up supporting services used by the ingestion
-pipeline (Grobid for PDF extraction, Ollama for embeddings). For local development you can start
-the required services with:
-
+**Start all services:**
 ```bash
 docker-compose up -d
 ```
 
-Check logs while services start:
-
+**Check service status:**
 ```bash
-docker-compose logs -f grobid
-docker-compose logs -f ollama
+docker-compose ps
+```
+
+**View logs:**
+```bash
+docker-compose logs -f grobid    # PDF extraction service
+docker-compose logs -f ollama    # Embedding/LLM service
+```
+
+**Service Ports:**
+- Grobid REST API: `8070` (configured in `smart_library.config.Grobid`)
+- Ollama endpoints: `11434` (configured in `smart_library.config.OllamaConfig`)
+- FastAPI: `8000` (API backend)
+- React/Vite: `5173` (Web UI)
+
+**Stop services:**
+```bash
+docker-compose down
 ```
 
 Notes:
-- `grobid` exposes its REST API on port `8070` (configured in `smart_library.config.Grobid`).
-- `ollama` exposes embedding and generation endpoints on port `11434` (configured in `smart_library.config.OllamaConfig`).
-- The `docker-compose.yml` may reference GPU/runtime options (e.g., `runtime: nvidia`) — remove or
-	adjust those if you do not have an NVIDIA runtime available on your machine.
-- After the services are running, run `smartlib init` then `smartlib add /path/to/file.pdf` to ingest
-	and create embeddings.
-
+- The `docker-compose.yml` may reference GPU/runtime options (e.g., `runtime: nvidia`) — remove or adjust if you don't have an NVIDIA runtime.
+- Dependencies (Python packages, npm modules) are pre-installed in the dev container during build.
+- If you prefer to run services manually or use a cloud provider, ensure the host/port values in `smart_library.config` match where Grobid and your embedding service are reachable.
 If you prefer to run services manually (or use a cloud provider), ensure the host/port values in
 `smart_library.config` match where Grobid and your embedding service are reachable.
 
