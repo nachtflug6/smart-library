@@ -30,7 +30,7 @@
 
 .pdf-viewer-content {
   flex: 1;
-  overflow: hidden;
+  overflow: auto;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -43,6 +43,52 @@
   height: 100%;
   border: none;
   max-width: 100%;
+}
+
+/* react-pdf page styling */
+.pdf-viewer-content .react-pdf__Document {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pdf-viewer-content .react-pdf__Page {
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  margin: 1rem auto;
+  max-width: 90%;
+}
+
+/* Controls */
+.pdf-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  padding: 1rem;
+  background: #f9fafb;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.pdf-download-btn {
+  padding: 0.5rem 1rem;
+  background: #10b981;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.875rem;
+  text-decoration: none;
+  transition: background 0.2s;
+  display: inline-block;
+}
+
+.pdf-download-btn:hover {
+  background: #059669;
+}
+
+.pdf-info-text {
+  font-size: 0.875rem;
+  color: #666;
 }
 
 .pdf-loading {
