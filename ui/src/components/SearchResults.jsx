@@ -142,7 +142,7 @@ function SearchResults({ results, query, onRerank }) {
                 {/* Content preview (always shown like CLI) */}
                 {text && (
                   <div className="result-preview">
-                    {truncateText(text.display_content || text.content, isExpanded ? 999999 : 200)}
+                    {text.display_content || text.content}
                   </div>
                 )}
               </div>
@@ -155,14 +155,12 @@ function SearchResults({ results, query, onRerank }) {
                   isNegative={result.is_negative}
                   onLabelChange={onRerank}
                 />
-                {text && text.content && text.content.length > 200 && (
-                  <button
-                    className="expand-button"
-                    onClick={() => toggleExpand(result.id)}
-                  >
-                    {isExpanded ? '▲ Show Less' : '▼ Show More'}
-                  </button>
-                )}
+                <button
+                  className="expand-button"
+                  onClick={() => toggleExpand(result.id)}
+                >
+                  {isExpanded ? '▲ Hide Details' : '▼ Show Details'}
+                </button>
               </div>
 
               {/* Detailed metadata when expanded */}
