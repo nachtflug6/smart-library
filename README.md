@@ -299,3 +299,32 @@ python -m pip install -e .
 python -m pip install -r requirements.txt
 smartlib init
 ```
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+### Dependencies & Acknowledgments
+
+This project uses the following open-source software:
+
+- **[Grobid](https://github.com/kermitt2/grobid)** (Apache 2.0) - PDF extraction and structuring
+- **[Ollama](https://ollama.ai/)** (MIT) - LLM and embedding models
+- **[FastAPI](https://fastapi.tiangolo.com/)** (MIT) - REST API framework
+- **[React](https://react.dev/)** (MIT) - UI framework
+- **[react-pdf](https://github.com/wojtekmaj/react-pdf)** (MIT) - PDF viewer component
+
+All dependencies retain their original licenses. Using these libraries does not affect the MIT license of this codebase.
+
+## Citation
+
+If you use this software in your research, please consider citing:
+
+```bibtex
+@software{smartlibrary2026,
+  author = {nachtflug6},
+  title = {Smart Library: Semantic Search for Academic PDFs},
+  year = {2026},
+  url = {https://github.com/nachtflug6/smart-library}
+}
+```
