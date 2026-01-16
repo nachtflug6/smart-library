@@ -117,9 +117,46 @@
   transition: background 0.2s ease, border-color 0.2s ease;
 }
 
-.nav-upload:hover {
+.nav-upload:hover:not(:disabled) {
   background: #3a3a3a;
   border-color: #4a4a4a;
+}
+
+.nav-upload:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.nav-upload-progress {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: #2a2a2a;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  border: 1px solid #555;
+}
+
+.nav-progress-bar {
+  width: 100px;
+  height: 8px;
+  background: #3a3a3a;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.nav-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #1f8ef1, #4CAF50);
+  transition: width 0.3s ease;
+}
+
+.nav-progress-text {
+  color: #e0e0e0;
+  font-size: 0.75rem;
+  font-weight: 600;
+  min-width: 35px;
+  text-align: right;
 }
 
 .nav-link {

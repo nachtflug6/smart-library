@@ -1,5 +1,3 @@
-version: "3.9"
-
 services:
   grobid:
     image: grobid/grobid:0.8.2-full
@@ -54,8 +52,6 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.api
-      cache_from:
-        - api:latest
     image: api:latest
     container_name: smartlib_api
     command: ["python", "-m", "uvicorn", "api.main:app", "--host", "0.0.0.0", "--port", "8000"]
@@ -88,8 +84,6 @@ services:
       dockerfile: Dockerfile.ui
       args:
         VITE_API_URL: "http://localhost:8000"
-      cache_from:
-        - ui:latest
     image: ui:latest
     container_name: smartlib_ui
     ports:

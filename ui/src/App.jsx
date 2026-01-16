@@ -1,9 +1,23 @@
-import { BrowserRouter as Router, Routes, Route, Link, useNavigate } from 'react-router-dom'
-import { useState } from 'react'
+import { BrowserRouter as Router, Routes, Route, Link, useNavigate, useLocation } from 'react-router-dom'
+import { useState, useEffect } from 'react'
 import Search from './pages/Search'
 import Documents from './pages/Documents'
 import DocumentView from './pages/DocumentView'
 import './App.css'
+
+// Global upload state to share between components
+let globalUploadState = { isUploading: false, progress: 0 }
+const uploadListeners = new Set()
+
+export const setGlobalUploadState = (state) => {
+  globalUploadState = { ...globalUploadState, ...state }
+  uploadListeners.forEach(listener => listener(globalUploadState))
+}
+
+export const subscribeToUploadState = (listener) => {
+  uploadListeners.add(listener)
+  return () => uploadListeners.delete(listener)
+}
 
 function App() {
   return (
@@ -15,7 +29,13 @@ function App() {
 
 function AppShell() {
   const navigate = useNavigate()
+  const location = useLocation()
   const [navQuery, setNavQuery] = useState('')
+  const [uploadState, setUploadState] = useState(globalUploadState)
+
+  useEffect(() => {
+    return subscribeToUploadState(setUploadState)
+  }, [])
 
   const handleNavSearch = (e) => {
     e.preventDefault()
@@ -27,6 +47,8 @@ function AppShell() {
   const handleNavUpload = () => {
     navigate('/documents', { state: { openUpload: true } })
   }
+
+  const isDocumentsPage = location.pathname === '/documents'
 
   return (
     <div className="app">
@@ -49,9 +71,24 @@ function AppShell() {
           </div>
 
           <div className="nav-actions">
-            <button className="nav-upload" onClick={handleNavUpload}>
-              Upload PDF
+            <button 
+              className="nav-upload" 
+              onClick={handleNavUpload}
+              disabled={uploadState.isUploading}
+            >
+              {uploadState.isUploading ? 'Uploading...' : 'Upload PDF'}
             </button>
+            {uploadState.isUploading && !isDocumentsPage && (
+              <div className="nav-upload-progress">
+                <div className="nav-progress-bar">
+                  <div 
+                    className="nav-progress-fill" 
+                    style={{ width: `${uploadState.progress}%` }}
+                  />
+                </div>
+                <span className="nav-progress-text">{uploadState.progress}%</span>
+              </div>
+            )}
 
             <Link to="/documents" className="nav-link">Documents</Link>
           </div>

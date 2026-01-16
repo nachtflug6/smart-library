@@ -1,5 +1,3 @@
-version: "3.9"
-
 services:
   grobid:
     image: grobid/grobid:0.8.2-full

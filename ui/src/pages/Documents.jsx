@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom'
 import { documentAPI } from '../services/api'
 import Pagination from '../components/Pagination'
 import PDFViewer from '../components/PDFViewer'
+import { setGlobalUploadState } from '../App'
 import './Documents.css'
 
 function Documents() {
@@ -122,6 +123,7 @@ function Documents() {
     setUploadProgress(0)
     setUploadMessage(null)
     setUploadStats({ total: files.length, completed: 0, failed: 0 })
+    setGlobalUploadState({ isUploading: true, progress: 0 })
 
     const results = []
     
@@ -136,6 +138,7 @@ function Documents() {
               ((i + progress / 100) / files.length) * 100
             )
             setUploadProgress(overallProgress)
+            setGlobalUploadState({ isUploading: true, progress: overallProgress })
           })
 
           if (result.success) {
@@ -184,6 +187,7 @@ function Documents() {
       setIsUploading(false)
       setUploadProgress(0)
       setUploadStats({ total: 0, completed: 0, failed: 0 })
+      setGlobalUploadState({ isUploading: false, progress: 0 })
       // Reset file input
       event.target.value = ''
     }
