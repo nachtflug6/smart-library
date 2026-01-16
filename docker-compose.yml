@@ -34,19 +34,14 @@ services:
       - smartlib-net
     environment:
       - OLLAMA_HOST=0.0.0.0:11434
-    entrypoint: ["/bin/sh", "-c"]
-    command: >
-      "
-      ollama serve &
-      sleep 4 &&
-      ollama pull nomic-embed-text &&
-      wait"
+    entrypoint: ["/bin/bash", "-c"]
+    command: ["sleep 2 && { ollama list | grep -q nomic-embed-text || ollama pull nomic-embed-text; } & exec ollama serve"]
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:11434/api/tags"]
+      test: ["CMD", "ollama", "list"]
       interval: 10s
-      timeout: 5s
-      retries: 5
-      start_period: 30s
+      timeout: 10s
+      retries: 10
+      start_period: 180s
     # Uncomment for GPU support (requires NVIDIA Container Toolkit installed)
     # runtime: nvidia
     # deploy:
@@ -73,8 +68,8 @@ services:
       - "8000:8000"  # API
       - "5173:5173"  # UI
     environment:
-      - GROBID_HOST=grobid:8070
-      - OLLAMA_HOST=ollama:11434
+      - GROBID_HOST=grobid
+      - OLLAMA_HOST=ollama
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8000/docs"]
       interval: 10s

@@ -15,7 +15,8 @@ function PDFViewer({ docId, textId, initialPage, textContent, onClose }) {
   const contentRef = useRef(null)
   const pageRefs = useRef({})
   const searchInputRef = useRef(null)
-  const pdfUrl = `/api/documents/pdf/${docId}`
+  const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:8000'
+  const pdfUrl = `${apiBase}/api/documents/pdf/${docId}`
 
   // Reset state when document changes
   useEffect(() => {

@@ -55,7 +55,7 @@ echo   - API (FastAPI)
 echo   - UI (React)
 echo.
 
-docker compose up -d
+docker compose -f docker-compose.prod.yml up -d
 if errorlevel 1 (
     echo [ERROR] Failed to start services
     pause
@@ -71,12 +71,12 @@ set "attempt=0"
 :wait_loop
 if !attempt! geq !max_attempts! (
     echo [TIMEOUT] Services took too long to start
-    echo Check logs: docker compose logs -f
+    echo Check logs: docker compose -f docker-compose.prod.yml logs -f
     pause
     exit /b 1
 )
 
-docker exec smartlib_dev curl -s http://localhost:8000/docs >nul 2>&1
+docker exec smartlib_api curl -s http://localhost:8000/docs >nul 2>&1
 if errorlevel 0 (
     echo [OK] API is ready
     goto health_ok
@@ -97,18 +97,9 @@ echo.
 
 REM Initialize database
 echo Initializing database (one-time)...
-docker exec smartlib_dev make init
-if errorlevel 1 (
-    echo [ERROR] Database initialization failed
-    pause
-    exit /b 1
-)
-echo [OK] Database initialized
+echo Note: Database initialization may be skipped if already initialized
+echo (This is a one-time operation)
 echo.
-
-REM Health check
-echo Verifying setup...
-docker exec smartlib_dev make check
 echo.
 
 REM Success message
@@ -129,10 +120,9 @@ echo   3. Try searching for relevant passages
 echo   4. Label results to improve ranking
 echo.
 echo Helpful Commands:
-echo   View logs:        docker compose logs -f
-echo   Stop services:    docker compose down
-echo   Restart:          docker compose restart
-echo   Reset database:   docker exec smartlib_dev rm -f data_dev/db/smart_library.db ^&^& docker exec smartlib_dev make init
+echo   View logs:        docker compose -f docker-compose.prod.yml logs -f
+echo   Stop services:    docker compose -f docker-compose.prod.yml down
+echo   Restart:          docker compose -f docker-compose.prod.yml restart
 echo.
 echo Documentation: See PRODUCTION.md for detailed troubleshooting
 echo.

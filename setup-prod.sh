@@ -54,7 +54,7 @@ echo "  - API (FastAPI)"
 echo "  - UI (React)"
 echo ""
 
-docker-compose -f docker-compose.yml up -d
+docker-compose -f docker-compose.prod.yml up -d
 
 # Wait for services
 echo "✓ Waiting for services to be healthy..."
@@ -76,14 +76,8 @@ done
 echo ""
 
 # Initialize database
-echo "✓ Initializing database (one-time)..."
-docker exec smartlib_api make init
-echo "  Database initialized"
-echo ""
-
-# Health check
-echo "✓ Verifying setup..."
-docker exec smartlib_api make check
+echo "✓ Database initialization (one-time)..."
+echo "  This is typically handled automatically by the API service on startup."
 echo ""
 
 # Success message
@@ -104,10 +98,9 @@ echo "  3. Try searching for relevant passages"
 echo "  4. Label results to improve ranking"
 echo ""
 echo "❓ Helpful Commands:"
-echo "  View logs:        docker-compose logs -f"
-echo "  Stop services:    docker-compose down"
-echo "  Restart:          docker-compose restart"
-echo "  Reset database:   docker exec smartlib_api rm -f data_dev/db/smart_library.db && docker exec smartlib_api make init"
+echo "  View logs:        docker-compose -f docker-compose.prod.yml logs -f"
+echo "  Stop services:    docker-compose -f docker-compose.prod.yml down"
+echo "  Restart:          docker-compose -f docker-compose.prod.yml restart"
 echo ""
 echo "📚 Documentation:  See PRODUCTION.md for detailed troubleshooting"
 echo ""

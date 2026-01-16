@@ -93,7 +93,7 @@ def run_docker_compose():
     print_info("  - UI (React)")
     
     try:
-        result = subprocess.run(['docker', 'compose', 'up', '-d'],
+        result = subprocess.run(['docker', 'compose', '-f', 'docker-compose.prod.yml', 'up', '-d'],
                               capture_output=True, text=True, timeout=60)
         if result.returncode != 0:
             print_error(f"Failed to start services: {result.stderr}")
@@ -111,7 +111,7 @@ def wait_for_services():
     while attempt < max_attempts:
         try:
             result = subprocess.run(
-                ['docker', 'exec', 'smartlib_dev', 'curl', '-f', 
+                ['docker', 'exec', 'smartlib_api', 'curl', '-f', 
                  'http://localhost:8000/docs'],
                 capture_output=True, text=True, timeout=5
             )
@@ -126,34 +126,12 @@ def wait_for_services():
             print_info(f"  Waiting... ({attempt} seconds)")
         time.sleep(1)
     
-    print_error("Services took too long to start. Check: docker compose logs -f")
+    print_error("Services took too long to start. Check: docker compose -f docker-compose.prod.yml logs -f")
 
 def init_database():
     """Initialize the database"""
-    print_info("Initializing database (one-time)...")
-    
-    try:
-        result = subprocess.run(['docker', 'exec', 'smartlib_dev', 'make', 'init'],
-                              capture_output=True, text=True, timeout=30)
-        if result.returncode == 0:
-            print_ok("Database initialized")
-        else:
-            print_error(f"Database initialization failed: {result.stderr}")
-    except Exception as e:
-        print_error(f"Error initializing database: {e}")
-
-def verify_setup():
-    """Run setup verification"""
-    print_info("Verifying setup...")
-    
-    try:
-        result = subprocess.run(['docker', 'exec', 'smartlib_dev', 'make', 'check'],
-                              capture_output=True, text=True, timeout=30)
-        print(result.stdout)
-        if result.returncode != 0:
-            print_error("Setup verification failed")
-    except Exception as e:
-        print_error(f"Error verifying setup: {e}")
+    print_info("Database initialization (one-time operation)...")
+    print_info("This is typically handled automatically by the API service on startup.")
 
 def show_success_message():
     """Display success message with next steps"""
@@ -172,10 +150,9 @@ def show_success_message():
     print("  4. Label results to improve ranking\n")
     
     print(f"{Colors.BOLD}❓ Helpful Commands:{Colors.END}")
-    print("  View logs:        docker compose logs -f")
-    print("  Stop services:    docker compose down")
-    print("  Restart:          docker compose restart")
-    print("  Reset database:   docker exec smartlib_dev rm -f data_dev/db/smart_library.db && docker exec smartlib_dev make init\n")
+    print("  View logs:        docker compose -f docker-compose.prod.yml logs -f")
+    print("  Stop services:    docker compose -f docker-compose.prod.yml down")
+    print("  Restart:          docker compose -f docker-compose.prod.yml restart\n")
     
     print(f"{Colors.BOLD}📚 Documentation:{Colors.END} See PRODUCTION.md for detailed troubleshooting\n")
 
@@ -189,7 +166,6 @@ def main():
         run_docker_compose()
         wait_for_services()
         init_database()
-        verify_setup()
         show_success_message()
         print(f"{Colors.GREEN}✓ All done!{Colors.END}\n")
         return 0

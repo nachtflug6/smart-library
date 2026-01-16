@@ -227,11 +227,59 @@ docker run --rm --gpus all nvidia/cuda:11.0-runtime-ubuntu20.04 nvidia-smi
 **Solution**:
 ```bash
 # Check container resources
-docker stats smartlib_dev
+docker stats smartlib_api
 
 # Restart services
-docker-compose restart
+docker-compose -f docker-compose.prod.yml restart
 ```
+
+### Windows: Container Exits Immediately
+
+**Problem**: Containers start and exit right away on Windows
+**Solution**:
+1. **Use the correct compose file**: Ensure you're using `docker-compose.prod.yml`
+   ```bash
+   docker-compose -f docker-compose.prod.yml up -d
+   ```
+
+2. **Check the logs** to see the actual error:
+   ```bash
+   docker-compose -f docker-compose.prod.yml logs smartlib_api
+   ```
+
+3. **Common Windows issues**:
+   - **WSL2 not installed**: Docker Desktop requires WSL2 backend on Windows 10/11
+   - **Line ending issues**: If you cloned on Windows, git may have converted line endings. Reset with:
+     ```bash
+     git config core.autocrlf false
+     git checkout -- .
+     ```
+   - **Permission issues**: Run Command Prompt or PowerShell as Administrator
+   - **Port already in use**: Check if ports 8000, 8070, 5173, 11434 are available
+     ```bash
+     netstat -ano | findstr :8000
+     ```
+
+4. **Full restart**:
+   ```bash
+   docker-compose -f docker-compose.prod.yml down
+   docker-compose -f docker-compose.prod.yml up -d
+   ```
+
+### Windows: Docker Desktop with WSL2
+
+**Recommended setup for Windows**:
+1. **Install Docker Desktop** with WSL2 backend (preferred over Hyper-V)
+2. **Allocate resources** in Docker Desktop settings:
+   - CPUs: 4+
+   - Memory: 8GB+ (needed for Ollama)
+   - Disk: 20GB+ free space
+3. **Use the setup script**:
+   ```bash
+   python setup-prod.py
+   # or
+   setup-prod.bat
+   ```
 
 ## Architecture
 
