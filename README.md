@@ -16,16 +16,28 @@ The stack is designed for research and developer workflows where provenance, sni
 
 ## 🚀 For Colleagues (Try It Out)
 
-**Minimal setup, no configuration needed:**
+**Works on Windows, macOS, and Linux**
+
+### Quick Start (All Platforms)
 
 ```bash
 git clone <repo-url> smart-library
 cd smart-library
-./setup-prod.sh
-# Opens at: http://localhost:5173
 ```
 
-See [QUICKSTART.md](QUICKSTART.md) for detailed instructions.
+**Choose one setup method:**
+
+| Platform | Command |
+|----------|---------|
+| **Windows** | `setup-prod.bat` |
+| **macOS/Linux** | `./setup-prod.sh` |
+| **Any Platform** | `python setup-prod.py` |
+
+**Opens at:** http://localhost:5173
+
+📖 **Setup Instructions:**
+- **Quick Start**: See [QUICKSTART.md](QUICKSTART.md)
+- **Platform-Specific Help**: See [PLATFORM_SETUP.md](PLATFORM_SETUP.md)
 
 ## 🛠️ For Developers
 
