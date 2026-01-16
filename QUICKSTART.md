@@ -5,6 +5,9 @@
 ## Prerequisites
 
 - Docker Desktop (with Docker Compose)
+  - **Windows**: [Docker Desktop for Windows](https://www.docker.com/products/docker-desktop) (requires WSL 2)
+  - **macOS**: [Docker Desktop for Mac](https://www.docker.com/products/docker-desktop)
+  - **Linux**: [Docker Engine](https://docs.docker.com/engine/install/)
 - ~20GB free disk space
 - 8GB+ RAM
 
@@ -13,12 +16,38 @@
 ```bash
 git clone <repo-url> smart-library
 cd smart-library
+```
 
+### Windows Users
+
+```batch
+REM Run setup batch file (works in Command Prompt or PowerShell)
+setup-prod.bat
+```
+
+Or use Python (works everywhere):
+```bash
+python setup-prod.py
+```
+
+### macOS & Linux Users
+
+```bash
 # Run automated setup (handles everything)
 ./setup-prod.sh
 
-# ⏱️ This takes 5-10 minutes (downloading models, first time only)
+# Or use Python version (also works)
+python3 setup-prod.py
 ```
+
+### All Platforms (Python Alternative)
+
+```bash
+# This works on Windows, Mac, and Linux
+python setup-prod.py
+```
+
+⏱️ **First run takes 5-10 minutes** (downloading models one time only)
 
 ## 2️⃣ Access the Application
 
@@ -79,32 +108,80 @@ docker exec smartlib_dev make init
 
 ## 🆘 Troubleshooting
 
-### "Connection refused" when starting
+### Platform-Specific Issues
 
-**Wait a bit!** On first run, Ollama downloads ~2GB of models. Monitor progress:
+#### Windows
 
+**Problem: Setup script won't run**
+- Use `setup-prod.bat` instead of `setup-prod.sh`
+- Or use Python: `python setup-prod.py`
+- Make sure Docker Desktop is running with WSL 2 backend
+
+**Problem: Path errors or file not found**
+- File paths on Windows use backslashes - Docker handles this automatically
+- If you get path errors, try using Python setup: `python setup-prod.py`
+
+**Problem: WSL 2 not enabled**
+- Open PowerShell as Administrator and run:
+```powershell
+wsl --install
+wsl --set-default-version 2
+```
+- Restart your computer and Docker
+
+#### macOS
+
+**Problem: "docker not found" in Terminal**
+- Make sure Docker Desktop is running (check the menu bar)
+- Try: `docker ps` to verify it's working
+
+**Problem: Out of memory**
+- Go to Docker Desktop → Settings → Resources
+- Increase "Memory" (recommend 8GB+)
+- Restart Docker
+
+#### Linux
+
+**Problem: Permission denied (cannot run Docker)**
 ```bash
-docker-compose logs -f ollama
-# When you see "Listening on 127.0.0.1:11434", it's ready
+# Add your user to docker group
+sudo usermod -aG docker $USER
+# Log out and log back in, or run:
+newgrp docker
 ```
 
-### API/UI not accessible
+**Problem: "docker compose" command not found**
+- Install Docker Compose: `sudo apt install docker-compose`
+- Or use `docker-compose` (with hyphen)
+
+### General Issues
+
+**"Connection refused" when starting**
+
+Wait a bit! On first run, Ollama downloads ~2GB of models. Monitor progress:
+
+```bash
+docker compose logs -f ollama
+# When you see "Listening on", it's ready
+```
+
+**API/UI not accessible**
 
 ```bash
 # Check if containers are running
-docker-compose ps
+docker compose ps
 
 # Restart everything
-docker-compose down
-docker-compose up -d
+docker compose down
+docker compose up -d
 ```
 
-### Out of disk space
+**Out of disk space**
 
 Ollama models take ~3-4GB. Free up space and:
 
 ```bash
-docker-compose restart ollama
+docker compose restart ollama
 ```
 
 ### GPU support
