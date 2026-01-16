@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { documentAPI } from '../services/api'
+import PDFViewer from '../components/PDFViewer'
 import './DocumentView.css'
 
 function DocumentView() {
@@ -106,6 +107,11 @@ function DocumentView() {
           <span className="metadata-label">Document ID:</span>
           <code className="document-id">{document.id}</code>
         </div>
+      </div>
+      
+      <div className="pdf-viewer-section">
+        <h2>PDF Viewer</h2>
+        <PDFViewer docId={document.id} />
       </div>
     </div>
   )

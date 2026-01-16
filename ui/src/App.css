@@ -1,45 +1,57 @@
 .app {
-  min-height: 100vh;
+  height: 100vh;
   display: flex;
   flex-direction: column;
+  overflow: hidden;
 }
 
 .navbar {
-  background-color: #1a1a1a;
-  padding: 0.5rem 0;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  background-color: #000;
+  padding: 0.25rem 0;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
 }
 
 .nav-container {
   max-width: 100%;
   margin: 0 auto;
-  padding: 0 1rem;
+  padding: 0 1.5rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  height: 36px;
 }
 
 .nav-brand {
   color: #fff;
-  font-size: 1.2rem;
-  font-weight: bold;
+  font-size: 0.95rem;
+  font-weight: 600;
   text-decoration: none;
+  letter-spacing: 0.5px;
+}
+
+.nav-brand:hover {
+  color: #4CAF50;
+  transition: color 0.2s;
 }
 
 .nav-links {
   display: flex;
-  gap: 1.5rem;
+  gap: 2rem;
 }
 
 .nav-links a {
-  color: #ccc;
+  color: #e0e0e0;
   text-decoration: none;
   transition: color 0.2s;
-  font-size: 0.95rem;
+  font-size: 0.8rem;
+  font-weight: 500;
 }
 
 .nav-links a:hover {
-  color: #fff;
+  color: #4CAF50;
 }
 
 .main-content {
@@ -48,4 +60,5 @@
   margin: 0;
   padding: 0;
   width: 100%;
+  overflow: hidden;
 }
