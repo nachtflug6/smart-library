@@ -15,7 +15,7 @@ services:
       timeout: 5s
       retries: 5
       start_period: 30s
-    # Uncomment for GPU support (requires NVIDIA Container Toolkit installed)
+    # Uncomment for GPU support (requires NVIDIA Container Toolkit)
     # runtime: nvidia
     # deploy:
     #   resources:
@@ -48,7 +48,7 @@ services:
       timeout: 5s
       retries: 5
       start_period: 30s
-    # Uncomment for GPU support (requires NVIDIA Container Toolkit installed)
+    # Uncomment for GPU support (requires NVIDIA Container Toolkit)
     # runtime: nvidia
     # deploy:
     #   resources:
@@ -56,32 +56,59 @@ services:
     #       devices:
     #         - capabilities: [gpu]
 
-  devcontainer:
+  api:
     build:
       context: .
       dockerfile: .devcontainer/Dockerfile
-    container_name: smartlib_dev
+      cache_from:
+        - api:latest
+    image: api:latest
+    container_name: smartlib_api
+    command: |
+      bash -c "
+      python -m pip install -e /workspace &&
+      python -m uvicorn api.main:app --host 0.0.0.0 --port 8000
+      "
+    ports:
+      - "8000:8000"
+    environment:
+      - GROBID_HOST=grobid:8070
+      - OLLAMA_HOST=ollama:11434
     networks:
       - smartlib-net
-    volumes:
-      - ./:/workspace:cached
     depends_on:
       grobid:
         condition: service_healthy
       ollama:
         condition: service_healthy
-    ports:
-      - "8000:8000"  # API
-      - "5173:5173"  # UI
-    environment:
-      - GROBID_HOST=grobid:8070
-      - OLLAMA_HOST=ollama:11434
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8000/docs"]
       interval: 10s
       timeout: 5s
       retries: 5
       start_period: 10s
+    volumes:
+      - ./data_dev:/workspace/data_dev
+      - ./db:/workspace/db
+    restart: unless-stopped
+
+  ui:
+    build:
+      context: ./ui
+      dockerfile: ../Dockerfile.ui
+      cache_from:
+        - ui:latest
+    image: ui:latest
+    container_name: smartlib_ui
+    ports:
+      - "5173:5173"
+    environment:
+      - VITE_API_URL=http://localhost:8000
+    networks:
+      - smartlib-net
+    depends_on:
+      api:
+        condition: service_healthy
     restart: unless-stopped
 
 networks:
@@ -90,3 +117,4 @@ networks:
 
 volumes:
   ollama_data:
+    driver: local

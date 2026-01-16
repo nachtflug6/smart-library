@@ -1,5 +1,7 @@
 # smart-library
 
+**Get started in 5 minutes → See [QUICKSTART.md](QUICKSTART.md)**
+
 Project Goal & Use Cases
 ------------------------
 
@@ -11,6 +13,21 @@ smart-library is focused on finding relevant, citable passages inside scholarly 
 - Semantic search over text chunks: embeddings are computed per chunk and stored in a vector index so similarity search returns focused text hits rather than whole-document matches.
 
 The stack is designed for research and developer workflows where provenance, snippet-level precision, and low hallucination risk matter.
+
+## 🚀 For Colleagues (Try It Out)
+
+**Minimal setup, no configuration needed:**
+
+```bash
+git clone <repo-url> smart-library
+cd smart-library
+./setup-prod.sh
+# Opens at: http://localhost:5173
+```
+
+See [QUICKSTART.md](QUICKSTART.md) for detailed instructions.
+
+## 🛠️ For Developers
 
 Getting started — dependencies & services
 ----------------------------------------
