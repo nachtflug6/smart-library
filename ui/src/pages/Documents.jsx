@@ -254,11 +254,24 @@ function Documents() {
         style={{ display: 'none' }}
       />
 
-      {uploadMessage && (
-        <div className="upload-notification">
-          <div className={`upload-message ${uploadMessage.type}`}>
-            {uploadMessage.text}
-          </div>
+      {(isUploading || uploadMessage) && (
+        <div className="upload-status-inline">
+          {isUploading && (
+            <div className="upload-progress compact">
+              <div className="progress-bar">
+                <div
+                  className="progress-fill"
+                  style={{ width: `${uploadProgress}%` }}
+                />
+              </div>
+              <span className="progress-text">{uploadProgress}%</span>
+            </div>
+          )}
+          {uploadMessage && (
+            <div className={`upload-message ${uploadMessage.type}`}>
+              {uploadMessage.text}
+            </div>
+          )}
         </div>
       )}
 

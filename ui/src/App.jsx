@@ -78,7 +78,7 @@ function AppShell() {
             >
               {uploadState.isUploading ? 'Uploading...' : 'Upload PDF'}
             </button>
-            {uploadState.isUploading && (
+            {uploadState.isUploading && !isDocumentsPage && (
               <div className="nav-upload-progress">
                 <div className="nav-progress-bar">
                   <div 
