@@ -1,9 +1,9 @@
-import { useState } from 'react'
-import SearchBar from '../components/SearchBar'
+import { useState, useEffect } from 'react'
+import { useLocation } from 'react-router-dom'
 import SearchResults from '../components/SearchResults'
 import Pagination from '../components/Pagination'
 import PDFViewer from '../components/PDFViewer'
-import { searchAPI, labelAPI, documentAPI } from '../services/api'
+import { searchAPI, labelAPI } from '../services/api'
 import './Search.css'
 
 function Search() {
@@ -16,8 +16,9 @@ function Search() {
   const [selectedPdf, setSelectedPdf] = useState(null)
   const [pdfContent, setPdfContent] = useState('')
   const RESULTS_PER_PAGE = 10
+  const location = useLocation()
 
-  const handleSearch = async (searchQuery, topK) => {
+  const handleSearch = async (searchQuery, topK = 10) => {
     setIsLoading(true)
     setError(null)
     setQuery(searchQuery)
@@ -37,6 +38,14 @@ function Search() {
       setIsLoading(false)
     }
   }
+
+  useEffect(() => {
+    const params = new URLSearchParams(location.search)
+    const q = params.get('q')?.trim()
+    if (q && q !== query) {
+      handleSearch(q, 10)
+    }
+  }, [location.search, query])
 
   const handlePageChange = (page) => {
     setCurrentPage(page)
@@ -86,17 +95,6 @@ function Search() {
       <div className="search-layout">
         {/* Left Column: Search and Results */}
         <div className="search-column">
-          <div className="search-header">
-            <h1>Search Documents</h1>
-            <p className="subtitle">
-              Find relevant papers and text chunks using semantic search
-            </p>
-          </div>
-          
-          <div className="search-bar-sticky">
-            <SearchBar onSearch={handleSearch} isLoading={isLoading} />
-          </div>
-          
           {error && (
             <div className="error-message">
               {error}

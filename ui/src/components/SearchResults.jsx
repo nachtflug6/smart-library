@@ -80,6 +80,59 @@ function SearchResults({ results, query, onRerank, onSelectPdf }) {
     return docId ? documentCache[docId] : null
   }
 
+  const getScoreColor = (score) => {
+    // Color code by decimal increments
+    if (score >= 0.9) return 'score-90'
+    if (score >= 0.8) return 'score-80'
+    if (score >= 0.7) return 'score-70'
+    if (score >= 0.6) return 'score-60'
+    if (score >= 0.5) return 'score-50'
+    if (score >= 0.4) return 'score-40'
+    if (score >= 0.3) return 'score-30'
+    if (score >= 0.2) return 'score-20'
+    if (score >= 0.1) return 'score-10'
+    return 'score-00'
+  }
+
+  const highlightKeywords = (text, searchQuery) => {
+    if (!text || !searchQuery) return text
+
+    // Extract words from search query (split by spaces, remove special chars)
+    const keywords = searchQuery
+      .toLowerCase()
+      .split(/\s+/)
+      .filter(word => word.length > 2) // Only highlight words with 3+ chars
+      .map(word => word.replace(/[^\w]/g, ''))
+      .filter(word => word.length > 0)
+
+    if (keywords.length === 0) return text
+
+    // Create regex pattern to match any keyword (case insensitive, word boundaries)
+    const pattern = new RegExp(`\\b(${keywords.join('|')})\\b`, 'gi')
+
+    // Split text and wrap matches in <strong> tags
+    const parts = []
+    let lastIndex = 0
+    let match
+
+    while ((match = pattern.exec(text)) !== null) {
+      // Add text before match
+      if (match.index > lastIndex) {
+        parts.push(text.substring(lastIndex, match.index))
+      }
+      // Add highlighted match
+      parts.push(<strong key={match.index}>{match[0]}</strong>)
+      lastIndex = pattern.lastIndex
+    }
+
+    // Add remaining text
+    if (lastIndex < text.length) {
+      parts.push(text.substring(lastIndex))
+    }
+
+    return parts.length > 0 ? parts : text
+  }
+
   if (!results || results.length === 0) {
     return (
       <div className="no-results">
@@ -90,15 +143,13 @@ function SearchResults({ results, query, onRerank, onSelectPdf }) {
 
   return (
     <div className="search-results">
-      <div className="results-header">
-        <h2>Results ({results.length})</h2>
-        <p className="query-display">Query: "{query}"</p>
-        {(results.some(r => r.is_positive) || results.some(r => r.is_negative)) && (
+      {(results.some(r => r.is_positive) || results.some(r => r.is_negative)) && (
+        <div className="results-actions">
           <button onClick={onRerank} className="rerank-button">
             🔄 Rerank with Feedback
           </button>
-        )}
-      </div>
+        </div>
+      )}
       
       <div className="results-list">
         {results.map((result) => {
@@ -115,7 +166,7 @@ function SearchResults({ results, query, onRerank, onSelectPdf }) {
               <div className="result-compact-header">
                 <div className="result-meta-line">
                   <span className="result-rank">#{result.rank}</span>
-                  <span className="result-score">Score: {result.score.toFixed(4)}</span>
+                  <span className={`result-score ${getScoreColor(result.score)}`}>Score: {result.score.toFixed(2)}</span>
                   {text && text.page_number && (
                     <span className="result-page">Page {text.page_number}</span>
                   )}
@@ -141,7 +192,7 @@ function SearchResults({ results, query, onRerank, onSelectPdf }) {
                 {/* Content preview (always shown like CLI) */}
                 {text && (
                   <div className="result-preview">
-                    {text.display_content || text.content}
+                    {highlightKeywords(text.display_content || text.content, query)}
                   </div>
                 )}
               </div>

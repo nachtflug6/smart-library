@@ -16,19 +16,30 @@
   min-height: 0;
 }
 
+.search-nav-header {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.search-nav-text h1 {
+  margin: 0;
+  font-size: 1.05rem;
+  color: #fff;
+  line-height: 1.2;
+}
+
+.nav-subtitle {
+  margin: 0;
+  color: #d8e0ff;
+  font-size: 0.85rem;
+}
+
 .search-column {
   display: flex;
   flex-direction: column;
   overflow-y: auto;
   height: 100%;
-}
-
-.search-bar-sticky {
-  position: sticky;
-  top: 0;
-  z-index: 10;
-  background: white;
-  padding-bottom: 0.05rem;
 }
 
 .pdf-column {

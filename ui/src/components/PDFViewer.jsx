@@ -9,7 +9,7 @@ pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/b
 
 function PDFViewer({ docId, textId, initialPage, textContent, onClose }) {
   const [numPages, setNumPages] = useState(null)
-  const [scale, setScale] = useState(1.0)
+  const [scale, setScale] = useState(1.5)
   const [currentPage, setCurrentPage] = useState(1)
   const [searchText, setSearchText] = useState('')
   const contentRef = useRef(null)
@@ -24,6 +24,16 @@ function PDFViewer({ docId, textId, initialPage, textContent, onClose }) {
     setSearchText('')
     pageRefs.current = {}
   }, [docId])
+
+  // Auto-populate search with textContent from search results
+  useEffect(() => {
+    if (textContent) {
+      // Extract a key phrase from textContent (first ~50 chars or until punctuation)
+      const match = textContent.match(/^.{10,50}?(?=[.!?,;\s]|$)/)
+      const keyPhrase = match ? match[0].trim() : textContent.substring(0, 50).trim()
+      setSearchText(keyPhrase)
+    }
+  }, [textContent, docId])
 
   // Handle Ctrl+F keyboard shortcut
   useEffect(() => {
@@ -48,6 +58,12 @@ function PDFViewer({ docId, textId, initialPage, textContent, onClose }) {
       // Delay to ensure pages are rendered before scrolling
       const timer = setTimeout(() => {
         scrollToPage(initialPage)
+        // After scrolling to page, try to center on highlighted text
+        if (searchText) {
+          setTimeout(() => {
+            scrollToHighlightedText()
+          }, 800)
+        }
       }, 300)
       return () => clearTimeout(timer)
     }
@@ -71,6 +87,25 @@ function PDFViewer({ docId, textId, initialPage, textContent, onClose }) {
           setCurrentPage(pageNum)
         }
       }, 200)
+    }
+  }
+
+  const scrollToHighlightedText = () => {
+    // Find the first highlighted mark element in the visible page
+    const marks = contentRef.current?.querySelectorAll('mark')
+    if (marks && marks.length > 0) {
+      // Find the mark that's closest to being in view
+      const firstVisibleMark = Array.from(marks).find(mark => {
+        const rect = mark.getBoundingClientRect()
+        return rect.top >= 0 && rect.top <= window.innerHeight
+      })
+      
+      if (firstVisibleMark) {
+        firstVisibleMark.scrollIntoView({ behavior: 'smooth', block: 'center' })
+      } else if (marks[0]) {
+        // If no visible mark, scroll to the first one
+        marks[0].scrollIntoView({ behavior: 'smooth', block: 'center' })
+      }
     }
   }
 
@@ -101,11 +136,11 @@ function PDFViewer({ docId, textId, initialPage, textContent, onClose }) {
   }, [numPages])
 
   const handleZoomIn = () => {
-    setScale(prev => Math.min(2.5, prev + 0.2))
+    setScale(prev => Math.min(2.5, prev + 0.1))
   }
 
   const handleZoomOut = () => {
-    setScale(prev => Math.max(0.5, prev - 0.2))
+    setScale(prev => Math.max(0.5, prev - 0.1))
   }
 
   const handlePreviousPage = () => {
