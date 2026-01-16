@@ -47,6 +47,20 @@ fi
 echo ""
 
 # Start services
+echo "✓ Building Docker images (first time only)..."
+echo "  - API (FastAPI)"
+echo "  - UI (React)"
+echo ""
+
+docker-compose -f docker-compose.prod.yml build --no-cache
+if [ $? -ne 0 ]; then
+    echo "✗ Failed to build Docker images"
+    exit 1
+fi
+
+echo "  Images built successfully"
+echo ""
+
 echo "✓ Starting services (this may take 5-10 minutes on first run)..."
 echo "  - Grobid (PDF extraction)"
 echo "  - Ollama (embeddings & LLM)"

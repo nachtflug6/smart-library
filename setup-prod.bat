@@ -48,6 +48,21 @@ if not exist .env (
 echo.
 
 REM Start services
+echo Building Docker images (first time only)...
+echo   - API (FastAPI)
+echo   - UI (React)
+echo.
+
+docker compose -f docker-compose.prod.yml build --no-cache
+if errorlevel 1 (
+    echo [ERROR] Failed to build Docker images
+    pause
+    exit /b 1
+)
+
+echo [OK] Images built successfully
+echo.
+
 echo Starting services (this may take 5-10 minutes on first run)...
 echo   - Grobid (PDF extraction)
 echo   - Ollama (embeddings ^& LLM)

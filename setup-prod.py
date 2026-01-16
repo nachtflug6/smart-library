@@ -86,6 +86,21 @@ def setup_env():
 
 def run_docker_compose():
     """Start Docker Compose services"""
+    print_info("Building Docker images (first time only)...")
+    print_info("  - API (FastAPI)")
+    print_info("  - UI (React)")
+    
+    try:
+        result = subprocess.run(['docker', 'compose', '-f', 'docker-compose.prod.yml', 'build', '--no-cache'],
+                              capture_output=True, text=True, timeout=300)
+        if result.returncode != 0:
+            print_error(f"Failed to build images: {result.stderr}")
+            return
+        print_ok("Images built successfully")
+    except Exception as e:
+        print_error(f"Error building images: {e}")
+        return
+    
     print_info("Starting services (this may take 5-10 minutes on first run)...")
     print_info("  - Grobid (PDF extraction)")
     print_info("  - Ollama (embeddings)")

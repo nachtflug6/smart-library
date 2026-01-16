@@ -26,13 +26,17 @@ COPY . .
 # Install package
 RUN pip install --no-cache-dir -e .
 
-# Create data directories
-RUN mkdir -p data_dev/db data_dev/documents/pdf
+# Create all required directories
+RUN mkdir -p data_dev/db data_dev/documents/pdf data_dev/jsonl db
 
 EXPOSE 8000
 
-# Health check
-HEALTHCHECK --interval=10s --timeout=5s --retries=5 \
-  CMD curl -f http://localhost:8000/docs || exit 1
+# Pre-initialize database if possible during build
+# This helps speed up first run
+RUN python -c "from smart_library.infrastructure.db.db import init_db; from smart_library.config import DB_PATH; DB_PATH.parent.mkdir(parents=True, exist_ok=True); init_db() if not DB_PATH.exists() else None" || true
+
+# Health check with generous timeout for slow systems
+HEALTHCHECK --interval=10s --timeout=10s --retries=10 \
+  CMD curl -f http://localhost:8000/health || exit 1
 
 CMD ["python", "-m", "uvicorn", "api.main:app", "--host", "0.0.0.0", "--port", "8000"]

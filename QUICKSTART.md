@@ -47,7 +47,27 @@ python3 setup-prod.py
 python setup-prod.py
 ```
 
-⏱️ **First run takes 5-10 minutes** (downloading models one time only)
+⏱️ **First run takes 10-15 minutes** (building images and downloading models one time only)
+
+## Manual Setup (Alternative)
+
+If you prefer to run commands manually instead of using the setup scripts:
+
+```powershell
+# Windows PowerShell
+cd your-workspace
+git pull
+docker compose -f docker-compose.prod.yml build --no-cache
+docker compose -f docker-compose.prod.yml up -d
+```
+
+```bash
+# macOS / Linux
+cd your-workspace
+git pull
+docker-compose -f docker-compose.prod.yml build --no-cache
+docker-compose -f docker-compose.prod.yml up -d
+```
 
 ## 2️⃣ Access the Application
 
