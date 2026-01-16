@@ -23,8 +23,15 @@ def get_connection_with_sqlitevec(db_path: Path = None, load_sqlitevec: bool = F
         from smart_library.config import DB_PATH
         db_path = DB_PATH
     # Allow SQLite connections to be used across threads (needed for FastAPI async workers)
-    conn = sqlite3.connect(str(db_path), check_same_thread=False)
+    conn = sqlite3.connect(str(db_path), check_same_thread=False, isolation_level=None)
     conn.row_factory = sqlite3.Row
+    
+    # Enable WAL mode for better concurrent access (allows multiple readers + one writer)
+    conn.execute("PRAGMA journal_mode=WAL;")
+    
+    # Set busy timeout to 30 seconds (allows retries when database is locked)
+    conn.execute("PRAGMA busy_timeout = 30000;")
+    
     conn.execute("PRAGMA foreign_keys = ON;")
     # Always load sqlite-vec extension unless explicitly disabled
     if load_sqlitevec or load_sqlitevec is None:
