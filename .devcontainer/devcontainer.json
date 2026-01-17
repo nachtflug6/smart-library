@@ -19,6 +19,7 @@
 		"../docker-compose.yml"
 	],
 	"service": "devcontainer",
+	"runServices": ["devcontainer", "grobid", "ollama"],
 
 	"workspaceFolder": "/workspace",
 
