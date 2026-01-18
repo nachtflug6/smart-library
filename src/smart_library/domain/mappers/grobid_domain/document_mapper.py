@@ -85,7 +85,6 @@ def parse_document(struct, source_path=None, source_url=None, file_hash=None,
                     pass
 
 
-    # Fallback 3: Try to extract year from abstract
     if year is None:
         abstract = getattr(header, "abstract", None)
         if abstract:
