@@ -71,6 +71,32 @@ def parse_document(struct, source_path=None, source_url=None, file_hash=None,
                     except ValueError:
                         pass
 
+
+    # Fallback 3: Try to extract year from abstract
+    if year is None:
+        abstract = getattr(header, "abstract", None)
+        if abstract:
+            abstract_text = str(abstract)
+            year_match = re.search(r'\b(19|20)\d{2}\b', abstract_text)
+            if year_match:
+                try:
+                    year = int(year_match.group(0))
+                except ValueError:
+                    pass
+
+
+    # Fallback 3: Try to extract year from abstract
+    if year is None:
+        abstract = getattr(header, "abstract", None)
+        if abstract:
+            abstract_text = str(abstract)
+            year_match = re.search(r'\b(19|20)\d{2}\b', abstract_text)
+            if year_match:
+                try:
+                    year = int(year_match.group(0))
+                except ValueError:
+                    pass
+
     # Create Document using service (only pass recognized Document fields)
     doc = document_service.create_document(
         title=getattr(header, "title", None),
