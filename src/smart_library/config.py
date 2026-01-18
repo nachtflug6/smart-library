@@ -10,6 +10,7 @@ DB_PATH     = DATA_DIR / "db/smart_library.db"
 DOC_ROOT      = DATA_DIR / "documents"
 DOC_PDF_DIR   = DOC_ROOT / "pdf"
 DOC_TEXT_DIR  = DOC_ROOT / "text"
+DOC_XML_DIR   = DOC_ROOT / "xml"
 
 JSONL_ROOT    = DATA_DIR / "jsonl"
 ENTITIES_JSONL  = JSONL_ROOT / "entities.jsonl"

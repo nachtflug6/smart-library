@@ -62,7 +62,7 @@ async def upload_document(
         
         # Store PDF in document storage directory
         try:
-            from smart_library.config import DOC_PDF_DIR
+            from smart_library.config import DOC_PDF_DIR, DOC_XML_DIR
             DOC_PDF_DIR.mkdir(parents=True, exist_ok=True)
             # Store with document ID as filename
             pdf_storage_path = DOC_PDF_DIR / f"{doc_id}.pdf"
@@ -144,7 +144,7 @@ async def get_pdf(
         PDF file
     """
     try:
-        from smart_library.config import DOC_PDF_DIR
+        from smart_library.config import DOC_PDF_DIR, DOC_XML_DIR
         pdf_path = DOC_PDF_DIR / f"{doc_id}.pdf"
         
         if not pdf_path.exists():
@@ -254,7 +254,7 @@ async def delete_document(
     try:
         from smart_library.infrastructure.repositories.document_repository import DocumentRepository
         from smart_library.infrastructure.db.db import get_connection
-        from smart_library.config import DOC_PDF_DIR
+        from smart_library.config import DOC_PDF_DIR, DOC_XML_DIR
         
         # Use a single connection for the entire operation
         conn = get_connection()
@@ -277,6 +277,14 @@ async def delete_document(
                 pdf_path.unlink()
         except Exception as e:
             print(f"Warning: Failed to delete PDF file for {doc_id}: {e}")
+
+        # Delete associated XML file
+        try:
+            xml_path = DOC_XML_DIR / f"{doc_id}.xml"
+            if xml_path.exists():
+                xml_path.unlink()
+        except Exception as e:
+            print(f"Warning: Failed to delete XML file for {doc_id}: {e}")
         
         message = f"Document deleted: {doc_id}"
         if orphans_removed > 0:

@@ -169,8 +169,9 @@ class IngestionAppService:
         """
         logger = self.log
         svc = GrobidService()
+        xml = None
         try:
-            struct = svc.extract_fulltext(pdf_path)
+            struct, xml = svc.extract_fulltext_with_xml(pdf_path)
         except Exception:
             logger.exception("Grobid extraction failed for %s", pdf_path)
             raise
@@ -181,7 +182,17 @@ class IngestionAppService:
             logger.exception("Failed to build snapshot from Grobid output for %s", pdf_path)
             raise
 
-        return self.persist_snapshot(snapshot, embed=embed)
+        doc_id = self.persist_snapshot(snapshot, embed=embed)
+        
+        # Save the raw XML if we have a valid document ID and XML content
+        if doc_id and xml:
+            try:
+                GrobidService.save_xml(doc_id, xml)
+                logger.debug("Saved Grobid XML for document %s", doc_id)
+            except Exception:
+                logger.exception("Failed to save Grobid XML for document %s", doc_id)
+        
+        return doc_id
 
     def close(self):
         for svc in (self.doc, self.head, self.page, self.text):

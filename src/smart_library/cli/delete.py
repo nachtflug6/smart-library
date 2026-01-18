@@ -15,11 +15,23 @@ def delete(
         service.repo_doc.delete(entity_id)
         # Also delete the associated PDF file if it exists
         try:
-            from smart_library.config import DOC_PDF_DIR
+            from smart_library.config import DOC_PDF_DIR, DOC_XML_DIR
             pdf_path = DOC_PDF_DIR / f"{entity_id}.pdf"
+            pdf_deleted = False
             if pdf_path.exists():
                 pdf_path.unlink()
+                pdf_deleted = True
+            xml_path = DOC_XML_DIR / f"{entity_id}.xml"
+            xml_deleted = False
+            if xml_path.exists():
+                xml_path.unlink()
+                xml_deleted = True
+            if pdf_deleted and xml_deleted:
+                echo(f"Document {entity_id} deleted (including PDF and XML).")
+            elif pdf_deleted and not xml_deleted:
                 echo(f"Document {entity_id} deleted (including PDF).")
+            elif not pdf_deleted and xml_deleted:
+                echo(f"Document {entity_id} deleted (including XML).")
             else:
                 echo(f"Document {entity_id} deleted.")
         except Exception as e:
