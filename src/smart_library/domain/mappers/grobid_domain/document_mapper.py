@@ -58,41 +58,6 @@ def parse_document(struct, source_path=None, source_url=None, file_hash=None,
         if doi:
             year = extract_year_from_doi(doi)
 
-    # Fallback 3: Try submission note (Accepted date preferred over Received)
-    if year is None:
-        submission_note = getattr(header, "submission_note", None)
-        if submission_note:
-            # Look for "Accepted:" date first (more likely to be publication year)
-            accepted_match = re.search(r'Accepted:.*?(\b(19|20)\d{2}\b)', str(submission_note))
-            if accepted_match:
-                try:
-                    year = int(accepted_match.group(1))
-                except ValueError:
-                    pass
-            # If no Accepted date, try any 4-digit year in the note
-            if year is None:
-                year_match = re.search(r'\b(19|20)\d{2}\b', str(submission_note))
-                if year_match:
-                    try:
-                        year = int(year_match.group(0))
-                    except ValueError:
-                        pass
-
-    # Fallback 4: DISABLED - Abstract text search
-    # Note: Disabled because it picks up cited years (e.g., "Smith 1960")
-    # rather than publication year. Would need NLP to reliably extract
-    # the actual publication year from abstract text.
-    # if year is None:
-    #     abstract = getattr(header, "abstract", None)
-    #     if abstract:
-    #         abstract_text = str(abstract)
-    #         year_match = re.search(r'\b(19|20)\d{2}\b', abstract_text)
-    #         if year_match:
-    #             try:
-    #                 year = int(year_match.group(0))
-    #             except ValueError:
-    #                 pass
-
     # Create Document using service (only pass recognized Document fields)
     doc = document_service.create_document(
         title=getattr(header, "title", None),
