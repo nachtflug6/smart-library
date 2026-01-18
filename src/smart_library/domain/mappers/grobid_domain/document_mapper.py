@@ -52,7 +52,13 @@ def parse_document(struct, source_path=None, source_url=None, file_hash=None,
                 except ValueError:
                     pass
     
-    # Fallback 2: Try submission note (Accepted date preferred over Received)
+    # Fallback 2: Try to extract year from DOI patterns (more reliable than text search)
+    if year is None:
+        doi = getattr(header, "doi", None)
+        if doi:
+            year = extract_year_from_doi(doi)
+
+    # Fallback 3: Try submission note (Accepted date preferred over Received)
     if year is None:
         submission_note = getattr(header, "submission_note", None)
         if submission_note:
@@ -72,8 +78,7 @@ def parse_document(struct, source_path=None, source_url=None, file_hash=None,
                     except ValueError:
                         pass
 
-
-    # Fallback 3: Try to extract year from abstract
+    # Fallback 4: Try to extract year from abstract
     if year is None:
         abstract = getattr(header, "abstract", None)
         if abstract:
@@ -84,24 +89,6 @@ def parse_document(struct, source_path=None, source_url=None, file_hash=None,
                     year = int(year_match.group(0))
                 except ValueError:
                     pass
-
-
-    if year is None:
-        abstract = getattr(header, "abstract", None)
-        if abstract:
-            abstract_text = str(abstract)
-            year_match = re.search(r'\b(19|20)\d{2}\b', abstract_text)
-            if year_match:
-                try:
-                    year = int(year_match.group(0))
-                except ValueError:
-                    pass
-
-    # Fallback 4: Try to extract year from DOI patterns
-    if year is None:
-        doi = getattr(header, "doi", None)
-        if doi:
-            year = extract_year_from_doi(doi)
 
     # Create Document using service (only pass recognized Document fields)
     doc = document_service.create_document(
