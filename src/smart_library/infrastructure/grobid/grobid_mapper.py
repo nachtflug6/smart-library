@@ -44,8 +44,18 @@ class GrobidMapper:
 
         # PUBLICATION INFO
         publisher = header_parser.text_or_none(header_parser.find(".//tei:publicationStmt/tei:publisher"))
+        
+        # Extract date from publicationStmt (primary source)
         pub_date_el = header_parser.find(".//tei:publicationStmt/tei:date")
         published_date = header_parser.get_attr(pub_date_el, "when")
+        
+        # Extract date from monogr/imprint (fallback source)
+        imprint_date_el = header_parser.find(".//tei:sourceDesc//tei:monogr/tei:imprint/tei:date[@type='published']")
+        imprint_date = header_parser.get_attr(imprint_date_el, "when")
+        
+        # Extract submission note text (another fallback)
+        submission_note_el = header_parser.find(".//tei:sourceDesc//tei:note[@type='submission']")
+        submission_note = header_parser.text_or_none(submission_note_el)
 
         # IDENTIFIERS (DOI, MD5)
         doi = None
@@ -84,6 +94,8 @@ class GrobidMapper:
             title=title,
             publisher=publisher,
             published_date=published_date,
+            imprint_date=imprint_date,
+            submission_note=submission_note,
             doi=doi,
             md5=md5,
             authors=authors,

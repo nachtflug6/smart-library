@@ -27,17 +27,49 @@ def parse_document(struct, source_path=None, source_url=None, file_hash=None,
     # Parse pages and build page map
     num_pages = parse_pages(struct)
 
-    # Extract year from published_date if available
-    published_date = getattr(header, "published_date", None)
+    # Extract year with multiple fallback options
     year = None
+    
+    # Try published_date first (from publicationStmt)
+    published_date = getattr(header, "published_date", None)
     if published_date:
-        # Try to extract a 4-digit year from the date string
         year_match = re.search(r'\b(19|20)\d{2}\b', str(published_date))
         if year_match:
             try:
                 year = int(year_match.group(0))
             except ValueError:
-                year = None
+                pass
+    
+    # Fallback 1: Try imprint_date (from monogr/imprint)
+    if year is None:
+        imprint_date = getattr(header, "imprint_date", None)
+        if imprint_date:
+            year_match = re.search(r'\b(19|20)\d{2}\b', str(imprint_date))
+            if year_match:
+                try:
+                    year = int(year_match.group(0))
+                except ValueError:
+                    pass
+    
+    # Fallback 2: Try submission note (Accepted date preferred over Received)
+    if year is None:
+        submission_note = getattr(header, "submission_note", None)
+        if submission_note:
+            # Look for "Accepted:" date first (more likely to be publication year)
+            accepted_match = re.search(r'Accepted:.*?(\b(19|20)\d{2}\b)', str(submission_note))
+            if accepted_match:
+                try:
+                    year = int(accepted_match.group(1))
+                except ValueError:
+                    pass
+            # If no Accepted date, try any 4-digit year in the note
+            if year is None:
+                year_match = re.search(r'\b(19|20)\d{2}\b', str(submission_note))
+                if year_match:
+                    try:
+                        year = int(year_match.group(0))
+                    except ValueError:
+                        pass
 
     # Create Document using service (only pass recognized Document fields)
     doc = document_service.create_document(

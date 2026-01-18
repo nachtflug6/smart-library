@@ -24,6 +24,8 @@ class Header:
     title: Optional[str] = None
     publisher: Optional[str] = None
     published_date: Optional[str] = None
+    imprint_date: Optional[str] = None
+    submission_note: Optional[str] = None
     doi: Optional[str] = None
     md5: Optional[str] = None
     authors: List[Author] = field(default_factory=list)
