@@ -2,6 +2,7 @@ from smart_library.domain.services.document_service import DocumentService
 from smart_library.domain.mappers.grobid_domain.page_mapper import parse_pages
 from types import SimpleNamespace
 import re
+from smart_library.infrastructure.doi.doi_parser import extract_year_from_doi
 
 def _format_author_name(author):
     """Format author as 'LastName, FirstName MiddleInitials'."""
@@ -95,6 +96,12 @@ def parse_document(struct, source_path=None, source_url=None, file_hash=None,
                     year = int(year_match.group(0))
                 except ValueError:
                     pass
+
+    # Fallback 4: Try to extract year from DOI patterns
+    if year is None:
+        doi = getattr(header, "doi", None)
+        if doi:
+            year = extract_year_from_doi(doi)
 
     # Create Document using service (only pass recognized Document fields)
     doc = document_service.create_document(
